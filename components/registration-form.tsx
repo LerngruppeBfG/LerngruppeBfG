@@ -48,6 +48,13 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const [submitted, setSubmitted] = useState(false)
   const [emailStatus, setEmailStatus] = useState<string>("")
 
+  const generateId = () => {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID()
+    }
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  }
+
   // Initialize EmailJS
   useEffect(() => {
     emailjs.init("ukCJVevtRBgZ-Dr1B")
@@ -56,13 +63,17 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const deleteToken = crypto.randomUUID()
+    const deleteToken = generateId()
     const participant: Participant = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       ...formData,
       timestamp: new Date().toISOString(),
       deleteToken: deleteToken,
     }
+
+    // Show success message immediately
+    setSubmitted(true)
+    setEmailStatus("E-Mail wird versendet...")
 
     // Save to localStorage as a fallback/cache
     try {
@@ -83,10 +94,6 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
       console.error("[Storage] Warning: Failed to save to Firebase:", error)
       console.warn("[Storage] Using localStorage only - data will not sync across devices")
     }
-
-    // Show success message
-    setSubmitted(true)
-    setEmailStatus("E-Mail wird versendet...")
 
     // Send email using EmailJS - this is secondary and can fail without breaking the flow
     try {

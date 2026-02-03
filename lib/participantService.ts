@@ -1,10 +1,9 @@
-import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  deleteDoc, 
-  doc, 
-  query, 
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
   where,
   onSnapshot,
   Timestamp,
@@ -31,6 +30,9 @@ const convertTimestamp = (data: DocumentData): Participant => {
  */
 export const addParticipant = async (participant: Participant): Promise<string> => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     // Use setDoc with the participant's ID as the document ID
     await setDoc(doc(db, COLLECTION_NAME, participant.id), {
       ...participant,
@@ -49,6 +51,9 @@ export const addParticipant = async (participant: Participant): Promise<string> 
  */
 export const getParticipants = async (): Promise<Participant[]> => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     const querySnapshot = await getDocs(collection(db, COLLECTION_NAME))
     const participants: Participant[] = []
     
@@ -70,6 +75,9 @@ export const getParticipants = async (): Promise<Participant[]> => {
  */
 export const deleteParticipantByToken = async (deleteToken: string): Promise<boolean> => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     const q = query(collection(db, COLLECTION_NAME), where('deleteToken', '==', deleteToken))
     const querySnapshot = await getDocs(q)
     
@@ -94,6 +102,9 @@ export const deleteParticipantByToken = async (deleteToken: string): Promise<boo
  */
 export const deleteParticipantById = async (id: string): Promise<void> => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     await deleteDoc(doc(db, COLLECTION_NAME, id))
     console.log('[Firebase] Participant deleted with ID:', id)
   } catch (error) {
@@ -109,6 +120,9 @@ export const subscribeToParticipants = (
   callback: (participants: Participant[]) => void
 ): (() => void) => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     const q = query(collection(db, COLLECTION_NAME))
     
     const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -133,6 +147,9 @@ export const subscribeToParticipants = (
  */
 export const migrateLocalStorageToFirestore = async (): Promise<number> => {
   try {
+    if (!db) {
+      throw new Error('Firestore not initialized')
+    }
     // Check if migration has already been completed
     const migrationCompleted = localStorage.getItem('firebaseMigrationCompleted')
     if (migrationCompleted === 'true') {
