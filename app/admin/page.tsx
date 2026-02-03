@@ -112,7 +112,7 @@ export default function AdminPage() {
           </form>
 
           <div className="mt-6 pt-6 border-t text-center">
-            <a href="/" className="text-sm text-primary hover:underline">
+            <a href="../" className="text-sm text-primary hover:underline">
               ← Zurück zur Anmeldung
             </a>
           </div>
@@ -246,7 +246,7 @@ export default function AdminPage() {
 
         {/* Navigation */}
         <div className="mt-6 text-center">
-          <a href="/" className="text-primary hover:underline">
+          <a href="../" className="text-primary hover:underline">
             ← Zurück zur Anmeldung
           </a>
         </div>

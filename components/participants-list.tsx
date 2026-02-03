@@ -66,7 +66,7 @@ export function ParticipantsList() {
     setCancelStatus("Sende Lösch-Link per E-Mail...")
 
     try {
-      const deleteUrl = `${window.location.origin}/delete/${participant.deleteToken}`
+      const deleteUrl = `${window.location.origin}${window.location.pathname.replace(/\/$/, "")}/delete?token=${participant.deleteToken}`
       
       const templateParams = {
         to_email: participant.email,

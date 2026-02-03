@@ -8,6 +8,12 @@ import { BookOpen, Users } from "lucide-react"
 
 export default function Home() {
   const [activeView, setActiveView] = useState<"form" | "list">("form")
+  const [showAdminLink, setShowAdminLink] = useState(false)
+
+  useEffect(() => {
+    const host = window.location.hostname
+    setShowAdminLink(host === "localhost" || host === "127.0.0.1")
+  }, [])
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
@@ -69,12 +75,14 @@ export default function Home() {
           <p className="text-xs text-gray-500 text-pretty mb-3">
             © 2026 Lerngruppen-Portal | Alle Daten werden gemäß DSGVO verarbeitet und gespeichert | Nur zur internen Schulnutzung
           </p>
-          <a 
-            href="/admin" 
-            className="text-xs text-gray-400 hover:text-primary transition-colors"
-          >
-            Admin-Bereich
-          </a>
+          {showAdminLink && (
+            <a 
+              href="./admin" 
+              className="text-xs text-gray-400 hover:text-primary transition-colors"
+            >
+              Admin-Bereich
+            </a>
+          )}
         </footer>
       </div>
     </main>

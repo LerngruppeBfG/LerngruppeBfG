@@ -86,7 +86,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         ? `${formData.numberOfSessions}× ${formData.sessionDuration} Min. + Pausen (${formData.breakDuration} Min.)`
         : `${formData.duration} Minuten`
 
-      const deleteUrl = `${window.location.origin}/delete/${deleteToken}`
+      const deleteUrl = `${window.location.origin}${window.location.pathname.replace(/\/$/, "")}/delete?token=${deleteToken}`
       
       const templateParams = {
         to_email: formData.email,
