@@ -5,13 +5,13 @@ import { getFirestore, Firestore } from 'firebase/firestore'
 // These values should be set via environment variables for production
 // Copy .env.example to .env.local and fill in your Firebase project values
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "YOUR_FIREBASE_API_KEY_HERE",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "YOUR_PROJECT_ID",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "YOUR_MESSAGING_SENDER_ID",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "YOUR_APP_ID"
-}
+  apiKey: "AIzaSyD5UVZr58RD7c9Bw6BAI-I9Yv3aQWjjFAI",
+  authDomain: "bfglerngruppe26.firebaseapp.com",
+  projectId: "bfglerngruppe26",
+  storageBucket: "bfglerngruppe26.firebasestorage.app",
+  messagingSenderId: "916290768574",
+  appId: "1:916290768574:web:ab49eb13f1b93dc70d58ef"
+};
 
 // Initialize Firebase
 let app: FirebaseApp
