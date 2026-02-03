@@ -44,32 +44,9 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=IHRE_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID=IHRE_APP_ID
 ```
 
-### Option 2: Direkte Konfiguration (Nur für Entwicklung/Test)
+### Option 2: Direkte Konfiguration (Nicht empfohlen)
 
-Öffnen Sie die Datei `/lib/firebase.ts` und ersetzen Sie die Platzhalterwerte mit Ihrer Firebase-Konfiguration:
-
-```typescript
-const firebaseConfig = {
-  apiKey: "IHRE_API_KEY",
-  authDomain: "IHRE_PROJECT_ID.firebaseapp.com",
-  projectId: "IHRE_PROJECT_ID",
-  storageBucket: "IHRE_PROJECT_ID.appspot.com",
-  messagingSenderId: "IHRE_SENDER_ID",
-  appId: "IHRE_APP_ID"
-}
-```
-
-**Beispiel:**
-```typescript
-const firebaseConfig = {
-  apiKey: "AIzaSyBH8vX9x6K-X3oP8kQ3mN5hL6jT9wU2vY8",
-  authDomain: "lerngruppe26.firebaseapp.com",
-  projectId: "lerngruppe26",
-  storageBucket: "lerngruppe26.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890abcdef"
-}
-```
+Aus Sicherheitsgründen sollten Firebase-Zugangsdaten nicht im Quellcode hinterlegt werden. Nutzen Sie stattdessen `.env.local`, damit keine Zugangsdaten versioniert werden.
 
 ## Schritt 5: Firestore-Sicherheitsregeln einrichten
 
