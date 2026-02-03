@@ -1,23 +1,27 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react"
 import type { Participant } from "@/components/registration-form"
 
-export default function DeletePage() {
-  const params = useParams()
+function DeleteContent() {
+  const searchParams = useSearchParams()
   const router = useRouter()
-  const token = params.token as string
+  const token = searchParams.get("token") ?? ""
 
   const [status, setStatus] = useState<"loading" | "found" | "notfound" | "deleted" | "error">("loading")
   const [participant, setParticipant] = useState<Participant | null>(null)
 
   useEffect(() => {
-    // Find participant by token
     try {
+      if (!token) {
+        setStatus("notfound")
+        return
+      }
+
       const existing = localStorage.getItem("participants")
       if (!existing) {
         setStatus("notfound")
@@ -54,7 +58,6 @@ export default function DeletePage() {
       console.log("[v0] Participant deleted successfully")
       setStatus("deleted")
 
-      // Redirect to home after 3 seconds
       setTimeout(() => {
         router.push("/")
       }, 3000)
@@ -67,7 +70,6 @@ export default function DeletePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Lerngruppen-Anmeldung</h1>
           <p className="text-gray-600">Anmeldung stornieren</p>
@@ -117,7 +119,6 @@ export default function DeletePage() {
               </p>
             </div>
 
-            {/* Participant Details */}
             <div className="bg-blue-50 rounded-lg p-6 mb-6">
               <h3 className="font-semibold text-blue-900 mb-3">Ihre Anmeldung:</h3>
               <div className="space-y-2 text-sm text-blue-800">
@@ -135,7 +136,6 @@ export default function DeletePage() {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-3 justify-center">
               <Button
                 onClick={() => router.push("/")}
@@ -169,5 +169,13 @@ export default function DeletePage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function DeletePage() {
+  return (
+    <Suspense fallback={<div />}>
+      <DeleteContent />
+    </Suspense>
   )
 }

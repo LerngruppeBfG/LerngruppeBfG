@@ -86,7 +86,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         ? `${formData.numberOfSessions}× ${formData.sessionDuration} Min. + Pausen (${formData.breakDuration} Min.)`
         : `${formData.duration} Minuten`
 
-      const deleteUrl = `${window.location.origin}/delete/${deleteToken}`
+      const deleteUrl = `${window.location.origin}${window.location.pathname.replace(/\/$/, "")}/delete?token=${deleteToken}`
       
       const templateParams = {
         to_email: formData.email,
@@ -255,7 +255,22 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
         {/* Day Selection */}
         <div>
           <Label>Lerntag *</Label>
-          <div className="grid grid-cols-2 gap-4 mt-2">
+          <div className="grid grid-cols-1 gap-4 mt-2 sm:grid-cols-3">
+            <label className="relative flex cursor-pointer">
+              <input
+                type="radio"
+                name="day"
+                value="08.02.2026"
+                required
+                checked={formData.day === "08.02.2026"}
+                onChange={(e) => setFormData({ ...formData, day: e.target.value })}
+                className="peer sr-only"
+              />
+              <div className="w-full rounded-lg border-2 border-gray-200 p-4 text-center transition-all peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground hover:border-gray-300">
+                <div className="font-semibold">Sonntag</div>
+                <div className="text-sm">08.02.2026</div>
+              </div>
+            </label>
             <label className="relative flex cursor-pointer">
               <input
                 type="radio"
@@ -267,7 +282,7 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
                 className="peer sr-only"
               />
               <div className="w-full rounded-lg border-2 border-gray-200 p-4 text-center transition-all peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground hover:border-gray-300">
-                <div className="font-semibold">Sonntag</div>
+                <div className="font-semibold">Montag</div>
                 <div className="text-sm">09.02.2026</div>
               </div>
             </label>
@@ -275,15 +290,15 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
               <input
                 type="radio"
                 name="day"
-                value="10.02.2026"
+                value="11.02.2026"
                 required
-                checked={formData.day === "10.02.2026"}
+                checked={formData.day === "11.02.2026"}
                 onChange={(e) => setFormData({ ...formData, day: e.target.value })}
                 className="peer sr-only"
               />
               <div className="w-full rounded-lg border-2 border-gray-200 p-4 text-center transition-all peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground hover:border-gray-300">
-                <div className="font-semibold">Montag</div>
-                <div className="text-sm">10.02.2026</div>
+                <div className="font-semibold">Mittwoch</div>
+                <div className="text-sm">11.02.2026</div>
               </div>
             </label>
           </div>
@@ -292,7 +307,7 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
         {/* Time Selection */}
         <div>
           <Label htmlFor="time">
-            Startzeit {formData.day === "09.02.2026" ? "(Sonntag - ab 10:00 Uhr)" : "(ab 15:00 Uhr)"} *
+            Startzeit {formData.day === "08.02.2026" ? "(Sonntag - ab 10:00 Uhr)" : "(ab 15:00 Uhr)"} *
           </Label>
           <select
             id="time"
@@ -301,7 +316,7 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
             onChange={(e) => setFormData({ ...formData, time: e.target.value })}
             className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {formData.day === "09.02.2026" ? (
+            {formData.day === "08.02.2026" ? (
               <>
                 <option value="10:00">10:00 Uhr</option>
                 <option value="10:15">10:15 Uhr</option>

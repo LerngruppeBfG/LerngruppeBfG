@@ -43,9 +43,17 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
+This project is configured to deploy to GitHub Pages. Push to `main`, enable Pages in the repository settings (GitHub Actions), and visit:
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+https://<your-username>.github.io/Lerngruppe26/
+```
+
+If you rename the repository, update `basePath` and `assetPrefix` in `next.config.js`.
+
+Note: The admin view is meant for local use only. It is disabled on GitHub Pages because client-side passwords are not secure on static sites.
+
+If styles look missing on Vercel, ensure the deployment uses the default base path (this repo config only applies the `/Lerngruppe26` base path when building for GitHub Pages).
 
 ---
 

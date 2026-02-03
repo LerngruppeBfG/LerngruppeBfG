@@ -66,7 +66,7 @@ export function ParticipantsList() {
     setCancelStatus("Sende Lösch-Link per E-Mail...")
 
     try {
-      const deleteUrl = `${window.location.origin}/delete/${participant.deleteToken}`
+      const deleteUrl = `${window.location.origin}${window.location.pathname.replace(/\/$/, "")}/delete?token=${participant.deleteToken}`
       
       const templateParams = {
         to_email: participant.email,
@@ -100,25 +100,30 @@ export function ParticipantsList() {
     : participants.filter(p => p.day === filter)
 
   const participantsByDay = {
+    "08.02.2026": participants.filter(p => p.day === "08.02.2026").length,
     "09.02.2026": participants.filter(p => p.day === "09.02.2026").length,
-    "10.02.2026": participants.filter(p => p.day === "10.02.2026").length,
+    "11.02.2026": participants.filter(p => p.day === "11.02.2026").length,
   }
 
   return (
     <div className="max-w-4xl mx-auto">
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center">
           <div className="text-3xl font-bold text-primary">{participants.length}</div>
           <div className="text-sm text-gray-600 mt-1">Gesamt Anmeldungen</div>
         </Card>
         <Card className="p-4 text-center">
-          <div className="text-3xl font-bold text-blue-600">{participantsByDay["09.02.2026"]}</div>
-          <div className="text-sm text-gray-600 mt-1">Sonntag, 09.02.</div>
+          <div className="text-3xl font-bold text-blue-600">{participantsByDay["08.02.2026"]}</div>
+          <div className="text-sm text-gray-600 mt-1">Sonntag, 08.02.</div>
         </Card>
         <Card className="p-4 text-center">
-          <div className="text-3xl font-bold text-indigo-600">{participantsByDay["10.02.2026"]}</div>
-          <div className="text-sm text-gray-600 mt-1">Montag, 10.02.</div>
+          <div className="text-3xl font-bold text-indigo-600">{participantsByDay["09.02.2026"]}</div>
+          <div className="text-sm text-gray-600 mt-1">Montag, 09.02.</div>
+        </Card>
+        <Card className="p-4 text-center">
+          <div className="text-3xl font-bold text-sky-600">{participantsByDay["11.02.2026"]}</div>
+          <div className="text-sm text-gray-600 mt-1">Mittwoch, 11.02.</div>
         </Card>
       </div>
 
@@ -147,6 +152,16 @@ export function ParticipantsList() {
           Alle anzeigen
         </button>
           <button
+            onClick={() => setFilter("08.02.2026")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              filter === "08.02.2026"
+                ? "bg-primary text-primary-foreground"
+                : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            08.02.2026
+          </button>
+          <button
             onClick={() => setFilter("09.02.2026")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               filter === "09.02.2026"
@@ -157,16 +172,16 @@ export function ParticipantsList() {
             09.02.2026
           </button>
           <button
-            onClick={() => setFilter("10.02.2026")}
+            onClick={() => setFilter("11.02.2026")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === "10.02.2026"
+              filter === "11.02.2026"
                 ? "bg-primary text-primary-foreground"
                 : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
             }`}
           >
-            10.02.2026
+            11.02.2026
           </button>
-      </div>
+        </div>
 
       {/* Cancel Modal */}
       {showCancelModal && (

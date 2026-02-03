@@ -3,6 +3,7 @@
 import React from "react"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,6 +13,7 @@ import { Trash2, Lock, LogOut, Calendar, Clock, Timer, User, Mail } from "lucide
 import type { Participant } from "@/components/registration-form"
 
 export default function AdminPage() {
+  const [isLocal, setIsLocal] = useState<boolean | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState("")
   const [participants, setParticipants] = useState<Participant[]>([])
@@ -21,11 +23,15 @@ export default function AdminPage() {
   const ADMIN_PASSWORD = "admin123" // Change this to your desired password
 
   useEffect(() => {
+    const host = window.location.hostname
+    setIsLocal(host === "localhost" || host === "127.0.0.1")
+  }, [])
+
+  useEffect(() => {
     // Check if already authenticated
     const adminAuth = sessionStorage.getItem("adminAuth")
     if (adminAuth === "true") {
       setIsAuthenticated(true)
-      loadParticipants()
     }
   }, [])
 
@@ -74,6 +80,35 @@ export default function AdminPage() {
     return `${local.substring(0, 2)}***@${domain}`
   }
 
+  if (isLocal === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">Admin-Bereich</h1>
+          <p className="text-sm text-gray-600">
+            Lädt...
+          </p>
+        </Card>
+      </div>
+    )
+  }
+
+  if (!isLocal) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">Admin-Bereich</h1>
+          <p className="text-sm text-gray-600 mb-6">
+            Dieser Bereich ist nur lokal verfügbar. Für GitHub Pages ist die Admin-Ansicht deaktiviert.
+          </p>
+          <Link href="/" className="text-sm text-primary hover:underline">
+            ← Zurück zur Anmeldung
+          </Link>
+        </Card>
+      </div>
+    )
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -112,9 +147,9 @@ export default function AdminPage() {
           </form>
 
           <div className="mt-6 pt-6 border-t text-center">
-            <a href="/" className="text-sm text-primary hover:underline">
+            <Link href="/" className="text-sm text-primary hover:underline">
               ← Zurück zur Anmeldung
-            </a>
+            </Link>
           </div>
         </Card>
       </div>
@@ -137,21 +172,27 @@ export default function AdminPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="p-6">
             <div className="text-sm text-gray-600">Gesamt Anmeldungen</div>
             <div className="text-3xl font-bold text-primary mt-2">{participants.length}</div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm text-gray-600">Sonntag (09.02.)</div>
+            <div className="text-sm text-gray-600">Sonntag (08.02.)</div>
             <div className="text-3xl font-bold text-blue-600 mt-2">
+              {participants.filter(p => p.day === "08.02.2026").length}
+            </div>
+          </Card>
+          <Card className="p-6">
+            <div className="text-sm text-gray-600">Montag (09.02.)</div>
+            <div className="text-3xl font-bold text-indigo-600 mt-2">
               {participants.filter(p => p.day === "09.02.2026").length}
             </div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm text-gray-600">Montag (10.02.)</div>
-            <div className="text-3xl font-bold text-indigo-600 mt-2">
-              {participants.filter(p => p.day === "10.02.2026").length}
+            <div className="text-sm text-gray-600">Mittwoch (11.02.)</div>
+            <div className="text-3xl font-bold text-sky-600 mt-2">
+              {participants.filter(p => p.day === "11.02.2026").length}
             </div>
           </Card>
         </div>
@@ -246,9 +287,9 @@ export default function AdminPage() {
 
         {/* Navigation */}
         <div className="mt-6 text-center">
-          <a href="/" className="text-primary hover:underline">
+          <Link href="/" className="text-primary hover:underline">
             ← Zurück zur Anmeldung
-          </a>
+          </Link>
         </div>
       </div>
     </div>
