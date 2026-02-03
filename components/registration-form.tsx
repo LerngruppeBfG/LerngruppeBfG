@@ -131,20 +131,12 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         }
       })
       await Promise.race([firebasePromise, timeoutPromise])
-      if (timeoutState.id) {
-        clearTimeout(timeoutState.id)
-        timeoutState.id = null
-      }
       if (!timeoutState.occurred) {
         savedToFirebase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
         console.log("[Storage] Participant data saved successfully to Firebase")
       }
     } catch (error) {
-      if (timeoutState.id) {
-        clearTimeout(timeoutState.id)
-        timeoutState.id = null
-      }
       console.error("[Storage] Warning: Failed to save to Firebase:", error)
       console.warn("[Storage] Using localStorage only - data will not sync across devices")
       const message = error instanceof Error ? error.message.toLowerCase() : ""
