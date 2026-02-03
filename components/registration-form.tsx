@@ -57,8 +57,9 @@ const generateParticipantId = () => {
   return `${Date.now().toString(36)}-${performanceStamp}-${randomStamp}`
 }
 
+const FIREBASE_TIMEOUT_MS = 5000
+
 export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
-  const FIREBASE_TIMEOUT_MS = 5000
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -113,15 +114,12 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     // PRIMARY: Save to Firebase for cross-device sync
     let savedToFirebase = false
     let firebaseError: string | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
     try {
-      let timeoutId: ReturnType<typeof setTimeout> | null = null
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => reject(new Error("timeout")), FIREBASE_TIMEOUT_MS)
       })
       await Promise.race([addParticipant(participant), timeoutPromise])
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
       savedToFirebase = true
       setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
       console.log("[Storage] Participant data saved successfully to Firebase")
@@ -133,6 +131,10 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         ? "Zeitüberschreitung bei der Datenbankverbindung"
         : "Datenbank nicht erreichbar"
       setSaveStatus(`⚠️ ${firebaseError} – nur lokal gespeichert`)
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
     }
 
     if (!savedToLocal && !savedToFirebase) {
@@ -145,10 +147,6 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
       }, 4000)
       return
     }
-    if (!savedToFirebase && savedToLocal && firebaseError) {
-      setSaveStatus(`⚠️ ${firebaseError} – nur lokal gespeichert`)
-    }
-
     // Send email using EmailJS - this is secondary and can fail without breaking the flow
     try {
       const durationText = formData.sessionType === "Aufgeteilt" && formData.sessionDuration
