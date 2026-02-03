@@ -2,14 +2,15 @@ import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { getFirestore, Firestore } from 'firebase/firestore'
 
 // Firebase configuration
-// These are public configuration values that are safe to expose in client-side code
+// These values should be set via environment variables for production
+// For development/testing, you can use placeholder values temporarily
 const firebaseConfig = {
-  apiKey: "AIzaSyBH8vX9x6K-X3oP8kQ3mN5hL6jT9wU2vY8",
-  authDomain: "lerngruppe26.firebaseapp.com",
-  projectId: "lerngruppe26",
-  storageBucket: "lerngruppe26.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890abcdef"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBH8vX9x6K-X3oP8kQ3mN5hL6jT9wU2vY8",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "lerngruppe26.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "lerngruppe26",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "lerngruppe26.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789012",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789012:web:abcdef1234567890abcdef"
 }
 
 // Initialize Firebase

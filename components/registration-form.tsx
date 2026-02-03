@@ -76,18 +76,11 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     }
 
     // PRIMARY: Save to Firebase for cross-device sync
-    let firebaseSaved = false
     try {
       await addParticipant(participant)
       console.log("[Storage] Participant data saved successfully to Firebase")
-      firebaseSaved = true
     } catch (error) {
       console.error("[Storage] Warning: Failed to save to Firebase:", error)
-      // Continue anyway - localStorage has the data
-    }
-
-    if (!firebaseSaved) {
-      // If Firebase failed, show a warning but still proceed
       console.warn("[Storage] Using localStorage only - data will not sync across devices")
     }
 

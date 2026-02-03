@@ -5,10 +5,12 @@ import {
   deleteDoc, 
   doc, 
   query, 
+  where,
   onSnapshot,
   Timestamp,
   QuerySnapshot,
-  DocumentData
+  DocumentData,
+  setDoc
 } from 'firebase/firestore'
 import { db } from './firebase'
 import type { Participant } from '@/components/registration-form'
@@ -25,15 +27,17 @@ const convertTimestamp = (data: any): Participant => {
 
 /**
  * Add a new participant to Firestore
+ * Uses the participant's ID as the document ID to avoid mismatches
  */
 export const addParticipant = async (participant: Participant): Promise<string> => {
   try {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+    // Use setDoc with the participant's ID as the document ID
+    await setDoc(doc(db, COLLECTION_NAME, participant.id), {
       ...participant,
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
-    console.log('[Firebase] Participant added with ID:', docRef.id)
-    return docRef.id
+    console.log('[Firebase] Participant added with ID:', participant.id)
+    return participant.id
   } catch (error) {
     console.error('[Firebase] Error adding participant:', error)
     throw error
@@ -62,23 +66,22 @@ export const getParticipants = async (): Promise<Participant[]> => {
 
 /**
  * Delete a participant by delete token
+ * Uses a query to efficiently find the document by deleteToken
  */
 export const deleteParticipantByToken = async (deleteToken: string): Promise<boolean> => {
   try {
-    const querySnapshot = await getDocs(collection(db, COLLECTION_NAME))
-    let deleted = false
+    const q = query(collection(db, COLLECTION_NAME), where('deleteToken', '==', deleteToken))
+    const querySnapshot = await getDocs(q)
     
-    for (const document of querySnapshot.docs) {
-      const data = document.data()
-      if (data.deleteToken === deleteToken) {
-        await deleteDoc(doc(db, COLLECTION_NAME, document.id))
-        console.log('[Firebase] Participant deleted with token:', deleteToken)
-        deleted = true
-        break
-      }
+    if (querySnapshot.empty) {
+      console.log('[Firebase] No participant found with token:', deleteToken)
+      return false
     }
     
-    return deleted
+    // Delete the first matching document (should only be one)
+    await deleteDoc(querySnapshot.docs[0].ref)
+    console.log('[Firebase] Participant deleted with token:', deleteToken)
+    return true
   } catch (error) {
     console.error('[Firebase] Error deleting participant:', error)
     throw error
@@ -87,27 +90,12 @@ export const deleteParticipantByToken = async (deleteToken: string): Promise<boo
 
 /**
  * Delete a participant by ID
+ * Directly uses the participant ID as the document ID
  */
 export const deleteParticipantById = async (id: string): Promise<void> => {
   try {
-    // First check if the document exists in Firestore
-    const querySnapshot = await getDocs(collection(db, COLLECTION_NAME))
-    let firestoreId: string | null = null
-    
-    for (const document of querySnapshot.docs) {
-      const data = document.data()
-      if (data.id === id) {
-        firestoreId = document.id
-        break
-      }
-    }
-    
-    if (firestoreId) {
-      await deleteDoc(doc(db, COLLECTION_NAME, firestoreId))
-      console.log('[Firebase] Participant deleted with ID:', id)
-    } else {
-      console.warn('[Firebase] Participant not found with ID:', id)
-    }
+    await deleteDoc(doc(db, COLLECTION_NAME, id))
+    console.log('[Firebase] Participant deleted with ID:', id)
   } catch (error) {
     console.error('[Firebase] Error deleting participant by ID:', error)
     throw error
@@ -141,12 +129,22 @@ export const subscribeToParticipants = (
 
 /**
  * Sync localStorage data to Firestore (migration helper)
+ * Only runs once per browser using a migration flag
  */
 export const migrateLocalStorageToFirestore = async (): Promise<number> => {
   try {
+    // Check if migration has already been completed
+    const migrationCompleted = localStorage.getItem('firebaseMigrationCompleted')
+    if (migrationCompleted === 'true') {
+      console.log('[Firebase] Migration already completed, skipping')
+      return 0
+    }
+
     const localData = localStorage.getItem('participants')
     if (!localData) {
       console.log('[Firebase] No localStorage data to migrate')
+      // Mark migration as completed even if there's no data
+      localStorage.setItem('firebaseMigrationCompleted', 'true')
       return 0
     }
     
@@ -163,6 +161,9 @@ export const migrateLocalStorageToFirestore = async (): Promise<number> => {
         migratedCount++
       }
     }
+    
+    // Mark migration as completed
+    localStorage.setItem('firebaseMigrationCompleted', 'true')
     
     console.log('[Firebase] Migrated', migratedCount, 'participants from localStorage')
     return migratedCount

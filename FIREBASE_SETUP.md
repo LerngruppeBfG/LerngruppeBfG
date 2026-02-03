@@ -30,6 +30,23 @@ Diese Anleitung hilft Ihnen, Firebase Firestore für die Cross-Device-Synchronis
 
 ## Schritt 4: Konfiguration in die Anwendung einfügen
 
+### Option 1: Environment Variables (Empfohlen für Produktion)
+
+1. Erstellen Sie eine `.env.local` Datei im Root-Verzeichnis des Projekts
+2. Kopieren Sie die `.env.example` Datei als Vorlage
+3. Fügen Sie Ihre Firebase-Konfiguration ein:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=IHRE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=IHRE_PROJECT_ID.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=IHRE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=IHRE_PROJECT_ID.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=IHRE_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID=IHRE_APP_ID
+```
+
+### Option 2: Direkte Konfiguration (Nur für Entwicklung/Test)
+
 Öffnen Sie die Datei `/lib/firebase.ts` und ersetzen Sie die Platzhalterwerte mit Ihrer Firebase-Konfiguration:
 
 ```typescript
