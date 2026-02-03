@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react"
 import type { Participant } from "@/components/registration-form"
+import { getParticipants, deleteParticipantByToken } from '@/lib/participantService'
 
 function DeleteContent() {
   const searchParams = useSearchParams()
@@ -16,53 +17,83 @@ function DeleteContent() {
   const [participant, setParticipant] = useState<Participant | null>(null)
 
   useEffect(() => {
-    try {
-      if (!token) {
-        setStatus("notfound")
-        return
-      }
+    const loadParticipant = async () => {
+      try {
+        if (!token) {
+          setStatus("notfound")
+          return
+        }
 
-      const existing = localStorage.getItem("participants")
-      if (!existing) {
-        setStatus("notfound")
-        return
-      }
+        // Try to load from Firebase first
+        try {
+          const participants = await getParticipants()
+          const found = participants.find(p => p.deleteToken === token)
+          
+          if (found) {
+            setParticipant(found)
+            setStatus("found")
+            return
+          }
+        } catch (error) {
+          console.error("[Storage] Failed to load from Firebase, trying localStorage:", error)
+        }
 
-      const participants: Participant[] = JSON.parse(existing)
-      const found = participants.find(p => p.deleteToken === token)
+        // Fallback to localStorage
+        const existing = localStorage.getItem("participants")
+        if (!existing) {
+          setStatus("notfound")
+          return
+        }
 
-      if (found) {
-        setParticipant(found)
-        setStatus("found")
-      } else {
-        setStatus("notfound")
+        const participants: Participant[] = JSON.parse(existing)
+        const found = participants.find(p => p.deleteToken === token)
+
+        if (found) {
+          setParticipant(found)
+          setStatus("found")
+        } else {
+          setStatus("notfound")
+        }
+      } catch (error) {
+        console.error("[Storage] Error loading participant:", error)
+        setStatus("error")
       }
-    } catch (error) {
-      console.error("[v0] Error loading participant:", error)
-      setStatus("error")
     }
+
+    loadParticipant()
   }, [token])
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
-      const existing = localStorage.getItem("participants")
-      if (!existing) {
-        setStatus("error")
-        return
+      // Delete from Firebase
+      let firebaseDeleted = false
+      try {
+        firebaseDeleted = await deleteParticipantByToken(token)
+        console.log("[Storage] Participant deleted from Firebase:", firebaseDeleted)
+      } catch (error) {
+        console.error("[Storage] Failed to delete from Firebase:", error)
       }
 
-      const participants: Participant[] = JSON.parse(existing)
-      const filtered = participants.filter(p => p.deleteToken !== token)
-      localStorage.setItem("participants", JSON.stringify(filtered))
+      // Also delete from localStorage
+      try {
+        const existing = localStorage.getItem("participants")
+        if (existing) {
+          const participants: Participant[] = JSON.parse(existing)
+          const filtered = participants.filter(p => p.deleteToken !== token)
+          localStorage.setItem("participants", JSON.stringify(filtered))
+        }
+      } catch (error) {
+        console.error("[Storage] Failed to delete from localStorage:", error)
+      }
       
-      console.log("[v0] Participant deleted successfully")
+      console.log("[Storage] Participant deleted successfully")
       setStatus("deleted")
 
       setTimeout(() => {
         router.push("/")
       }, 3000)
     } catch (error) {
-      console.error("[v0] Error deleting participant:", error)
+      console.error("[Storage] Error deleting participant:", error)
       setStatus("error")
     }
   }

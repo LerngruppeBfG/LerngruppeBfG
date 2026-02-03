@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Trash2, Lock, LogOut, Calendar, Clock, Timer, User, Mail } from "lucide-react"
 import type { Participant } from "@/components/registration-form"
+import { subscribeToParticipants, deleteParticipantById } from '@/lib/participantService'
 
 export default function AdminPage() {
   const [isLocal, setIsLocal] = useState<boolean | null>(null)
@@ -37,7 +38,25 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadParticipants()
+      // Subscribe to real-time updates from Firebase
+      let unsubscribe: (() => void) | null = null
+      try {
+        unsubscribe = subscribeToParticipants((updatedParticipants) => {
+          setParticipants(updatedParticipants)
+          // Also update localStorage as cache
+          localStorage.setItem("participants", JSON.stringify(updatedParticipants))
+        })
+      } catch (error) {
+        console.error('[Storage] Failed to subscribe to Firebase, using localStorage:', error)
+        // Fallback to localStorage
+        loadParticipants()
+      }
+
+      return () => {
+        if (unsubscribe) {
+          unsubscribe()
+        }
+      }
     }
   }, [isAuthenticated])
 
@@ -66,11 +85,24 @@ export default function AdminPage() {
     setPassword("")
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Möchten Sie diese Anmeldung wirklich löschen?")) {
-      const updated = participants.filter(p => p.id !== id)
-      localStorage.setItem("participants", JSON.stringify(updated))
-      setParticipants(updated)
+      try {
+        // Delete from Firebase
+        await deleteParticipantById(id)
+        console.log('[Storage] Participant deleted from Firebase')
+        
+        // Also delete from localStorage cache
+        const updated = participants.filter(p => p.id !== id)
+        localStorage.setItem("participants", JSON.stringify(updated))
+        setParticipants(updated)
+      } catch (error) {
+        console.error('[Storage] Error deleting participant:', error)
+        // Fallback to localStorage only
+        const updated = participants.filter(p => p.id !== id)
+        localStorage.setItem("participants", JSON.stringify(updated))
+        setParticipants(updated)
+      }
     }
   }
 

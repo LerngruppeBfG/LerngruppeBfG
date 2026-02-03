@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { CheckCircle } from "lucide-react"
 import emailjs from '@emailjs/browser'
+import { addParticipant } from '@/lib/participantService'
 
 interface RegistrationFormProps {
   onSuccess: () => void
@@ -63,17 +64,31 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
       deleteToken: deleteToken,
     }
 
-    // CRITICAL: Save to localStorage FIRST - this must always succeed
+    // Save to localStorage as a fallback/cache
     try {
       const existing = localStorage.getItem("participants")
       const participants: Participant[] = existing ? JSON.parse(existing) : []
       participants.push(participant)
       localStorage.setItem("participants", JSON.stringify(participants))
-      console.log("[v0] Participant data saved successfully to localStorage")
+      console.log("[Storage] Participant data saved to localStorage as cache")
     } catch (error) {
-      console.error("[v0] CRITICAL: Failed to save to localStorage:", error)
-      alert("Fehler beim Speichern der Daten. Bitte versuchen Sie es erneut.")
-      return
+      console.error("[Storage] Warning: Failed to save to localStorage cache:", error)
+    }
+
+    // PRIMARY: Save to Firebase for cross-device sync
+    let firebaseSaved = false
+    try {
+      await addParticipant(participant)
+      console.log("[Storage] Participant data saved successfully to Firebase")
+      firebaseSaved = true
+    } catch (error) {
+      console.error("[Storage] Warning: Failed to save to Firebase:", error)
+      // Continue anyway - localStorage has the data
+    }
+
+    if (!firebaseSaved) {
+      // If Firebase failed, show a warning but still proceed
+      console.warn("[Storage] Using localStorage only - data will not sync across devices")
     }
 
     // Show success message

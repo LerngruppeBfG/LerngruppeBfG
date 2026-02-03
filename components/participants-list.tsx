@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Calendar, Clock, Timer, BookOpen, Mail, Trash2, X } from "lucide-react"
 import emailjs from '@emailjs/browser'
 import type { Participant } from "./registration-form"
+import { subscribeToParticipants, migrateLocalStorageToFirestore } from '@/lib/participantService'
 
 export function ParticipantsList() {
   const [participants, setParticipants] = useState<Participant[]>([])
@@ -20,8 +21,33 @@ export function ParticipantsList() {
   const [cancelStatus, setCancelStatus] = useState("")
 
   useEffect(() => {
-    loadParticipants()
+    // Initialize EmailJS
     emailjs.init("ukCJVevtRBgZ-Dr1B")
+
+    // Migrate any existing localStorage data to Firestore
+    migrateLocalStorageToFirestore().catch(error => {
+      console.error('[Storage] Migration error:', error)
+    })
+
+    // Subscribe to real-time updates from Firebase
+    let unsubscribe: (() => void) | null = null
+    try {
+      unsubscribe = subscribeToParticipants((updatedParticipants) => {
+        setParticipants(updatedParticipants)
+        // Also update localStorage as cache
+        localStorage.setItem("participants", JSON.stringify(updatedParticipants))
+      })
+    } catch (error) {
+      console.error('[Storage] Failed to subscribe to Firebase, using localStorage:', error)
+      // Fallback to localStorage
+      loadParticipants()
+    }
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe()
+      }
+    }
   }, [])
 
   const loadParticipants = () => {
