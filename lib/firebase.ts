@@ -6,14 +6,14 @@ import { getFirestore, Firestore } from 'firebase/firestore'
 // Add your Firebase project values to .env.local
 type FirebaseConfig = Required<Pick<FirebaseOptions, 'apiKey' | 'authDomain' | 'projectId' | 'storageBucket' | 'messagingSenderId' | 'appId'>>
 
-const firebaseConfig: Partial<FirebaseConfig> = {
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-}
+} satisfies Partial<FirebaseConfig>
 
 // Initialize Firebase
 let app: FirebaseApp | null = null
@@ -49,7 +49,7 @@ if (typeof window !== 'undefined') {
       appId: Boolean(firebaseConfig.appId)
     })
   } else {
-    console.warn('[Firebase] Missing configuration. Firestore sync disabled. Check NEXT_PUBLIC_FIREBASE_* env vars.')
+    console.warn('[Firebase] Missing configuration. Firestore sync disabled. Set NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, NEXT_PUBLIC_FIREBASE_PROJECT_ID, NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET, NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID, and NEXT_PUBLIC_FIREBASE_APP_ID.')
   }
 }
 
