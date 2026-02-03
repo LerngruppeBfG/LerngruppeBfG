@@ -116,6 +116,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     let firebaseError: string | null = null
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let didTimeout = false
+    let didSaveToFirebase = false
     try {
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
@@ -132,6 +133,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
       await Promise.race([firebasePromise, timeoutPromise])
       if (!didTimeout) {
         savedToFirebase = true
+        didSaveToFirebase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
         console.log("[Storage] Participant data saved successfully to Firebase")
       }
@@ -145,8 +147,8 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         : "Datenbank nicht erreichbar"
       setSaveStatus(`⚠️ ${firebaseError} – nur lokal gespeichert`)
     } finally {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
+      if (!didSaveToFirebase && didTimeout) {
+        setSaveStatus(`⚠️ ${firebaseError ?? "Datenbank nicht erreichbar"} – nur lokal gespeichert`)
       }
     }
 
