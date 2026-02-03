@@ -1,10 +1,10 @@
-import { initializeApp, getApps, FirebaseApp, type FirebaseOptions } from 'firebase/app'
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { getFirestore, Firestore } from 'firebase/firestore'
 
 // Firebase configuration
 // These values should be set via environment variables for production
 // Copy .env.example to .env.local and fill in your Firebase project values
-const firebaseConfig: FirebaseOptions = {
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -30,7 +30,14 @@ if (typeof window !== 'undefined') {
   )
 
   if (hasConfig) {
-    const resolvedConfig = firebaseConfig as Required<FirebaseOptions>
+    const resolvedConfig = {
+      apiKey: firebaseConfig.apiKey!,
+      authDomain: firebaseConfig.authDomain!,
+      projectId: firebaseConfig.projectId!,
+      storageBucket: firebaseConfig.storageBucket!,
+      messagingSenderId: firebaseConfig.messagingSenderId!,
+      appId: firebaseConfig.appId!
+    }
     if (!getApps().length) {
       app = initializeApp(resolvedConfig)
     } else {
