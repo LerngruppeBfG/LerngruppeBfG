@@ -1,10 +1,10 @@
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
+import { initializeApp, getApps, FirebaseApp, type FirebaseOptions } from 'firebase/app'
 import { getFirestore, Firestore } from 'firebase/firestore'
 
 // Firebase configuration
 // These values should be set via environment variables for production
 // Copy .env.example to .env.local and fill in your Firebase project values
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -30,8 +30,9 @@ if (typeof window !== 'undefined') {
   )
 
   if (hasConfig) {
+    const resolvedConfig = firebaseConfig as Required<FirebaseOptions>
     if (!getApps().length) {
-      app = initializeApp(firebaseConfig)
+      app = initializeApp(resolvedConfig)
     } else {
       app = getApps()[0]
     }
@@ -46,7 +47,7 @@ if (typeof window !== 'undefined') {
       appId: Boolean(firebaseConfig.appId)
     })
   } else {
-    console.warn('[Firebase] Missing configuration. Firestore sync disabled (env vars not set).')
+    console.warn('[Firebase] Missing configuration. Firestore sync disabled. Check NEXT_PUBLIC_FIREBASE_* env vars.')
   }
 }
 
