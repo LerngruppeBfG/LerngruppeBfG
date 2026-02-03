@@ -4,7 +4,7 @@ import { getFirestore, Firestore } from 'firebase/firestore'
 // Firebase configuration
 // These values should be set via environment variables for production
 // Copy .env.example to .env.local and fill in your Firebase project values
-const firebaseConfig: FirebaseOptions = {
+const firebaseConfig: Partial<FirebaseOptions> = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -20,7 +20,7 @@ let db: Firestore | null = null
 if (typeof window !== 'undefined') {
   // Only initialize on client side
   const isDevelopment = process.env.NODE_ENV === 'development'
-  const hasConfig = (config: FirebaseOptions): config is Required<FirebaseOptions> =>
+  const isCompleteConfig = (config: Partial<FirebaseOptions>): config is Required<FirebaseOptions> =>
     Boolean(
       config.apiKey &&
       config.projectId &&
@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
       config.messagingSenderId
     )
 
-  if (hasConfig(firebaseConfig)) {
+  if (isCompleteConfig(firebaseConfig)) {
     if (!getApps().length) {
       app = initializeApp(firebaseConfig)
     } else {
