@@ -34,6 +34,11 @@ This project uses:
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
 
+Common folders:
+- **app/** - Next.js App Router pages and layouts
+- **components/** - Reusable React components
+- **lib/** - Shared utilities and helpers
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
