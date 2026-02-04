@@ -20,9 +20,10 @@ This guide shows where to get the Supabase credentials needed for cross-device s
    - `sessionType` (text)
    - `learningPreferences` (text)
    - `timestamp` (timestamptz)
-   - `numberOfSessions` (integer, nullable) — optional fields for split sessions
-   - `sessionDuration` (integer, nullable) — optional fields for split sessions
-   - `breakDuration` (integer, nullable) — optional fields for split sessions
+   - Optional fields for split sessions:
+     - `numberOfSessions` (integer, nullable)
+     - `sessionDuration` (integer, nullable)
+     - `breakDuration` (integer, nullable)
    - `deleteToken` (text)
 
 ## 3) Get your Supabase URL + anon key
@@ -47,7 +48,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
    - **Insert**: allow all (anyone can register).
    - **Delete**: restrict to requests that match `deleteToken` via an authenticated token.
 
-Example policy for delete with token (requires Supabase Auth JWT; adjust to your auth strategy):
+Example policy for delete with token (requires Supabase Auth JWT with a deleteToken claim):
 ```sql
 create policy "delete by token"
 on public.participants
@@ -55,7 +56,7 @@ for delete
 using (deleteToken = auth.jwt() ->> 'deleteToken');
 ```
 
-If you do not plan to use authentication, consider removing the delete feature or using a secured backend endpoint that validates the deleteToken server-side.
+If you do not plan to use authentication, do not expose delete from the client. Instead, use a secured backend endpoint or Supabase Edge Function that validates the deleteToken server-side with the service role key.
 
 ## 6) Test locally
 1. Start the dev server: `npm run dev`
