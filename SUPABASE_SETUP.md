@@ -44,9 +44,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 1. Open **Authentication > Policies**.
 2. Enable **RLS** on the `participants` table.
 3. Add policies:
-   - **Select**: allow all (read for everyone).
-   - **Insert**: allow all (anyone can register).
-   - **Delete**: restrict to requests that match `deleteToken` via an authenticated token.
+    - **Select**: allow all (read for everyone).
+    - **Insert**: allow all (anyone can register).
+    - **Delete**: restrict to requests that match `deleteToken` via an authenticated token.
 
 Example policy for delete with token (requires Supabase Auth JWT with a deleteToken claim):
 ```sql
@@ -56,7 +56,44 @@ for delete
 using (deleteToken = auth.jwt() ->> 'deleteToken');
 ```
 
-If you do not plan to use authentication, do not expose delete operations from the client. Instead, use a secured backend endpoint or Supabase Edge Function to validate the deleteToken server-side with the service role key.
+### Why deleteToken deletes can fail
+- The app uses the **anon key** and does **not** sign users in with Supabase Auth.
+- With the anon key, `auth.jwt()` is empty, so the delete policy above **always fails**.
+- The `.eq('deleteToken', token)` filter in the client request is **not available** to RLS, so the policy cannot verify the token from the request.
+
+### Recommended fix (no Supabase Auth)
+If you do not plan to use authentication, do not expose delete operations from the client. Instead, use a secured backend endpoint or Supabase Edge Function that:
+1. Receives the `deleteToken`.
+2. Looks up the row by `deleteToken`.
+3. Deletes the row using the **service role key**.
+
+Example Edge Function flow:
+```ts
+// pseudo-code in an Edge Function
+const deleteToken: string
+try {
+  ({ deleteToken } = await req.json())
+} catch {
+  return new Response("Invalid JSON", { status: 400 })
+}
+if (typeof deleteToken !== "string" || !deleteToken) {
+  return new Response("Missing deleteToken", { status: 400 })
+}
+const { data, error } = await supabaseAdmin
+  .from('participants')
+  .delete()
+  .eq('deleteToken', deleteToken)
+  .select('id') // select() is used here to confirm which row was deleted
+if (error) {
+  return new Response("Delete failed", { status: 500 })
+}
+if (!data?.length) {
+  return new Response("Delete token not found", { status: 404 })
+}
+```
+
+### Development-only workaround (not recommended for production)
+For quick local testing you can temporarily disable RLS or create a permissive delete policy, but this allows anyone with the anon key to delete rows. Remove it before going live.
 
 ## 6) Test locally
 1. Start the dev server: `npm run dev`
