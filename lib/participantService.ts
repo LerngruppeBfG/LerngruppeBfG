@@ -26,7 +26,7 @@ const toParticipant = (row: unknown): Participant => {
 const normalizeParticipant = (participant: Participant): Participant => {
   const normalizeOptionalNumberToString = (value?: string) => {
     if (!value) return undefined
-    // Fall back to the original string when parsing fails (e.g., legacy data).
+    // Fall back to the original string when parsing fails (e.g., imported records).
     return String(parseIntegerOrNull(value) ?? value)
   }
   return {
@@ -61,7 +61,7 @@ export const getParticipants = async (): Promise<Participant[]> => {
     console.error('[Supabase] Error getting participants:', error)
     throw error
   }
-  // Rehydrate timestamps to ISO strings for UI usage.
+  // Convert timestamps to ISO strings for UI usage.
   const participants = (data ?? []).map((row) => toParticipant(row))
   console.log('[Supabase] Loaded participants:', participants.length)
   return participants
