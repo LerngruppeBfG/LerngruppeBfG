@@ -58,6 +58,8 @@ const generateParticipantId = () => {
 }
 
 const FIREBASE_TIMEOUT_MS = 5000
+const FIREBASE_TIMEOUT_RESULT = "timeout" as const
+const FIREBASE_SAVED_RESULT = "saved" as const
 
 export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const [formData, setFormData] = useState({
@@ -101,10 +103,10 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     let savedToFirebase = false
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let timeoutOccurred = false
-    const timeoutPromise = new Promise<"timeout">((resolve) => {
+    const timeoutPromise = new Promise<typeof FIREBASE_TIMEOUT_RESULT>((resolve) => {
       timeoutId = setTimeout(() => {
         timeoutOccurred = true
-        resolve("timeout")
+        resolve(FIREBASE_TIMEOUT_RESULT)
       }, FIREBASE_TIMEOUT_MS)
     })
     let firebaseFailed = false
@@ -115,8 +117,8 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
       }
     })
     try {
-      const result = await Promise.race([firebasePromise.then(() => "saved"), timeoutPromise])
-      if (result === "saved") {
+      const result = await Promise.race([firebasePromise.then(() => FIREBASE_SAVED_RESULT), timeoutPromise])
+      if (result === FIREBASE_SAVED_RESULT) {
         savedToFirebase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
         console.log("[Storage] Participant data saved successfully to Firebase")
