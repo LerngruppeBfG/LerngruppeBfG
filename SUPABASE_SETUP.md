@@ -20,9 +20,9 @@ This guide shows where to get the Supabase credentials needed for cross-device s
    - `sessionType` (text)
    - `learningPreferences` (text)
    - `timestamp` (timestamptz)
-   - `numberOfSessions` (text, nullable)
-   - `sessionDuration` (text, nullable)
-   - `breakDuration` (text, nullable)
+   - `numberOfSessions` (integer, nullable)
+   - `sessionDuration` (integer, nullable)
+   - `breakDuration` (integer, nullable)
    - `deleteToken` (text)
 
 ## 3) Get your Supabase URL + anon key
@@ -63,6 +63,6 @@ If you do not plan to use authentication, consider removing the delete feature o
 3. Open the list on another device — the entry should appear.
 
 ## Troubleshooting
-- **401 / 403 errors:** double check RLS policies.
+- **401 / 403 errors:** double-check RLS policies.
 - **Missing data:** verify `NEXT_PUBLIC_SUPABASE_*` values and restart the dev server.
 - **CORS errors:** confirm you are using the Project URL (not the REST endpoint).
