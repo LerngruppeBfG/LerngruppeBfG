@@ -129,14 +129,14 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
         console.log("[Storage] Participant data saved successfully to Firebase")
       } else {
-        setSaveStatus("⏳ Verbindung dauert länger, wir speichern weiter.")
+        setSaveStatus("⏳ Verbindung dauert länger – wir speichern weiter.")
       }
     } catch (error) {
       markFirebaseFailure(error)
     }
     // Retry only when the save is still pending after the timeout without a hard failure.
-    const shouldRetryAfterTimeout = !savedToFirebase && timeoutOccurred && !firebaseFailed
-    if (shouldRetryAfterTimeout) {
+    const shouldWaitForPendingSave = !savedToFirebase && timeoutOccurred && !firebaseFailed
+    if (shouldWaitForPendingSave) {
       try {
         await firebasePromise
         savedToFirebase = true
