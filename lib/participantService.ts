@@ -16,7 +16,7 @@ import { db } from './firebase'
 import type { Participant } from '@/components/registration-form'
 
 const COLLECTION_NAME = 'participants'
-// Firestore writes can take a short moment to propagate; retry once with a small backoff.
+// Firestore writes can take a short moment to propagate; retry once with a small linear backoff.
 const VERIFICATION_RETRY_DELAY_MS = 250
 const VERIFICATION_RETRY_ATTEMPTS = 1
 
@@ -44,8 +44,8 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
     let savedSnapshot = await getDoc(participantRef)
-    for (let attempt = 1; attempt <= VERIFICATION_RETRY_ATTEMPTS && !savedSnapshot.exists(); attempt += 1) {
-      const delay = VERIFICATION_RETRY_DELAY_MS * attempt
+    for (let retryAttempt = 1; retryAttempt <= VERIFICATION_RETRY_ATTEMPTS && !savedSnapshot.exists(); retryAttempt += 1) {
+      const delay = VERIFICATION_RETRY_DELAY_MS * retryAttempt
       await new Promise((resolve) => setTimeout(resolve, delay))
       savedSnapshot = await getDoc(participantRef)
     }
