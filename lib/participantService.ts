@@ -10,7 +10,8 @@ import {
   QuerySnapshot,
   DocumentData,
   setDoc,
-  getDoc
+  getDoc,
+  DocumentSnapshot
 } from 'firebase/firestore'
 import { db } from './firebase'
 import type { Participant } from '@/components/registration-form'
@@ -43,18 +44,18 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       ...participant,
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
-    let savedSnapshot: DocumentData | null = null
-    for (let attempt = 0; attempt <= VERIFICATION_RETRY_COUNT; attempt += 1) {
+    let verifiedSnapshot: DocumentSnapshot<DocumentData> | null = null
+    for (let attempt = 0; attempt <= VERIFICATION_RETRY_COUNT; attempt++) {
       if (attempt > 0) {
         await new Promise((resolve) => setTimeout(resolve, VERIFICATION_RETRY_DELAY_MS))
       }
       const snapshot = await getDoc(participantRef)
       if (snapshot.exists()) {
-        savedSnapshot = snapshot
+        verifiedSnapshot = snapshot
         break
       }
     }
-    if (!savedSnapshot) {
+    if (!verifiedSnapshot) {
       throw new Error(`Failed to verify participant registration for ID: ${participant.id}`)
     }
     console.log('[Firebase] Participant added with ID:', participant.id)
