@@ -44,8 +44,8 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
     let savedSnapshot = await getDoc(participantRef)
-    for (let retryCount = 0; retryCount < VERIFICATION_RETRY_COUNT && !savedSnapshot.exists(); retryCount += 1) {
-      const delay = VERIFICATION_RETRY_DELAY_MS * (retryCount + 1)
+    for (let retryAttempt = 1; retryAttempt <= VERIFICATION_RETRY_COUNT && !savedSnapshot.exists(); retryAttempt += 1) {
+      const delay = VERIFICATION_RETRY_DELAY_MS * retryAttempt
       await new Promise((resolve) => setTimeout(resolve, delay))
       savedSnapshot = await getDoc(participantRef)
     }
