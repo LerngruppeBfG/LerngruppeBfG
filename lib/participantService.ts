@@ -45,7 +45,8 @@ export const addParticipant = async (participant: Participant): Promise<string> 
     })
     let isVerified = false
     // Verify by reading the new document; retry once after a short delay if needed.
-    for (let attempt = 0; attempt <= VERIFICATION_RETRY_COUNT; attempt++) {
+    const verificationAttempts = VERIFICATION_RETRY_COUNT + 1
+    for (let attempt = 0; attempt < verificationAttempts; attempt++) {
       if (attempt > 0) {
         await new Promise((resolve) => setTimeout(resolve, VERIFICATION_RETRY_DELAY_MS))
       }
@@ -57,7 +58,7 @@ export const addParticipant = async (participant: Participant): Promise<string> 
     }
     if (!isVerified) {
       throw new Error(
-        `Failed to verify participant registration for ID: ${participant.id} after ${VERIFICATION_RETRY_COUNT + 1} attempts. This may indicate a database connectivity issue. Please check your connection and try again.`
+        `Failed to verify participant registration for ID: ${participant.id} after ${verificationAttempts} attempts. This may indicate a transient database issue or permission problem. Please check your connection and try again.`
       )
     }
     console.log('[Firebase] Participant added with ID:', participant.id)
