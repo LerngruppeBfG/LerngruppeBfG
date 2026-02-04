@@ -43,12 +43,18 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       ...participant,
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
-    let savedSnapshot = await getDoc(participantRef)
-    for (let retryAttempt = 1; retryAttempt <= VERIFICATION_RETRY_COUNT && !savedSnapshot.exists(); retryAttempt += 1) {
-      await new Promise((resolve) => setTimeout(resolve, VERIFICATION_RETRY_DELAY_MS))
-      savedSnapshot = await getDoc(participantRef)
+    let savedSnapshot: DocumentData | null = null
+    for (let attempt = 0; attempt <= VERIFICATION_RETRY_COUNT; attempt += 1) {
+      if (attempt > 0) {
+        await new Promise((resolve) => setTimeout(resolve, VERIFICATION_RETRY_DELAY_MS))
+      }
+      const snapshot = await getDoc(participantRef)
+      if (snapshot.exists()) {
+        savedSnapshot = snapshot
+        break
+      }
     }
-    if (!savedSnapshot.exists()) {
+    if (!savedSnapshot) {
       throw new Error(`Failed to verify participant registration for ID: ${participant.id}`)
     }
     console.log('[Firebase] Participant added with ID:', participant.id)
