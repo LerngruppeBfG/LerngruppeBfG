@@ -40,7 +40,7 @@ export function ParticipantsList() {
         setParticipants(updatedParticipants)
       })
     } catch (error) {
-      console.error('[Storage] Failed to subscribe to Firebase:', error)
+      console.error('[Storage] Failed to subscribe to Supabase:', error)
     }
 
     return () => {

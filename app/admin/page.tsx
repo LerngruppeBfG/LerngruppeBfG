@@ -54,7 +54,7 @@ export default function AdminPage() {
           setParticipants(updatedParticipants)
         })
       } catch (error) {
-        console.error('[Storage] Failed to subscribe to Firebase:', error)
+        console.error('[Storage] Failed to subscribe to Supabase:', error)
       }
 
       return () => {
@@ -87,7 +87,7 @@ export default function AdminPage() {
       try {
         // Delete from Firebase
         await deleteParticipantById(id)
-        console.log('[Storage] Participant deleted from Firebase')
+        console.log('[Storage] Participant deleted from Supabase')
       } catch (error) {
         console.error('[Storage] Error deleting participant:', error)
       }

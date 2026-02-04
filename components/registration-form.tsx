@@ -57,9 +57,9 @@ const generateParticipantId = () => {
   return `${Date.now().toString(36)}-${performanceStamp}-${randomStamp}`
 }
 
-const FIREBASE_TIMEOUT_MS = 5000
-const FIREBASE_TIMEOUT_RESULT = "timeout" as const
-const FIREBASE_SAVED_RESULT = "saved" as const
+const DATABASE_TIMEOUT_MS = 5000
+const DATABASE_TIMEOUT_RESULT = "timeout" as const
+const DATABASE_SAVED_RESULT = "saved" as const
 
 export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const [formData, setFormData] = useState({
@@ -99,55 +99,55 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     setSubmitted(true)
     setSaveStatus("Speichere Anmeldung...")
 
-    // PRIMARY: Save to Firebase for cross-device sync
-    let savedToFirebase = false
+    // PRIMARY: Save to Supabase for cross-device sync
+    let savedToDatabase = false
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let timeoutOccurred = false
-    let firebaseFailed = false
-    const markFirebaseFailure = (error: unknown) => {
-      firebaseFailed = true
-      console.error("[Storage] Warning: Failed to save to Firebase:", error)
+    let databaseFailed = false
+    const markDatabaseFailure = (error: unknown) => {
+      databaseFailed = true
+      console.error("[Storage] Warning: Failed to save to Supabase:", error)
       setSaveStatus("⚠️ Datenbank nicht erreichbar – Anmeldung nicht gespeichert")
     }
     // Resolve with a timeout marker so slow saves don't trigger an error state.
-    const timeoutPromise = new Promise<typeof FIREBASE_TIMEOUT_RESULT>((resolve) => {
+    const timeoutPromise = new Promise<typeof DATABASE_TIMEOUT_RESULT>((resolve) => {
       timeoutId = setTimeout(() => {
         timeoutOccurred = true
-        resolve(FIREBASE_TIMEOUT_RESULT)
-      }, FIREBASE_TIMEOUT_MS)
+        resolve(DATABASE_TIMEOUT_RESULT)
+      }, DATABASE_TIMEOUT_MS)
     })
-    const firebasePromise = addParticipant(participant).finally(() => {
+    const databasePromise = addParticipant(participant).finally(() => {
       if (timeoutId) {
         clearTimeout(timeoutId)
         timeoutId = null
       }
     })
     try {
-      const result = await Promise.race([firebasePromise.then(() => FIREBASE_SAVED_RESULT), timeoutPromise])
-      if (result === FIREBASE_SAVED_RESULT) {
-        savedToFirebase = true
+      const result = await Promise.race([databasePromise.then(() => DATABASE_SAVED_RESULT), timeoutPromise])
+      if (result === DATABASE_SAVED_RESULT) {
+        savedToDatabase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
-        console.log("[Storage] Participant data saved successfully to Firebase")
+        console.log("[Storage] Participant data saved successfully to Supabase")
       } else {
         setSaveStatus("⏳ Verbindung dauert länger – wir speichern weiter.")
       }
     } catch (error) {
-      markFirebaseFailure(error)
+      markDatabaseFailure(error)
     }
     // Retry only when the save is still pending after the timeout without a hard failure.
-    const shouldWaitForPendingSave = !savedToFirebase && timeoutOccurred && !firebaseFailed
+    const shouldWaitForPendingSave = !savedToDatabase && timeoutOccurred && !databaseFailed
     if (shouldWaitForPendingSave) {
       try {
-        await firebasePromise
-        savedToFirebase = true
+        await databasePromise
+        savedToDatabase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert (nachträglich)")
       } catch (error) {
-        markFirebaseFailure(error)
+        markDatabaseFailure(error)
       }
     }
 
-    if (!savedToFirebase) {
-      console.error("[Storage] Registration could not be saved in Firebase")
+    if (!savedToDatabase) {
+      console.error("[Storage] Registration could not be saved in Supabase")
       setSaveStatus("Fehler: Anmeldung konnte nicht gespeichert werden.")
       setTimeout(() => {
         setSubmitted(false)

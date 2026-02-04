@@ -16,7 +16,7 @@ yarn install
 
 ### Supabase Setup (Required for cross-device sync)
 
-This application supports cross-device synchronization via Supabase. To enable this feature:
+This application uses Supabase to store form entries across devices. To enable this feature:
 
 1. Follow the detailed instructions in [SUPABASE_SETUP.md](SUPABASE_SETUP.md)
 2. Create a Supabase project and table
