@@ -9,7 +9,8 @@ import {
   Timestamp,
   QuerySnapshot,
   DocumentData,
-  setDoc
+  setDoc,
+  getDoc
 } from 'firebase/firestore'
 import { db } from './firebase'
 import type { Participant } from '@/components/registration-form'
@@ -34,10 +35,15 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       throw new Error('Firestore not initialized')
     }
     // Use setDoc with the participant's ID as the document ID
-    await setDoc(doc(db, COLLECTION_NAME, participant.id), {
+    const participantRef = doc(db, COLLECTION_NAME, participant.id)
+    await setDoc(participantRef, {
       ...participant,
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
+    const savedSnapshot = await getDoc(participantRef)
+    if (!savedSnapshot.exists()) {
+      throw new Error('Firestore write did not persist')
+    }
     console.log('[Firebase] Participant added with ID:', participant.id)
     return participant.id
   } catch (error) {
