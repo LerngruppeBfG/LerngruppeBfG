@@ -40,7 +40,11 @@ export const addParticipant = async (participant: Participant): Promise<string> 
       ...participant,
       timestamp: Timestamp.fromDate(new Date(participant.timestamp))
     })
-    const savedSnapshot = await getDoc(participantRef)
+    let savedSnapshot = await getDoc(participantRef)
+    if (!savedSnapshot.exists()) {
+      await new Promise((resolve) => setTimeout(resolve, 250))
+      savedSnapshot = await getDoc(participantRef)
+    }
     if (!savedSnapshot.exists()) {
       throw new Error(`Failed to verify participant registration for ID: ${participant.id}`)
     }
