@@ -103,6 +103,12 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     let savedToFirebase = false
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let timeoutOccurred = false
+    let firebaseFailed = false
+    const markFirebaseFailure = (error: unknown) => {
+      firebaseFailed = true
+      console.error("[Storage] Warning: Failed to save to Firebase:", error)
+      setSaveStatus("⚠️ Datenbank nicht erreichbar – Anmeldung nicht gespeichert")
+    }
     // Resolve with a timeout marker so slow saves don't trigger an error state.
     const timeoutPromise = new Promise<typeof FIREBASE_TIMEOUT_RESULT>((resolve) => {
       timeoutId = setTimeout(() => {
@@ -110,7 +116,6 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         resolve(FIREBASE_TIMEOUT_RESULT)
       }, FIREBASE_TIMEOUT_MS)
     })
-    let firebaseFailed = false
     const firebasePromise = addParticipant(participant).finally(() => {
       if (timeoutId) {
         clearTimeout(timeoutId)
@@ -124,12 +129,10 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert")
         console.log("[Storage] Participant data saved successfully to Firebase")
       } else {
-        setSaveStatus("⏳ Verbindung dauert länger, wir speichern weiter...")
+        setSaveStatus("⏳ Verbindung dauert länger, wir speichern weiter.")
       }
     } catch (error) {
-      firebaseFailed = true
-      console.error("[Storage] Warning: Failed to save to Firebase:", error)
-      setSaveStatus("⚠️ Datenbank nicht erreichbar – Anmeldung nicht gespeichert")
+      markFirebaseFailure(error)
     }
     // Retry only when the save is still pending after the timeout without a hard failure.
     const shouldRetryAfterTimeout = !savedToFirebase && timeoutOccurred && !firebaseFailed
@@ -139,9 +142,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         savedToFirebase = true
         setSaveStatus("✅ Anmeldung in der Datenbank gespeichert (nachträglich)")
       } catch (error) {
-        firebaseFailed = true
-        console.error("[Storage] Warning: Failed to save to Firebase:", error)
-        setSaveStatus("⚠️ Datenbank nicht erreichbar – Anmeldung nicht gespeichert")
+        markFirebaseFailure(error)
       }
     }
 
