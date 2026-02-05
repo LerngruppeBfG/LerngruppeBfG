@@ -13,7 +13,7 @@ function DeleteContent() {
   const router = useRouter()
   const token = searchParams.get("token") ?? ""
 
-  const [status, setStatus] = useState<"loading" | "found" | "notfound" | "deleted" | "error">("loading")
+  const [status, setStatus] = useState<"loading" | "found" | "confirm" | "notfound" | "deleted" | "error">("loading")
   const [participant, setParticipant] = useState<Participant | null>(null)
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function DeleteContent() {
           participants = await getParticipants()
         } catch (error) {
           console.error("[Storage] Error loading participant:", error)
-          setStatus("error")
+          setStatus(token ? "confirm" : "error")
           return
         }
         const found = participants.find(p => p.deleteToken === token)
@@ -42,7 +42,7 @@ function DeleteContent() {
         }
       } catch (error) {
         console.error("[Storage] Error loading participant:", error)
-        setStatus("error")
+        setStatus(token ? "confirm" : "error")
       }
     }
 
@@ -111,7 +111,7 @@ function DeleteContent() {
           </Card>
         )}
 
-        {status === "found" && participant && (
+        {(status === "found" || status === "confirm") && (
           <Card className="p-8">
             <div className="text-center mb-6">
               <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
@@ -121,22 +121,28 @@ function DeleteContent() {
               </p>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-6 mb-6">
-              <h3 className="font-semibold text-blue-900 mb-3">Ihre Anmeldung:</h3>
-              <div className="space-y-2 text-sm text-blue-800">
-                <div><strong>Name:</strong> {participant.name}</div>
-                <div><strong>E-Mail:</strong> {participant.email}</div>
-                <div><strong>Tag:</strong> {participant.day}</div>
-                <div><strong>Startzeit:</strong> {participant.time} Uhr</div>
-                <div>
-                  <strong>Dauer:</strong>{" "}
-                  {participant.sessionType === "Aufgeteilt" && participant.sessionDuration
-                    ? `${participant.numberOfSessions}× ${participant.sessionDuration} Min. + Pausen (${participant.breakDuration} Min.)`
-                    : `${participant.duration} Minuten`}
+            {participant ? (
+              <div className="bg-blue-50 rounded-lg p-6 mb-6">
+                <h3 className="font-semibold text-blue-900 mb-3">Ihre Anmeldung:</h3>
+                <div className="space-y-2 text-sm text-blue-800">
+                  <div><strong>Name:</strong> {participant.name}</div>
+                  <div><strong>E-Mail:</strong> {participant.email}</div>
+                  <div><strong>Tag:</strong> {participant.day}</div>
+                  <div><strong>Startzeit:</strong> {participant.time} Uhr</div>
+                  <div>
+                    <strong>Dauer:</strong>{" "}
+                    {participant.sessionType === "Aufgeteilt" && participant.sessionDuration
+                      ? `${participant.numberOfSessions}× ${participant.sessionDuration} Min. + Pausen (${participant.breakDuration} Min.)`
+                      : `${participant.duration} Minuten`}
+                  </div>
+                  <div><strong>Modus:</strong> {participant.sessionType}</div>
                 </div>
-                <div><strong>Modus:</strong> {participant.sessionType}</div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-blue-50 rounded-lg p-6 mb-6 text-sm text-blue-800">
+                Die Details konnten nicht geladen werden. Sie können die Anmeldung trotzdem löschen.
+              </div>
+            )}
 
             <div className="flex gap-3 justify-center">
               <Button

@@ -67,7 +67,7 @@ export const getParticipants = async (): Promise<Participant[]> => {
   return participants
 }
 
-export const deleteParticipantByToken = async (deleteToken: string): Promise<boolean> => {
+const deleteParticipantByTokenViaApi = async (deleteToken: string): Promise<boolean | null> => {
   const basePath = typeof window === 'undefined'
     ? ''
     : window.location.pathname.replace(/\/delete\/?$/, '')
@@ -78,6 +78,10 @@ export const deleteParticipantByToken = async (deleteToken: string): Promise<boo
     body: JSON.stringify({ deleteToken })
   })
   if (response.status === 404) {
+    const contentType = response.headers.get('content-type') ?? ''
+    if (!contentType.includes('application/json')) {
+      return null
+    }
     console.log('[Supabase] No participant found with token:', deleteToken)
     return false
   }
@@ -93,6 +97,54 @@ export const deleteParticipantByToken = async (deleteToken: string): Promise<boo
   }
   console.log('[Supabase] Participant deleted with token:', deleteToken)
   return true
+}
+
+const ensureDeleteTokenSession = async (deleteToken: string) => {
+  ensureSupabase()
+  const { data: sessionData, error: sessionError } = await supabase!.auth.getSession()
+  if (sessionError) {
+    throw sessionError
+  }
+  if (!sessionData.session) {
+    const { error } = await supabase!.auth.signInAnonymously({
+      options: { data: { deleteToken } }
+    })
+    if (error) {
+      throw error
+    }
+    return
+  }
+  const { error } = await supabase!.auth.updateUser({ data: { deleteToken } })
+  if (error) {
+    throw error
+  }
+}
+
+const deleteParticipantByTokenViaClient = async (deleteToken: string): Promise<boolean> => {
+  await ensureDeleteTokenSession(deleteToken)
+  const { data, error } = await supabase!
+    .from(TABLE_NAME)
+    .delete()
+    .eq('deleteToken', deleteToken)
+    .select('id')
+  if (error) {
+    console.error('[Supabase] Error deleting participant:', error)
+    throw error
+  }
+  if (!data || data.length === 0) {
+    console.log('[Supabase] No participant found with token:', deleteToken)
+    return false
+  }
+  console.log('[Supabase] Participant deleted with token:', deleteToken)
+  return true
+}
+
+export const deleteParticipantByToken = async (deleteToken: string): Promise<boolean> => {
+  const apiResult = await deleteParticipantByTokenViaApi(deleteToken)
+  if (apiResult !== null) {
+    return apiResult
+  }
+  return deleteParticipantByTokenViaClient(deleteToken)
 }
 
 export const deleteParticipantById = async (id: string): Promise<void> => {

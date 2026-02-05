@@ -49,28 +49,31 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 3. Add policies:
     - **Select**: allow all (read for everyone).
     - **Insert**: allow all (anyone can register).
-    - **Delete**: restrict to requests that match `deleteToken` via an authenticated token.
+    - **Delete**: restrict to authenticated requests that include the `deleteToken` in user metadata.
 
-Example policy for delete with token (requires Supabase Auth JWT with a deleteToken claim):
+Example policy for delete with token (uses Supabase Auth user metadata from anonymous sign-in):
 ```sql
 create policy "delete by token"
 on public.participants
 for delete
-using (deleteToken = auth.jwt() ->> 'deleteToken');
+using (deleteToken = auth.jwt() -> 'user_metadata' ->> 'deleteToken');
 ```
 
 ### Why deleteToken deletes can fail
-- The app uses the **anon key** and does **not** sign users in with Supabase Auth.
-- With the anon key, `auth.jwt()` is empty, so the delete policy above **always fails**.
-- The `.eq('deleteToken', token)` filter in the client request is **not available** to RLS, so the policy cannot verify the token from the request.
+- On static hosting (GitHub Pages), `/api/delete` is not available, so deletes must run from the client.
+- If the user is not signed in (anonymous or otherwise), `auth.jwt()` has no user metadata and the delete policy fails.
+- The `.eq('deleteToken', token)` filter in the client request is **not available** to RLS, so the policy must read the token from the JWT.
 
-### Recommended fix (no Supabase Auth)
-If you do not plan to use authentication, do not expose delete operations from the client. This app now uses a server-side API route (`/api/delete`) that:
+### Recommended fix (server hosting)
+If you deploy on a server-capable host (Vercel, Render, etc.), the app uses a server-side API route (`/api/delete`) that:
 1. Receives the `deleteToken`.
 2. Looks up the row by `deleteToken`.
 3. Deletes the row using the **service role key**.
 
 Make sure `SUPABASE_SERVICE_ROLE_KEY` is configured so the API route can perform the delete.
+
+### Static hosting (GitHub Pages)
+When deployed as a static site, the app falls back to Supabase Auth anonymous sign-in before deleting. Ensure **Anonymous Sign-ins** are enabled in **Authentication → Providers**, then keep the delete policy above so the JWT user metadata can be used for verification.
 
 ### Development-only workaround (not recommended for production)
 For quick local testing you can temporarily disable RLS or create a permissive delete policy, but this allows anyone with the anon key to delete rows. Remove it before going live.
