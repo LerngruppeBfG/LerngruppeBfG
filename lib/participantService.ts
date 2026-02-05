@@ -77,15 +77,15 @@ const deleteParticipantByTokenViaApi = async (deleteToken: string): Promise<bool
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ deleteToken })
   })
-  if (response.status === 404) {
+  if (!response.ok) {
     const contentType = response.headers.get('content-type') ?? ''
     if (!contentType.includes('application/json')) {
       return null
     }
-    console.log('[Supabase] No participant found with token:', deleteToken)
-    return false
-  }
-  if (!response.ok) {
+    if (response.status === 404) {
+      console.log('[Supabase] No participant found with token:', deleteToken)
+      return false
+    }
     const errorText = await response.text()
     console.error('[Supabase] Error deleting participant:', errorText)
     throw new Error('Delete request failed')
