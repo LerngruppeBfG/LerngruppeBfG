@@ -21,7 +21,10 @@ export function ParticipantsList() {
   const [cancelStatus, setCancelStatus] = useState("")
   const [deleteTarget, setDeleteTarget] = useState<Participant | null>(null)
   const [deleteEmail, setDeleteEmail] = useState("")
-  const [deleteStatus, setDeleteStatus] = useState("")
+  const [deleteStatus, setDeleteStatus] = useState<{
+    message: string
+    type: "success" | "error" | "info"
+  } | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
@@ -121,14 +124,14 @@ export function ParticipantsList() {
   const openDeleteModal = (participant: Participant) => {
     setDeleteTarget(participant)
     setDeleteEmail("")
-    setDeleteStatus("")
+    setDeleteStatus(null)
     setIsDeleting(false)
   }
 
   const resetDeleteModal = () => {
     setDeleteTarget(null)
     setDeleteEmail("")
-    setDeleteStatus("")
+    setDeleteStatus(null)
     setIsDeleting(false)
   }
 
@@ -138,36 +141,36 @@ export function ParticipantsList() {
 
     const typedEmail = deleteEmail.trim().toLowerCase()
     if (!typedEmail) {
-      setDeleteStatus("Bitte gib deine E-Mail-Adresse ein.")
+      setDeleteStatus({ message: "Bitte gib deine E-Mail-Adresse ein.", type: "error" })
       return
     }
 
     if (typedEmail !== deleteTarget.email.toLowerCase()) {
-      setDeleteStatus("E-Mail-Adresse stimmt nicht überein.")
+      setDeleteStatus({ message: "E-Mail-Adresse stimmt nicht überein.", type: "error" })
       return
     }
 
     if (!deleteTarget.deleteToken) {
-      setDeleteStatus("Fehler: Keine Lösch-Berechtigung vorhanden.")
+      setDeleteStatus({ message: "Fehler: Keine Lösch-Berechtigung vorhanden.", type: "error" })
       return
     }
 
     setIsDeleting(true)
-    setDeleteStatus("Lösche Anmeldung...")
+    setDeleteStatus({ message: "Lösche Anmeldung...", type: "info" })
     try {
       const deleted = await deleteParticipantByToken(deleteTarget.deleteToken)
       if (!deleted) {
-        setDeleteStatus("Anmeldung wurde bereits gelöscht.")
+        setDeleteStatus({ message: "Anmeldung wurde bereits gelöscht.", type: "error" })
         return
       }
       setParticipants((current) => current.filter((participant) => participant.id !== deleteTarget.id))
-      setDeleteStatus("✓ Anmeldung wurde gelöscht.")
+      setDeleteStatus({ message: "✓ Anmeldung wurde gelöscht.", type: "success" })
       setTimeout(() => {
         resetDeleteModal()
       }, 2000)
     } catch (error) {
       console.error("[Storage] Error deleting participant:", error)
-      setDeleteStatus("Fehler beim Löschen. Bitte versuche es erneut.")
+      setDeleteStatus({ message: "Fehler beim Löschen. Bitte versuche es erneut.", type: "error" })
     } finally {
       setIsDeleting(false)
     }
@@ -360,13 +363,13 @@ export function ParticipantsList() {
 
               {deleteStatus && (
                 <div className={`text-sm p-3 rounded ${
-                  deleteStatus.includes("✓") 
-                    ? "bg-green-50 text-green-700 border border-green-200" 
-                    : deleteStatus.includes("Fehler") || deleteStatus.includes("nicht")
+                  deleteStatus.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : deleteStatus.type === "error"
                     ? "bg-red-50 text-red-700 border border-red-200"
                     : "bg-blue-50 text-blue-700 border border-blue-200"
                 }`}>
-                  {deleteStatus}
+                  {deleteStatus.message}
                 </div>
               )}
 
