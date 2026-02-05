@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Calendar, Clock, Timer, BookOpen, Mail, Trash2, X } from "lucide-react"
 import emailjs from '@emailjs/browser'
 import type { Participant } from "./registration-form"
-import { subscribeToParticipants, getParticipants } from '@/lib/participantService'
+import { subscribeToParticipants, getParticipants, deleteParticipantByToken } from '@/lib/participantService'
 
 export function ParticipantsList() {
   const [participants, setParticipants] = useState<Participant[]>([])
@@ -19,6 +19,10 @@ export function ParticipantsList() {
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [cancelForm, setCancelForm] = useState({ name: "", email: "" })
   const [cancelStatus, setCancelStatus] = useState("")
+  const [deleteTarget, setDeleteTarget] = useState<Participant | null>(null)
+  const [deleteEmail, setDeleteEmail] = useState("")
+  const [deleteStatus, setDeleteStatus] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const loadParticipants = async () => {
@@ -111,6 +115,61 @@ export function ParticipantsList() {
       console.error("[v0] EmailJS error:", error)
       setCancelStatus("Fehler beim Senden der E-Mail. Bitte versuche es erneut.")
       setTimeout(() => setCancelStatus(""), 3000)
+    }
+  }
+
+  const openDeleteModal = (participant: Participant) => {
+    setDeleteTarget(participant)
+    setDeleteEmail("")
+    setDeleteStatus("")
+    setIsDeleting(false)
+  }
+
+  const resetDeleteModal = () => {
+    setDeleteTarget(null)
+    setDeleteEmail("")
+    setDeleteStatus("")
+    setIsDeleting(false)
+  }
+
+  const handleDeleteRequest = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (!deleteTarget) return
+
+    const typedEmail = deleteEmail.trim().toLowerCase()
+    if (!typedEmail) {
+      setDeleteStatus("Bitte gib deine E-Mail-Adresse ein.")
+      return
+    }
+
+    if (typedEmail !== deleteTarget.email.toLowerCase()) {
+      setDeleteStatus("E-Mail-Adresse stimmt nicht überein.")
+      return
+    }
+
+    if (!deleteTarget.deleteToken) {
+      setDeleteStatus("Fehler: Keine Lösch-Berechtigung vorhanden.")
+      return
+    }
+
+    setIsDeleting(true)
+    setDeleteStatus("Lösche Anmeldung...")
+    try {
+      const deleted = await deleteParticipantByToken(deleteTarget.deleteToken)
+      if (!deleted) {
+        setDeleteStatus("Anmeldung wurde bereits gelöscht.")
+        return
+      }
+      setParticipants((current) => current.filter((participant) => participant.id !== deleteTarget.id))
+      setDeleteStatus("✓ Anmeldung wurde gelöscht.")
+      setTimeout(() => {
+        resetDeleteModal()
+      }, 2000)
+    } catch (error) {
+      console.error("[Storage] Error deleting participant:", error)
+      setDeleteStatus("Fehler beim Löschen. Bitte versuche es erneut.")
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -269,6 +328,71 @@ export function ParticipantsList() {
         </div>
       )}
 
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-md w-full p-6 relative">
+            <button
+              onClick={resetDeleteModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Anmeldung löschen</h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Um die Anmeldung von <strong>{deleteTarget.name}</strong> zu löschen, gib bitte die vollständige
+              E-Mail-Adresse ein.
+            </p>
+
+            <form onSubmit={handleDeleteRequest} className="space-y-4">
+              <div>
+                <Label htmlFor="delete-email">E-Mail-Adresse *</Label>
+                <Input
+                  id="delete-email"
+                  type="email"
+                  required
+                  value={deleteEmail}
+                  onChange={(event) => setDeleteEmail(event.target.value)}
+                  placeholder="beispiel@gmail.com"
+                  className="mt-1"
+                />
+              </div>
+
+              {deleteStatus && (
+                <div className={`text-sm p-3 rounded ${
+                  deleteStatus.includes("✓") 
+                    ? "bg-green-50 text-green-700 border border-green-200" 
+                    : deleteStatus.includes("Fehler") || deleteStatus.includes("nicht")
+                    ? "bg-red-50 text-red-700 border border-red-200"
+                    : "bg-blue-50 text-blue-700 border border-blue-200"
+                }`}>
+                  {deleteStatus}
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={resetDeleteModal}
+                  className="bg-transparent"
+                >
+                  Abbrechen
+                </Button>
+                <Button
+                  type="submit"
+                  variant="destructive"
+                  className="bg-red-600 hover:bg-red-700"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Lösche..." : "Anmeldung löschen"}
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      )}
+
       {/* Participants List */}
       {filteredParticipants.length === 0 ? (
         <Card className="p-8 text-center">
@@ -277,7 +401,15 @@ export function ParticipantsList() {
       ) : (
         <div className="space-y-4">
           {filteredParticipants.map((participant) => (
-            <Card key={participant.id} className="p-6 hover:shadow-lg transition-shadow">
+            <Card key={participant.id} className="relative p-6 hover:shadow-lg transition-shadow">
+              <button
+                type="button"
+                onClick={() => openDeleteModal(participant)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-red-600"
+                aria-label="Anmeldung löschen"
+              >
+                <X className="w-4 h-4" />
+              </button>
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">

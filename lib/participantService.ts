@@ -72,11 +72,17 @@ const deleteParticipantByTokenViaApi = async (deleteToken: string): Promise<bool
     ? ''
     : window.location.pathname.replace(/\/delete\/?$/, '')
   const apiUrl = `${basePath || ''}/api/delete`
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ deleteToken })
-  })
+  let response: Response
+  try {
+    response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deleteToken })
+    })
+  } catch (error) {
+    console.warn('[Supabase] Delete API unreachable, falling back to client delete:', error)
+    return null
+  }
   if (response.status === 404) {
     const contentType = response.headers.get('content-type') ?? ''
     if (!contentType.includes('application/json')) {
@@ -86,8 +92,18 @@ const deleteParticipantByTokenViaApi = async (deleteToken: string): Promise<bool
     return false
   }
   if (!response.ok) {
-    const errorText = await response.text()
-    console.error('[Supabase] Error deleting participant:', errorText)
+    const contentType = response.headers.get('content-type') ?? ''
+    if (contentType.includes('application/json')) {
+      const errorBody = (await response.json().catch(() => null)) as { error?: string } | null
+      if (response.status === 500 && errorBody?.error === 'Supabase service role key missing') {
+        console.warn('[Supabase] Service role key missing, falling back to client delete')
+        return null
+      }
+      console.error('[Supabase] Error deleting participant:', errorBody ?? 'Unknown error')
+    } else {
+      const errorText = await response.text()
+      console.error('[Supabase] Error deleting participant:', errorText)
+    }
     throw new Error('Delete request failed')
   }
   const result = (await response.json()) as { deleted?: boolean }
