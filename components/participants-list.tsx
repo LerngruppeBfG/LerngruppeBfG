@@ -160,7 +160,7 @@ export function ParticipantsList() {
     try {
       const deleted = await deleteParticipantByToken(deleteTarget.deleteToken)
       if (!deleted) {
-        setDeleteStatus({ message: "Anmeldung wurde bereits gelöscht.", type: "error" })
+        setDeleteStatus({ message: "Anmeldung konnte nicht gefunden werden.", type: "error" })
         return
       }
       setParticipants((current) => current.filter((participant) => participant.id !== deleteTarget.id))
