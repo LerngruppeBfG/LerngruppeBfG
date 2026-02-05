@@ -52,12 +52,11 @@ function DeleteContent() {
   const handleDelete = async () => {
     try {
       const deleted = await deleteParticipantByToken(token)
-      if (deleted) {
-        console.log("[Storage] Participant deleted from Firebase")
-      } else {
-        console.warn("[Storage] Participant not found in Firebase")
+      if (!deleted) {
+        console.warn("[Storage] Participant not found in Supabase")
+        setStatus("notfound")
+        return
       }
-      
       console.log("[Storage] Participant deleted successfully")
       setStatus("deleted")
 

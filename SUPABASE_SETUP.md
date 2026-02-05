@@ -38,7 +38,10 @@ Create `.env.local` in the project root and add:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
+
+**Important:** `SUPABASE_SERVICE_ROLE_KEY` must stay server-side only. Never expose it in client code.
 
 ## 5) Configure Row Level Security (RLS)
 1. Open **Authentication > Policies**.
@@ -62,35 +65,12 @@ using (deleteToken = auth.jwt() ->> 'deleteToken');
 - The `.eq('deleteToken', token)` filter in the client request is **not available** to RLS, so the policy cannot verify the token from the request.
 
 ### Recommended fix (no Supabase Auth)
-If you do not plan to use authentication, do not expose delete operations from the client. Instead, use a secured backend endpoint or Supabase Edge Function that:
+If you do not plan to use authentication, do not expose delete operations from the client. This app now uses a server-side API route (`/api/delete`) that:
 1. Receives the `deleteToken`.
 2. Looks up the row by `deleteToken`.
 3. Deletes the row using the **service role key**.
 
-Example Edge Function flow:
-```ts
-// pseudo-code in an Edge Function
-const deleteToken: string
-try {
-  ({ deleteToken } = await req.json())
-} catch {
-  return new Response("Invalid JSON", { status: 400 })
-}
-if (typeof deleteToken !== "string" || !deleteToken) {
-  return new Response("Missing deleteToken", { status: 400 })
-}
-const { data, error } = await supabaseAdmin
-  .from('participants')
-  .delete()
-  .eq('deleteToken', deleteToken)
-  .select('id') // select() is used here to confirm which row was deleted
-if (error) {
-  return new Response("Delete failed", { status: 500 })
-}
-if (!data?.length) {
-  return new Response("Delete token not found", { status: 404 })
-}
-```
+Make sure `SUPABASE_SERVICE_ROLE_KEY` is configured so the API route can perform the delete.
 
 ### Development-only workaround (not recommended for production)
 For quick local testing you can temporarily disable RLS or create a permissive delete policy, but this allows anyone with the anon key to delete rows. Remove it before going live.
