@@ -126,7 +126,7 @@ export default function LerntabellenPage() {
                         <tr key={`${table.title}-row-${rowIndex}`}>
                           {row.map((cell, cellIndex) => (
                             <td
-                              key={cellIndex}
+                              key={`${table.title}-row-${rowIndex}-cell-${cellIndex}`}
                               className="px-3 py-2 text-gray-600"
                             >
                               {cell}

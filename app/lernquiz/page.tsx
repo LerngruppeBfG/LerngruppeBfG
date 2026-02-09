@@ -211,7 +211,7 @@ export default function LernquizPage() {
                     <CardContent className="space-y-3 text-sm text-gray-600">
                       <ol className="space-y-1">
                         {quiz.options.map((option, index) => (
-                          <li key={option} className="flex gap-2">
+                          <li key={`${quiz.question}-${index}`} className="flex gap-2">
                             <span className="font-semibold text-gray-500">
                               {String.fromCharCode(65 + index)}.
                             </span>
