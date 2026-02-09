@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
 import {
   Card,
   CardContent,
@@ -10,12 +9,12 @@ import {
 } from "@/components/ui/card"
 
 const uploadGoals = [
-  "Lernkarten werden aus deinen PDF-Uploads generiert",
+  "Lernkarten werden aus den PDFs im GitHub-Ordner generiert",
   "Quizfragen basieren ausschließlich auf deinen Unterlagen",
   "Zusammenfassungen bleiben klausurrelevant",
 ]
 
-const emptyDocumentsMessage = ["Noch keine PDFs hochgeladen"]
+const emptyDocumentsMessage = ["Noch keine PDFs im GitHub-Ordner"]
 
 const learningFields = [
   {
@@ -57,11 +56,28 @@ const learningMethods = [
     title: "Mini-Quiz",
     description: "Jede Woche 5 Fragen – kurze Wiederholung statt Lernstress.",
   },
+  {
+    title: "Teach-back-Runde",
+    description: "Erkläre ein Thema in 2 Minuten – so merkst du sofort Lücken.",
+  },
+  {
+    title: "Lernlandkarte",
+    description: "Baue ein Mindmap-Poster aus den PDF-Kapiteln als Überblick.",
+  },
+  {
+    title: "Audio-Recap",
+    description: "Sprich dir eine Zusammenfassung ein und höre sie unterwegs.",
+  },
+  {
+    title: "Intervall-Mix",
+    description: "Wechsle Themen im 20-Minuten-Takt, um Wissen zu vernetzen.",
+  },
 ]
 
-const placeholderQuizQuestion = "Quizfragen erscheinen nach deinem Upload."
+const placeholderQuizQuestion =
+  "Quizfragen erscheinen, sobald PDFs im Ordner liegen."
 const placeholderQuizAnswer =
-  "Lade deine PDFs hoch, damit passende Fragen generiert werden."
+  "Lege deine PDFs in den GitHub-Ordner, damit passende Fragen entstehen."
 
 const quickChecks = [
   "Wunden",
@@ -84,9 +100,10 @@ export default function LernplattformPage() {
             Klausur-Training ohne Langeweile
           </h1>
           <p className="text-lg text-gray-600 text-pretty max-w-2xl mx-auto">
-            Hier lädst du deine Unterlagen hoch. Lernkarten, Quizfragen und
-            Zusammenfassungen werden daraus erzeugt, damit alles wirklich
-            klausurrelevant bleibt.
+            Lege deine Unterlagen im GitHub-Ordner{" "}
+            <span className="font-semibold">/pdf-uploads</span> ab. Lernkarten,
+            Quizfragen und Zusammenfassungen werden daraus erzeugt, damit alles
+            wirklich klausurrelevant bleibt.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
             <Link
@@ -105,69 +122,56 @@ export default function LernplattformPage() {
         </header>
 
         <section className="mb-12">
-          <Card className="bg-white/80">
-            <CardHeader>
-              <CardTitle className="text-2xl">PDF-Upload</CardTitle>
-              <CardDescription>
-                Lade deine Unterlagen hoch, damit wir daraus passende
-                Lerninhalte und Übungen erstellen können.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-lg border border-dashed border-emerald-200 bg-emerald-50/60 p-4">
-                <label className="text-sm font-medium text-gray-700">
-                  PDF-Dateien auswählen
-                  <span className="block text-xs text-gray-500">
-                    Mehrere PDFs möglich (z.B. Skripte, Folien, Zusammenfassungen)
-                  </span>
-                </label>
-                <Input
-                  id="pdf-upload"
-                  type="file"
-                  accept="application/pdf"
-                  multiple
-                  className="sr-only peer"
-                />
-                <label
-                  htmlFor="pdf-upload"
-                  className="mt-3 inline-flex w-fit cursor-pointer items-center justify-center rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
-                >
-                  PDFs auswählen
-                </label>
-                <p className="mt-2 text-xs text-gray-500">
-                  Die Uploads sind die Grundlage für deine Lernkarten und
-                  Quizfragen. Sobald Dateien ausgewählt sind, erscheinen sie in
-                  der Übersicht unter den Lernfeldern.
-                </p>
-              </div>
-              <div className="rounded-lg border border-gray-100 bg-white/70 p-3 text-xs text-gray-500">
-                Noch keine PDFs hochgeladen. Wähle oben Dateien aus, damit wir
-                daraus Lernkarten und Quizfragen erstellen können.
-              </div>
-              <div className="grid gap-3 md:grid-cols-2 text-sm text-gray-600">
-                <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
-                  <p className="font-medium text-gray-700">Was passiert danach?</p>
-                  <p className="mt-1 text-xs">
-                    Die PDFs werden analysiert, damit Lernkarten, Quizfragen und
-                    Zusammenfassungen automatisch entstehen können.
+            <Card className="bg-white/80">
+              <CardHeader>
+                <CardTitle className="text-2xl">PDFs im GitHub-Ordner</CardTitle>
+                <CardDescription>
+                  Lege deine Unterlagen im Repository-Ordner{" "}
+                  <span className="font-semibold">/pdf-uploads</span> ab. Wir
+                  lesen sie anschließend und erstellen daraus passende
+                  Lerninhalte und Übungen.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-lg border border-dashed border-emerald-200 bg-emerald-50/60 p-4">
+                  <p className="text-sm font-medium text-gray-700">
+                    PDFs über GitHub hinzufügen
                   </p>
+                  <ol className="mt-2 list-decimal space-y-1 pl-4 text-xs text-gray-600">
+                    <li>Öffne den Ordner <span className="font-semibold">/pdf-uploads</span> im Repository.</li>
+                    <li>Lade dort deine PDFs hoch (Skripte, Folien, Zusammenfassungen).</li>
+                    <li>Wir lesen sie anschließend aus und erstellen Lernkarten, Quiz und Zusammenfassungen.</li>
+                  </ol>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
-                  <p className="font-medium text-gray-700">Empfohlene Inhalte</p>
-                  <ul className="mt-1 list-disc space-y-1 pl-4 text-xs">
-                    <li>Unterrichtsskripte und Leitlinien</li>
-                    <li>Eigene Zusammenfassungen</li>
-                    <li>Abbildungen oder Tabellen (PDF)</li>
-                  </ul>
+                <div className="rounded-lg border border-gray-100 bg-white/70 p-3 text-xs text-gray-500">
+                  Noch keine PDFs im Ordner <span className="font-semibold">/pdf-uploads</span>. Lege
+                  dort Dateien ab, damit wir daraus Lernkarten und Quizfragen
+                  erstellen können.
                 </div>
-              </div>
+                <div className="grid gap-3 md:grid-cols-2 text-sm text-gray-600">
+                  <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
+                    <p className="font-medium text-gray-700">Was passiert danach?</p>
+                    <p className="mt-1 text-xs">
+                      Die PDFs aus dem GitHub-Ordner werden analysiert, damit
+                      Lernkarten, Quizfragen und Zusammenfassungen entstehen.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
+                    <p className="font-medium text-gray-700">Empfohlene Inhalte</p>
+                    <ul className="mt-1 list-disc space-y-1 pl-4 text-xs">
+                      <li>Unterrichtsskripte und Leitlinien</li>
+                      <li>Eigene Zusammenfassungen</li>
+                      <li>Abbildungen oder Tabellen (PDF)</li>
+                    </ul>
+                  </div>
+                </div>
             </CardContent>
           </Card>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            Lernfelder auf Basis deiner Uploads
+            Lernfelder auf Basis deiner PDFs
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
             {learningFields.map((field) => (
@@ -207,8 +211,9 @@ export default function LernplattformPage() {
                     </div>
                   </div>
                   <div className="rounded-lg border border-dashed border-gray-200 bg-white/70 p-3 text-xs text-gray-500">
-                    Deine hochgeladenen PDFs werden hier gesammelt, damit wir
-                    daraus Lernkarten, Quiz und Zusammenfassungen erstellen.
+                    Deine PDFs aus dem GitHub-Ordner werden hier gesammelt,
+                    damit wir daraus Lernkarten, Quiz und Zusammenfassungen
+                    erstellen.
                   </div>
                 </CardContent>
               </Card>
@@ -252,10 +257,10 @@ export default function LernplattformPage() {
         </section>
 
         <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-          <p className="mb-3">
-            Lade jederzeit neue PDFs hoch, damit die Lernkarten und Quizfragen
-            aktuell bleiben.
-          </p>
+            <p className="mb-3">
+              Lege jederzeit neue PDFs in <span className="font-semibold">/pdf-uploads</span> ab,
+              damit die Lernkarten und Quizfragen aktuell bleiben.
+            </p>
           <Link href="/" className="text-primary hover:underline">
             Zur Startseite
           </Link>
