@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Aseptisch vs. septisch</title>
+  <desc id="desc">Vergleichstafel mit aseptischen und septischen Wundmerkmalen.</desc>
+  <rect width="640" height="360" fill="#f8fafc" />
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Aseptisch vs. septisch</text>
+  <rect x="60" y="80" width="240" height="240" rx="16" fill="#dcfce7" />
+  <rect x="340" y="80" width="240" height="240" rx="16" fill="#fee2e2" />
+  <text x="90" y="120" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">Aseptisch</text>
+  <text x="370" y="120" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#b91c1c">Septisch</text>
+  <text x="90" y="155" font-family="Arial, sans-serif" font-size="12" fill="#166534">• keimfrei</text>
+  <text x="90" y="180" font-family="Arial, sans-serif" font-size="12" fill="#166534">• OP-Wunde</text>
+  <text x="90" y="205" font-family="Arial, sans-serif" font-size="12" fill="#166534">• sauberer Wundrand</text>
+  <text x="90" y="230" font-family="Arial, sans-serif" font-size="12" fill="#166534">• wenig Exsudat</text>
+  <text x="370" y="155" font-family="Arial, sans-serif" font-size="12" fill="#b91c1c">• gerötet, warm</text>
+  <text x="370" y="180" font-family="Arial, sans-serif" font-size="12" fill="#b91c1c">• eitriges Exsudat</text>
+  <text x="370" y="205" font-family="Arial, sans-serif" font-size="12" fill="#b91c1c">• Schmerz, Geruch</text>
+  <text x="370" y="230" font-family="Arial, sans-serif" font-size="12" fill="#b91c1c">• Infektionszeichen</text>
+</svg>

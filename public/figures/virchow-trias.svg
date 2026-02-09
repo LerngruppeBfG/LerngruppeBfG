@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Virchow-Trias</title>
+  <desc id="desc">Dreieck mit Blutströmung, Gefäßwand und Gerinnung.</desc>
+  <rect width="640" height="360" fill="#f8fafc" />
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Virchow-Trias</text>
+  <polygon points="320,90 520,280 120,280" fill="#e0e7ff" stroke="#6366f1" stroke-width="2" />
+  <text x="290" y="115" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Gefäßwand</text>
+  <text x="150" y="275" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Blutströmung</text>
+  <text x="440" y="275" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Gerinnung</text>
+  <circle cx="320" cy="170" r="42" fill="#c7d2fe" />
+  <text x="295" y="176" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Risiko</text>
+</svg>

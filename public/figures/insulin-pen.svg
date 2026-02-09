@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Insulin-PEN Schritte</title>
+  <desc id="desc">Dreischritt zur Anwendung des Insulin-PEN.</desc>
+  <rect width="640" height="360" fill="#f8fafc" />
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Insulin-PEN Schrittfolge</text>
+  <rect x="70" y="110" width="150" height="180" rx="16" fill="#e0f2fe" />
+  <rect x="245" y="110" width="150" height="180" rx="16" fill="#e0f2fe" />
+  <rect x="420" y="110" width="150" height="180" rx="16" fill="#e0f2fe" />
+  <text x="120" y="140" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0f4c81">1</text>
+  <text x="290" y="140" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0f4c81">2</text>
+  <text x="465" y="140" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0f4c81">3</text>
+  <text x="90" y="175" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Nadel aufsetzen</text>
+  <text x="90" y="200" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Dosis wählen</text>
+  <text x="265" y="175" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Desinfizieren</text>
+  <text x="265" y="200" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Einstichstelle</text>
+  <text x="445" y="175" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Injizieren</text>
+  <text x="445" y="200" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">10 Sekunden halten</text>
+</svg>

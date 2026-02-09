@@ -392,6 +392,44 @@ const learningSprint = [
   },
 ]
 
+const learningResources = [
+  {
+    title: "Lernkarten-Decks",
+    description:
+      "Thematisch sortierte Karteikarten mit Antworten, Tipps und Quellen aus den PDFs.",
+    href: "/lernkarten",
+    badge: "Lernkarten",
+  },
+  {
+    title: "Lernquiz-Station",
+    description:
+      "Ausführliche Quizfragen mit Lösungen, Begründungen und Tipps zur Selbstkontrolle.",
+    href: "/lernquiz",
+    badge: "Lernquiz",
+  },
+  {
+    title: "Lerntabellen",
+    description:
+      "Kleine, übersichtliche Merktabellen zu Wunden, Diabetes, Thrombose und Fieber.",
+    href: "/lerntabellen",
+    badge: "Lerntabellen",
+  },
+  {
+    title: "Tabellen & Übersichten",
+    description:
+      "Ausführliche Tabellen für Pflegeprozesse, Maßnahmenplanung und Dokumentation.",
+    href: "/tabellen",
+    badge: "Tabellen",
+  },
+  {
+    title: "Abbildungen aus den PDFs",
+    description:
+      "Wichtige Grafiken, Schemata und Prozessbilder mit Kurzkommentaren.",
+    href: "/abbildungen",
+    badge: "Abbildungen",
+  },
+]
+
 export default function LernplattformPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50">
@@ -422,6 +460,32 @@ export default function LernplattformPage() {
             </Link>
           </div>
         </header>
+
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            Schnellzugriff auf Lernmodule
+          </h2>
+          <p className="text-sm text-gray-600 mb-6 max-w-3xl">
+            Nutze die neuen Themenseiten, um Lernkarten, Quizfragen, Tabellen
+            und Abbildungen strukturiert zu trainieren. Alle Inhalte basieren
+            auf den PDFs aus dem Ordner <span className="font-semibold">/pdf-uploads</span>.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {learningResources.map((resource) => (
+              <Link key={resource.title} href={resource.href}>
+                <Card className="h-full bg-white/90 transition hover:-translate-y-1 hover:shadow-md">
+                  <CardHeader>
+                    <div className="flex items-center justify-between gap-2">
+                      <CardTitle className="text-lg">{resource.title}</CardTitle>
+                      <Badge variant="secondary">{resource.badge}</Badge>
+                    </div>
+                    <CardDescription>{resource.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="mb-12">
           <Card className="bg-white/80">

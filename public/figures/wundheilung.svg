@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Wundheilungsphasen</title>
+  <desc id="desc">Zeitachse mit Exsudation, Proliferation und Regeneration.</desc>
+  <rect width="640" height="360" fill="#f8fafc" />
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Wundheilung</text>
+  <line x1="60" y1="110" x2="580" y2="110" stroke="#94a3b8" stroke-width="3" />
+  <circle cx="120" cy="110" r="14" fill="#22c55e" />
+  <circle cx="320" cy="110" r="14" fill="#38bdf8" />
+  <circle cx="520" cy="110" r="14" fill="#f97316" />
+  <rect x="70" y="150" width="160" height="120" rx="12" fill="#dcfce7" />
+  <rect x="250" y="150" width="160" height="120" rx="12" fill="#e0f2fe" />
+  <rect x="430" y="150" width="160" height="120" rx="12" fill="#ffedd5" />
+  <text x="90" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#166534">Exsudation</text>
+  <text x="90" y="202" font-family="Arial, sans-serif" font-size="12" fill="#166534">0–3 Tage</text>
+  <text x="90" y="224" font-family="Arial, sans-serif" font-size="12" fill="#166534">Reinigung &amp; Schutz</text>
+  <text x="270" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0f4c81">Proliferation</text>
+  <text x="270" y="202" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">1–14 Tage</text>
+  <text x="270" y="224" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Granulation</text>
+  <text x="450" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#9a3412">Regeneration</text>
+  <text x="450" y="202" font-family="Arial, sans-serif" font-size="12" fill="#9a3412">ab Tag 4</text>
+  <text x="450" y="224" font-family="Arial, sans-serif" font-size="12" fill="#9a3412">Narbenaufbau</text>
+</svg>
