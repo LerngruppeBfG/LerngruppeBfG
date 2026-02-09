@@ -130,7 +130,7 @@ export default function LernplattformPage() {
                 />
                 <label
                   htmlFor="pdf-upload"
-                  className="mt-3 inline-flex w-fit items-center justify-center rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
+                  className="mt-3 inline-flex w-fit cursor-pointer items-center justify-center rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
                 >
                   PDFs auswählen
                 </label>
