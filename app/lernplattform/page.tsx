@@ -122,49 +122,57 @@ export default function LernplattformPage() {
         </header>
 
         <section className="mb-12">
-            <Card className="bg-white/80">
-              <CardHeader>
-                <CardTitle className="text-2xl">PDFs im GitHub-Ordner</CardTitle>
-                <CardDescription>
-                  Lege deine Unterlagen im Repository-Ordner{" "}
-                  <span className="font-semibold">/pdf-uploads</span> ab. Wir
-                  lesen sie anschließend und erstellen daraus passende
-                  Lerninhalte und Übungen.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded-lg border border-dashed border-emerald-200 bg-emerald-50/60 p-4">
-                  <p className="text-sm font-medium text-gray-700">
-                    PDFs über GitHub hinzufügen
+          <Card className="bg-white/80">
+            <CardHeader>
+              <CardTitle className="text-2xl">PDFs im GitHub-Ordner</CardTitle>
+              <CardDescription>
+                Lege deine Unterlagen im Repository-Ordner{" "}
+                <span className="font-semibold">/pdf-uploads</span> ab. Wir
+                lesen sie anschließend und erstellen daraus passende
+                Lerninhalte und Übungen.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-lg border border-dashed border-emerald-200 bg-emerald-50/60 p-4">
+                <p className="text-sm font-medium text-gray-700">
+                  PDFs über GitHub hinzufügen
+                </p>
+                <ol className="mt-2 list-decimal space-y-1 pl-4 text-xs text-gray-600">
+                  <li>
+                    Öffne den Ordner{" "}
+                    <span className="font-semibold">/pdf-uploads{" "}</span>im Repository.
+                  </li>
+                  <li>
+                    Lade dort deine PDFs hoch (Skripte, Folien, Zusammenfassungen).
+                  </li>
+                  <li>
+                    Wir lesen sie anschließend aus und erstellen Lernkarten, Quiz und Zusammenfassungen.
+                  </li>
+                </ol>
+              </div>
+              <div className="rounded-lg border border-gray-100 bg-white/70 p-3 text-xs text-gray-500">
+                Noch keine PDFs im Ordner{" "}
+                <span className="font-semibold">/pdf-uploads.{" "}</span>Lege
+                dort Dateien ab, damit wir daraus Lernkarten und Quizfragen
+                erstellen können.
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 text-sm text-gray-600">
+                <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
+                  <p className="font-medium text-gray-700">Was passiert danach?</p>
+                  <p className="mt-1 text-xs">
+                    Die PDFs aus dem GitHub-Ordner werden analysiert, damit
+                    Lernkarten, Quizfragen und Zusammenfassungen entstehen.
                   </p>
-                  <ol className="mt-2 list-decimal space-y-1 pl-4 text-xs text-gray-600">
-                    <li>Öffne den Ordner <span className="font-semibold">/pdf-uploads</span> im Repository.</li>
-                    <li>Lade dort deine PDFs hoch (Skripte, Folien, Zusammenfassungen).</li>
-                    <li>Wir lesen sie anschließend aus und erstellen Lernkarten, Quiz und Zusammenfassungen.</li>
-                  </ol>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white/70 p-3 text-xs text-gray-500">
-                  Noch keine PDFs im Ordner <span className="font-semibold">/pdf-uploads</span>. Lege
-                  dort Dateien ab, damit wir daraus Lernkarten und Quizfragen
-                  erstellen können.
+                <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
+                  <p className="font-medium text-gray-700">Empfohlene Inhalte</p>
+                  <ul className="mt-1 list-disc space-y-1 pl-4 text-xs">
+                    <li>Unterrichtsskripte und Leitlinien</li>
+                    <li>Eigene Zusammenfassungen</li>
+                    <li>Abbildungen oder Tabellen (PDF)</li>
+                  </ul>
                 </div>
-                <div className="grid gap-3 md:grid-cols-2 text-sm text-gray-600">
-                  <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
-                    <p className="font-medium text-gray-700">Was passiert danach?</p>
-                    <p className="mt-1 text-xs">
-                      Die PDFs aus dem GitHub-Ordner werden analysiert, damit
-                      Lernkarten, Quizfragen und Zusammenfassungen entstehen.
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
-                    <p className="font-medium text-gray-700">Empfohlene Inhalte</p>
-                    <ul className="mt-1 list-disc space-y-1 pl-4 text-xs">
-                      <li>Unterrichtsskripte und Leitlinien</li>
-                      <li>Eigene Zusammenfassungen</li>
-                      <li>Abbildungen oder Tabellen (PDF)</li>
-                    </ul>
-                  </div>
-                </div>
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -257,10 +265,11 @@ export default function LernplattformPage() {
         </section>
 
         <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-            <p className="mb-3">
-              Lege jederzeit neue PDFs in <span className="font-semibold">/pdf-uploads</span> ab,
-              damit die Lernkarten und Quizfragen aktuell bleiben.
-            </p>
+          <p className="mb-3">
+            Lege jederzeit neue PDFs in{" "}
+            <span className="font-semibold">/pdf-uploads{" "}</span>ab, damit
+            die Lernkarten und Quizfragen aktuell bleiben.
+          </p>
           <Link href="/" className="text-primary hover:underline">
             Zur Startseite
           </Link>
