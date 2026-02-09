@@ -8,87 +8,253 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-const uploadGoals = [
-  "Lernkarten werden aus den PDFs im GitHub-Ordner generiert",
-  "Quizfragen basieren ausschließlich auf deinen Unterlagen",
-  "Zusammenfassungen bleiben klausurrelevant",
-]
+const pdfSources = {
+  wounds: [
+    "04 Wunden & Wundversorgung",
+    "04a AB Wundheilung",
+    "04b Literatur Wunden und Drainagen",
+    "LS 4C Herr Winterhaus (Fallbeispiel)",
+  ],
+  diabetes: [
+    "1. Diabetes Präsentation",
+    "3. AB Diabetes mellitus",
+    "6. AB Diabetes mellitus Typ 2",
+    "7. Lösung AB Diabetes mellitus Typ 2",
+    "8 Pflege bei Diabetes mellitus Typ 2",
+    "5. Insulinspritzen mit dem PEN",
+    "2. Die 10 Regeln der DGE",
+    "LS 4C Herr Winterhaus (Fallbeispiel)",
+  ],
+  thrombosis: [
+    "1. Definition Thrombose",
+    "1a Lungenembolie",
+    "1b Venensystem der Beine",
+    "2. Übersicht Virchow-Trias",
+    "3. Risikofaktoren einer Thrombose",
+    "4. Zuordnung der Virchow-Trias",
+    "6. Ansatzpunkte & Ziele der Thromboseprophylaxe",
+    "01a Thromboseprophylaxe - Pflegeassistenz Heute",
+    "01b AB - Thromboseprophylaxe",
+    "01c AB Virchow-Trias",
+    "Text - Atemübungen",
+    "Text - Bewegungsübungen",
+    "Text - Ausstreichen der Beinvenen",
+    "Text - Hochlagerung der Beine",
+    "Text - Kompressionsverband",
+    "Text - Medizinischer Thromboseprophylaxestrumpf",
+  ],
+  fever: ["Fieber"],
+}
 
-const emptyDocumentsMessage = ["Noch keine PDFs im GitHub-Ordner"]
+const pdfCatalog = Array.from(new Set(Object.values(pdfSources).flat()))
 
 const learningFields = [
   {
     title: "Wunden",
     subtitle: "Wundheilung, Assessment & Verbandwechsel",
-    goals: uploadGoals,
-    documents: emptyDocumentsMessage,
+    goals: [
+      "Wundarten (mechanisch, chemisch, thermisch, Strahlen) sicher unterscheiden.",
+      "Aseptische vs. septische Wunden erkennen und dokumentieren.",
+      "Wundheilungsphasen: Exsudation, Proliferation, Regeneration.",
+      "Wunddokumentation und Non-Touch-Verbandswechsel üben.",
+    ],
+    documents: pdfSources.wounds,
   },
   {
     title: "Diabetes mellitus",
     subtitle: "Stoffwechsel verstehen & Pflegeinterventionen",
-    goals: uploadGoals,
-    documents: emptyDocumentsMessage,
+    goals: [
+      "Insulinwirkung: Glukose wird in Zellen eingeschleust, Speicherung als Glykogen.",
+      "Diagnostik: nüchtern BZ 80–100 mg/dl, HbA1c ≥ 6,5% (Diagnosegrenze für Diabetes mellitus), oGTT.",
+      "Hypoglykämie < 50 mg/dl: Glukosegabe, BZ messen, Arzt informieren.",
+      "DGE (Deutsche Gesellschaft für Ernährung): 5 am Tag, Vollkorn, 1,5 Liter Wasser, 300–600 g Fleisch/Woche.",
+    ],
+    documents: pdfSources.diabetes,
   },
   {
     title: "Thromboseprophylaxe",
     subtitle: "Risiken erkennen & Maßnahmen planen",
-    goals: uploadGoals,
-    documents: emptyDocumentsMessage,
+    goals: [
+      "Definition Thrombose + Gefahr der Lungenembolie verinnerlichen.",
+      "Virchow-Trias: Blutströmung, Gefäßwand, Gerinnungsneigung.",
+      "Symptome: Schweregefühl, warme Extremität, Schwellung, Waden-Schmerz.",
+      "Prophylaxe: Bewegung, Atemübungen, Hochlagerung, Kompression.",
+    ],
+    documents: pdfSources.thrombosis,
   },
   {
     title: "Fiebererkrankungen",
     subtitle: "Fiebermanagement & Beobachtung",
-    goals: uploadGoals,
-    documents: emptyDocumentsMessage,
+    goals: [
+      "Fieber > 38 °C (rektal), Temperaturbereiche kennen.",
+      "Fieberphasen: Anstieg, Höhe, Abfall, Erschöpfung.",
+      "Maßnahmen: Vitalzeichen, Wadenwickel, Waschungen, Flüssigkeit.",
+    ],
+    documents: pdfSources.fever,
   },
 ]
 
 const learningMethods = [
   {
-    title: "Karteikarten-Boost",
-    description: "Kurze Frage-Antwort-Runden direkt nach jedem Dokument.",
+    title: "Virchow-Trias-Check",
+    description:
+      "Ordne Risikofaktoren den drei Ursachen (Blutströmung, Gefäßwand, Gerinnung) zu.",
   },
   {
-    title: "Fallbeispiele",
-    description: "Echte Pflege-Situationen lösen und im Team besprechen.",
+    title: "Thrombose-Symptom-Scan",
+    description:
+      "Schweregefühl, warme Extremität, Schwellung und Waden-Schmerz als Alarmzeichen merken.",
   },
   {
-    title: "Mini-Quiz",
-    description: "Jede Woche 5 Fragen – kurze Wiederholung statt Lernstress.",
+    title: "Atem- & Bewegungsübungen",
+    description:
+      "Tiefes Atmen und aktive Fußbewegungen fördern den venösen Rückfluss.",
   },
   {
-    title: "Teach-back-Runde",
-    description: "Erkläre ein Thema in 2 Minuten – so merkst du sofort Lücken.",
+    title: "Ausstreichen & Hochlagerung",
+    description:
+      "Beinvenen ausstreichen und Beine hochlagern, um venöse Stauung zu reduzieren.",
   },
   {
-    title: "Lernlandkarte",
-    description: "Baue ein Mindmap-Poster aus den PDF-Kapiteln als Überblick.",
+    title: "Kompressionstraining",
+    description:
+      "Kompressionsverband und Thromboseprophylaxestrumpf korrekt anlegen.",
   },
   {
-    title: "Audio-Recap",
-    description: "Sprich dir eine Zusammenfassung ein und höre sie unterwegs.",
+    title: "Wundarten-Karteikarten",
+    description:
+      "Mechanische, chemische, thermische und strahlenbedingte Wunden unterscheiden.",
   },
   {
-    title: "Intervall-Mix",
-    description: "Wechsle Themen im 20-Minuten-Takt, um Wissen zu vernetzen.",
+    title: "Wundheilungsphasen-Poster",
+    description:
+      "Exsudation (bis 3 Tage), Proliferation (1–14 Tage), Regeneration (ab Tag 4, überlappend).",
+  },
+  {
+    title: "Non-Touch-Verbandswechsel",
+    description:
+      "Wundauflage nicht berühren und einfache Wundversorgung strukturiert üben.",
+  },
+  {
+    title: "Diabetes-Glukosewerte-Check",
+    description:
+      "Nüchtern-BZ 80–100 mg/dl, HbA1c ≥ 6,5% (Diagnosegrenze für Diabetes mellitus) und oGTT im Team abfragen.",
+  },
+  {
+    title: "Hypoglykämie-Notfallkarte",
+    description:
+      "Bei < 50 mg/dl Glukose geben, BZ messen, Arzt informieren; bei Bewusstlosigkeit stabile Seitenlage.",
+  },
+  {
+    title: "DGE-10-Regeln-Foodplan",
+    description:
+      "5 am Tag, Vollkorn, 1,5 Liter Wasser, maximal 300–600 g Fleisch/Woche.",
+  },
+  {
+    title: "Fieberkurven & Pflegeplan",
+    description:
+      "Fieberphasen erkennen, Vitalzeichen 2× täglich, Wadenwickel bei warmen Beinen.",
+  },
+  {
+    title: "Fallbeispiel Herr Winterhaus",
+    description:
+      "Case-Review zu Diabetes, Wundversorgung, Fiebermanagement und Mobilisation.",
   },
 ]
 
-const placeholderQuizQuestion =
-  "Quizfragen erscheinen, sobald PDFs im Ordner liegen."
-const placeholderQuizAnswer =
-  "Lege deine PDFs in den GitHub-Ordner, damit passende Fragen entstehen."
-
-const quickChecks = [
-  "Wunden",
-  "Diabetes mellitus",
-  "Thromboseprophylaxe",
-  "Fiebererkrankungen",
-].map((topic) => ({
-  topic,
-  question: placeholderQuizQuestion,
-  answer: placeholderQuizAnswer,
-}))
+const dataBacktests = [
+  {
+    topic: "Thrombose",
+    question: "Was ist eine Thrombose?",
+    answer:
+      "Ein Gefäßverschluss durch intravasale Blutgerinnung (Thrombus), teils oder vollständig.",
+    source: "1. Definition Thrombose",
+  },
+  {
+    topic: "Thrombose",
+    question: "Welche drei Faktoren umfasst die Virchow-Trias?",
+    answer:
+      "Verlangsamte Blutströmung, Gefäßwandschaden und erhöhte Gerinnungsneigung.",
+    source: "2. Übersicht Virchow-Trias",
+  },
+  {
+    topic: "Thrombose",
+    question: "Nenne typische Symptome einer tiefen Beinvenenthrombose.",
+    answer:
+      "Einseitiges Schweregefühl, warme Extremität, Schwellung, Waden-Schmerz und bläulich-rote Haut.",
+    source: "1. Definition Thrombose",
+  },
+  {
+    topic: "Thrombose",
+    question: "Was ist die Sofortmaßnahme bei Verdacht auf Phlebothrombose?",
+    answer:
+      "Arzt verständigen, absolute Bettruhe einhalten und den Oberkörper hochlagern.",
+    source: "1. Definition Thrombose",
+  },
+  {
+    topic: "Fieber",
+    question: "Ab wann spricht man von Fieber?",
+    answer: "Ab einer Körpertemperatur über 38 °C.",
+    source: "Fieber",
+  },
+  {
+    topic: "Fieber",
+    question: "Welche Phasen durchläuft ein Fieberverlauf?",
+    answer:
+      "Fieberanstieg (Schüttelfrost), Fieberhöhe, Fieberabfall (Schwitzen), Erschöpfung.",
+    source: "Fieber",
+  },
+  {
+    topic: "Fieber",
+    question: "Welche fiebersenkenden Maßnahmen werden genannt?",
+    answer:
+      "Wadenwickel, Waschungen sowie Medikamente wie Paracetamol oder Ibuprofen.",
+    source: "Fieber",
+  },
+  {
+    topic: "Wunden",
+    question: "Wie heißen die drei Wundheilungsphasen?",
+    answer:
+      "Exsudationsphase (bis ca. 3 Tage), Proliferationsphase (1–14 Tage), Regenerationsphase (ab Tag 4, überlappend).",
+    source: "04 Wunden & Wundversorgung",
+  },
+  {
+    topic: "Wunden",
+    question: "Wodurch unterscheiden sich primäre und sekundäre Wundheilung?",
+    answer:
+      "Primär: komplikationslos, kleine Narben; sekundär: verunreinigt/infiziert, langsamer, große Narben.",
+    source: "04 Wunden & Wundversorgung",
+  },
+  {
+    topic: "Wunden",
+    question: "Was kennzeichnet eine aseptische vs. septische Wunde?",
+    answer:
+      "Aseptisch = keimfrei (OP-Wunde), septisch = mit Keimen/Infektionszeichen (z.B. Dekubitus).",
+    source: "04 Wunden & Wundversorgung",
+  },
+  {
+    topic: "Diabetes",
+    question:
+      "Welche Werte nennt die Präsentation für nüchtern BZ und HbA1c (Diagnosegrenze)?",
+    answer:
+      "Nüchtern BZ 80–100 mg/dl, HbA1c ≥ 6,5% als Diagnosegrenze für Diabetes mellitus.",
+    source: "1. Diabetes Präsentation",
+  },
+  {
+    topic: "Diabetes",
+    question: "Ab wann gilt eine Hypoglykämie und was ist sofort zu tun?",
+    answer:
+      "Unter 50 mg/dl: Pflegefachkraft/Arzt informieren, BZ messen, Glukose geben; bei Bewusstlosigkeit stabile Seitenlage.",
+    source: "1. Diabetes Präsentation",
+  },
+  {
+    topic: "Ernährung",
+    question: "Welche DGE-Regeln helfen gegen Diabetes Typ 2?",
+    answer:
+      "5 am Tag, Vollkorn, rund 1,5 Liter Wasser/Tag, Zucker sparen und max. 300–600 g Fleisch/Woche.",
+    source: "2. Die 10 Regeln der DGE",
+  },
+]
 
 export default function LernplattformPage() {
   return (
@@ -100,10 +266,10 @@ export default function LernplattformPage() {
             Klausur-Training ohne Langeweile
           </h1>
           <p className="text-lg text-gray-600 text-pretty max-w-2xl mx-auto">
-            Lege deine Unterlagen im GitHub-Ordner{" "}
-            <span className="font-semibold">/pdf-uploads</span> ab. Lernkarten,
-            Quizfragen und Zusammenfassungen werden daraus erzeugt, damit alles
-            wirklich klausurrelevant bleibt.
+            Die PDFs aus{" "}
+            <span className="font-semibold">/pdf-uploads</span> wurden
+            ausgewertet. Lernmethoden, Backtests und Zusammenfassungen basieren
+            auf diesen Inhalten, damit alles klausurrelevant bleibt.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
             <Link
@@ -127,9 +293,10 @@ export default function LernplattformPage() {
               <CardTitle className="text-2xl">PDFs im GitHub-Ordner</CardTitle>
               <CardDescription>
                 Lege deine Unterlagen im Repository-Ordner{" "}
-                <span className="font-semibold">/pdf-uploads</span> ab. Wir
-                lesen sie anschließend und erstellen daraus passende
-                Lerninhalte und Übungen.
+                <span className="font-semibold">/pdf-uploads</span> ab. Die
+                Inhalte werden ausgelesen – aktuell sind{" "}
+                <span className="font-semibold">{pdfCatalog.length} PDFs</span>{" "}
+                erfasst.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -151,17 +318,27 @@ export default function LernplattformPage() {
                 </ol>
               </div>
               <div className="rounded-lg border border-gray-100 bg-white/70 p-3 text-xs text-gray-500">
-                Noch keine PDFs im Ordner{" "}
-                <span className="font-semibold">/pdf-uploads.{" "}</span>Lege
-                dort Dateien ab, damit wir daraus Lernkarten und Quizfragen
-                erstellen können.
+                <p className="text-sm font-medium text-gray-700">
+                  Eingelesene PDFs ({pdfCatalog.length})
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {pdfCatalog.map((doc) => (
+                    <Badge
+                      key={doc}
+                      variant="outline"
+                      className="border-dashed text-[11px]"
+                    >
+                      {doc}
+                    </Badge>
+                  ))}
+                </div>
               </div>
               <div className="grid gap-3 md:grid-cols-2 text-sm text-gray-600">
                 <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
                   <p className="font-medium text-gray-700">Was passiert danach?</p>
                   <p className="mt-1 text-xs">
                     Die PDFs aus dem GitHub-Ordner werden analysiert, damit
-                    Lernkarten, Quizfragen und Zusammenfassungen entstehen.
+                    Lernmethoden, Backtests und Zusammenfassungen entstehen.
                   </p>
                 </div>
                 <div className="rounded-lg border border-gray-100 bg-white/70 p-3">
@@ -219,9 +396,8 @@ export default function LernplattformPage() {
                     </div>
                   </div>
                   <div className="rounded-lg border border-dashed border-gray-200 bg-white/70 p-3 text-xs text-gray-500">
-                    Deine PDFs aus dem GitHub-Ordner werden hier gesammelt,
-                    damit wir daraus Lernkarten, Quiz und Zusammenfassungen
-                    erstellen.
+                    Die PDFs wurden ausgewertet; Lernziele, Methoden und
+                    Backtests basieren auf diesen Dateien.
                   </div>
                 </CardContent>
               </Card>
@@ -231,7 +407,7 @@ export default function LernplattformPage() {
 
         <section className="mt-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            Lernmethoden gegen Langeweile
+            Lernmethoden aus den PDFs
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {learningMethods.map((method) => (
@@ -247,18 +423,21 @@ export default function LernplattformPage() {
 
         <section className="mt-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            Quizfragen aus deinen PDFs
+            Backtests zur Datenverifikation
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {quickChecks.map((check) => (
+            {dataBacktests.map((check) => (
               <details
-                key={check.topic}
+                key={`${check.topic}-${check.question}`}
                 className="rounded-lg border border-gray-200 bg-white/80 p-4"
               >
                 <summary className="cursor-pointer text-sm font-semibold text-gray-800">
                   {check.topic}: {check.question}
                 </summary>
                 <p className="mt-2 text-sm text-gray-600">{check.answer}</p>
+                <p className="mt-2 text-xs text-gray-400">
+                  Quelle: {check.source}
+                </p>
               </details>
             ))}
           </div>
@@ -268,7 +447,7 @@ export default function LernplattformPage() {
           <p className="mb-3">
             Lege jederzeit neue PDFs in{" "}
             <span className="font-semibold">/pdf-uploads{" "}</span>ab, damit
-            die Lernkarten und Quizfragen aktuell bleiben.
+            Lernmethoden und Backtests aktuell bleiben.
           </p>
           <Link href="/" className="text-primary hover:underline">
             Zur Startseite
