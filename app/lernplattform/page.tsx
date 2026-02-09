@@ -20,7 +20,7 @@ const learningFields = [
     documents: ["PDF-Skript (Upload geplant)", "Checkliste Verbandwechsel", "Bildatlas"],
   },
   {
-    title: "Diabetis mellitus",
+    title: "Diabetes mellitus",
     subtitle: "Stoffwechsel verstehen & Pflegeinterventionen",
     goals: [
       "Typen und Leitsymptome sicher zuordnen",
@@ -40,7 +40,7 @@ const learningFields = [
     documents: ["Prophylaxe-Checkliste", "Kompressionsschema", "Übungsblatt"],
   },
   {
-    title: "Fiebererkrakungen",
+    title: "Fiebererkrankungen",
     subtitle: "Fiebermanagement & Beobachtung",
     goals: [
       "Fieberverlauf richtig beurteilen",
@@ -73,7 +73,7 @@ const quickChecks = [
     answer: "Exsudation, Granulation, Epithelisierung, Remodellierung.",
   },
   {
-    topic: "Diabetis mellitus",
+    topic: "Diabetes mellitus",
     question: "Was gehört zu den klassischen Symptomen?",
     answer: "Polyurie, Polydipsie, Gewichtsverlust, Müdigkeit.",
   },
@@ -83,7 +83,7 @@ const quickChecks = [
     answer: "Frühmobilisation, Kompressionsstrümpfe oder Venengymnastik.",
   },
   {
-    topic: "Fiebererkrakungen",
+    topic: "Fiebererkrankungen",
     question: "Wann ist ärztliche Rücksprache dringend nötig?",
     answer: "Bei Bewusstseinsveränderung, Schüttelfrost oder starkem Anstieg.",
   },
