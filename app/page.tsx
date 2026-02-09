@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { RegistrationForm } from "@/components/registration-form"
 import { ParticipantsList } from "@/components/participants-list"
@@ -75,14 +76,22 @@ export default function Home() {
           <p className="text-xs text-gray-500 text-pretty mb-3">
             © 2026 Lerngruppen-Portal | Alle Daten werden gemäß DSGVO verarbeitet und gespeichert | Nur zur internen Schulnutzung
           </p>
-          {showAdminLink && (
-            <a 
-              href="./admin" 
-              className="text-xs text-gray-400 hover:text-primary transition-colors"
+          <div className="flex flex-col items-center gap-2 text-xs text-gray-400">
+            <Link
+              href="/lernplattform"
+              className="hover:text-primary transition-colors"
             >
-              Admin-Bereich
-            </a>
-          )}
+              Lernplattform
+            </Link>
+            {showAdminLink && (
+              <Link
+                href="/admin"
+                className="hover:text-primary transition-colors"
+              >
+                Admin-Bereich
+              </Link>
+            )}
+          </div>
         </footer>
       </div>
     </main>
