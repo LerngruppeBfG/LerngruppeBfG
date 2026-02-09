@@ -256,6 +256,142 @@ const dataBacktests = [
   },
 ]
 
+const flashcards = [
+  {
+    title: "Wundheilung in 3 Phasen",
+    question: "Welche Phasen der Wundheilung musst du nennen können?",
+    answer:
+      "Exsudation (bis ca. 3 Tage), Proliferation (1–14 Tage), Regeneration (ab Tag 4, überlappend).",
+    tip: "Merksatz: Erst reinigen, dann aufbauen, dann stabilisieren.",
+    source: "04 Wunden & Wundversorgung",
+  },
+  {
+    title: "Aseptisch vs. septisch",
+    question: "Woran erkennst du eine septische Wunde?",
+    answer:
+      "Zeichen der Infektion: Rötung, Wärme, Schwellung, Schmerz oder eitriges Exsudat.",
+    tip: "Aseptisch = keimfrei, septisch = infiziert.",
+    source: "04 Wunden & Wundversorgung",
+  },
+  {
+    title: "Virchow-Trias",
+    question: "Welche drei Ursachen begünstigen eine Thrombose?",
+    answer:
+      "Verlangsamte Blutströmung, Gefäßwandschaden, erhöhte Gerinnungsneigung.",
+    tip: "Denke an: Strom, Wand, Gerinnung.",
+    source: "2. Übersicht Virchow-Trias",
+  },
+  {
+    title: "Thrombose-Warnzeichen",
+    question: "Nenne zwei Alarmzeichen einer Beinvenenthrombose.",
+    answer: "Einseitige Schwellung, warme Extremität, Waden-Schmerz.",
+    tip: "Bei Verdacht: Arzt informieren, Bettruhe.",
+    source: "1. Definition Thrombose",
+  },
+  {
+    title: "Hypoglykämie-Alarm",
+    question: "Ab welchem Wert beginnt eine Hypoglykämie?",
+    answer:
+      "Unter 50 mg/dl: BZ messen, Glukose geben, Arzt informieren.",
+    tip: "Bei Bewusstlosigkeit: stabile Seitenlage.",
+    source: "1. Diabetes Präsentation",
+  },
+  {
+    title: "Fiebermanagement",
+    question: "Welche Maßnahmen helfen bei Fieber?",
+    answer:
+      "Wadenwickel, Waschungen, Flüssigkeit, ggf. Paracetamol/Ibuprofen.",
+    tip: "Temperatur und Vitalzeichen dokumentieren.",
+    source: "Fieber",
+  },
+]
+
+const quizItems = [
+  {
+    title: "Thrombose-Check",
+    question: "Welche Maßnahme gehört zur Thromboseprophylaxe?",
+    options: [
+      "Absolute Bettruhe ohne Mobilisation",
+      "Atemübungen und aktive Fußbewegungen",
+      "Beine dauerhaft tief lagern",
+      "Flüssigkeitszufuhr reduzieren",
+    ],
+    answer: "B",
+    explanation:
+      "Atem- und Bewegungsübungen aktivieren die Muskelpumpe und fördern den venösen Rückfluss.",
+  },
+  {
+    title: "Diabetes-Quiz",
+    question: "Welche HbA1c-Grenze gilt als Diagnosegrenze?",
+    options: ["≥ 5,5%", "≥ 6,5%", "≥ 7,5%", "≥ 8,5%"],
+    answer: "B",
+    explanation:
+      "Die Präsentation nennt ≥ 6,5% als Diagnosegrenze für Diabetes mellitus.",
+  },
+  {
+    title: "Wundpflege-Quiz",
+    question: "Welche Aussage beschreibt eine aseptische Wunde korrekt?",
+    options: [
+      "Sie ist mit Keimen besiedelt und eitrig.",
+      "Sie entsteht ausschließlich durch thermische Einwirkung.",
+      "Sie ist keimfrei, z.B. eine OP-Wunde.",
+      "Sie ist immer chronisch und schlecht heilend.",
+    ],
+    answer: "C",
+    explanation: "Aseptische Wunden gelten als keimfrei.",
+  },
+  {
+    title: "Fieber-Quiz",
+    question: "Ab welcher Temperatur spricht man von Fieber?",
+    options: ["37,0 °C", "37,5 °C", "38,0 °C", "39,5 °C"],
+    answer: "C",
+    explanation: "Fieber beginnt ab 38 °C Körpertemperatur.",
+  },
+]
+
+const quickQuestions = [
+  {
+    question: "Wie oft sollen Vitalzeichen bei Fieber kontrolliert werden?",
+    answer: "Mindestens 2× täglich und zusätzlich bei Zustandsveränderungen.",
+  },
+  {
+    question: "Was gehört in die Wunddokumentation?",
+    answer:
+      "Wundgröße, Exsudat, Geruch, Schmerzen, Wundrand und verwendetes Material.",
+  },
+  {
+    question: "Welche DGE-Regel ist bei Diabetes besonders wichtig?",
+    answer: "Zucker sparen, Vollkorn bevorzugen und 5 Portionen Obst/Gemüse.",
+  },
+  {
+    question: "Was ist die erste Maßnahme bei Verdacht auf Thrombose?",
+    answer: "Arzt informieren und Bettruhe einhalten.",
+  },
+]
+
+const learningSprint = [
+  {
+    title: "10-Minuten-Überblick",
+    focus: "Lernziele der Einheit durchlesen, Schlüsselbegriffe markieren.",
+    duration: "10 Min",
+  },
+  {
+    title: "Karteikarten-Runde",
+    focus: "3–5 Lernkarten laut beantworten, Antworten prüfen.",
+    duration: "15 Min",
+  },
+  {
+    title: "Mini-Quiz",
+    focus: "1–2 Quizfragen lösen und Begründungen lesen.",
+    duration: "10 Min",
+  },
+  {
+    title: "Kurz-Reflexion",
+    focus: "Notiere 2 Dinge, die du heute sicher kannst.",
+    duration: "5 Min",
+  },
+]
+
 export default function LernplattformPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50">
@@ -417,6 +553,129 @@ export default function LernplattformPage() {
                   <CardDescription>{method.description}</CardDescription>
                 </CardHeader>
               </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            Lernroutine für effektive Sessions
+          </h2>
+          <p className="text-sm text-gray-600 mb-4 max-w-3xl">
+            Arbeite in kurzen Sprints, damit du Wissen aktiv abrufst und direkt
+            festigst. Nutze die Karten, Quizfragen und Q&amp;A-Blöcke darunter.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {learningSprint.map((step) => (
+              <Card key={step.title} className="bg-white/80">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <CardTitle className="text-lg">{step.title}</CardTitle>
+                    <Badge variant="secondary">{step.duration}</Badge>
+                  </div>
+                  <CardDescription>{step.focus}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            Lernkarten: aktive Wiederholung
+          </h2>
+          <p className="text-sm text-gray-600 mb-4 max-w-3xl">
+            Lies zuerst die Frage, beantworte sie laut und klappe danach die
+            Antwort auf. So trainierst du aktives Erinnern.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {flashcards.map((card) => (
+              <Card key={card.title} className="bg-white/80">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <CardTitle className="text-lg">{card.title}</CardTitle>
+                    <Badge variant="outline">Lernkarte</Badge>
+                  </div>
+                  <CardDescription>{card.question}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-gray-600">
+                  <details className="rounded-lg border border-dashed border-gray-200 bg-white/80 p-3">
+                    <summary className="cursor-pointer text-sm font-medium text-gray-700">
+                      Antwort anzeigen
+                    </summary>
+                    <p className="mt-2">{card.answer}</p>
+                    <p className="mt-2 text-xs text-gray-500">{card.tip}</p>
+                    <p className="mt-2 text-xs text-gray-400">
+                      Quelle: {card.source}
+                    </p>
+                  </details>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            Lernquiz: prüfe dein Wissen
+          </h2>
+          <p className="text-sm text-gray-600 mb-4 max-w-3xl">
+            Kreuze deine Antwort an (laut oder schriftlich) und klappe die
+            Lösung auf, um dich selbst zu kontrollieren.
+          </p>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {quizItems.map((quiz) => (
+              <Card key={quiz.title} className="bg-white/80">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <CardTitle className="text-lg">{quiz.title}</CardTitle>
+                    <Badge>Lernquiz</Badge>
+                  </div>
+                  <CardDescription>{quiz.question}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-gray-600">
+                  <ol className="space-y-1 text-sm text-gray-600">
+                    {quiz.options.map((option, index) => (
+                      <li key={option} className="flex gap-2">
+                        <span className="font-semibold text-gray-500">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        <span>{option}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <details className="rounded-lg border border-dashed border-gray-200 bg-white/80 p-3">
+                    <summary className="cursor-pointer text-sm font-medium text-gray-700">
+                      Lösung anzeigen
+                    </summary>
+                    <p className="mt-2 font-medium text-gray-700">
+                      Richtige Antwort: {quiz.answer}
+                    </p>
+                    <p className="mt-2 text-xs text-gray-500">
+                      {quiz.explanation}
+                    </p>
+                  </details>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            Fragen &amp; Antworten
+          </h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {quickQuestions.map((item) => (
+              <details
+                key={item.question}
+                className="rounded-lg border border-gray-200 bg-white/80 p-4"
+              >
+                <summary className="cursor-pointer text-sm font-semibold text-gray-800">
+                  {item.question}
+                </summary>
+                <p className="mt-2 text-sm text-gray-600">{item.answer}</p>
+              </details>
             ))}
           </div>
         </section>
