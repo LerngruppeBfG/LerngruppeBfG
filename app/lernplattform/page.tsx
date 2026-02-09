@@ -126,7 +126,7 @@ export default function LernplattformPage() {
                   type="file"
                   accept="application/pdf"
                   multiple
-                  className="mt-3 bg-white"
+                  className="sr-only"
                 />
                 <label
                   htmlFor="pdf-upload"
