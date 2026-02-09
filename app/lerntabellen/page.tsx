@@ -122,11 +122,11 @@ export default function LerntabellenPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {table.rows.map((row) => (
-                        <tr key={`${table.title}-${row.join("-")}`}>
+                      {table.rows.map((row, rowIndex) => (
+                        <tr key={`${table.title}-row-${rowIndex}`}>
                           {row.map((cell, cellIndex) => (
                             <td
-                              key={`${cell}-${cellIndex}`}
+                              key={cellIndex}
                               className="px-3 py-2 text-gray-600"
                             >
                               {cell}
