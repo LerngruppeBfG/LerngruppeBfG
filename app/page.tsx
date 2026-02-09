@@ -60,6 +60,13 @@ export default function Home() {
             <Users className="w-5 h-5" />
             Teilnehmerliste
           </button>
+          <Link
+            href="/lernplattform"
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+          >
+            <BookOpen className="w-5 h-5" />
+            Lernplattform
+          </Link>
         </div>
 
         {/* Content Area */}

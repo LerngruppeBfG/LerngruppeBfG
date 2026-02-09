@@ -122,11 +122,18 @@ export default function LernplattformPage() {
                   </span>
                 </label>
                 <Input
+                  id="pdf-upload"
                   type="file"
                   accept="application/pdf"
                   multiple
-                  className="mt-3 bg-white"
+                  className="sr-only peer"
                 />
+                <label
+                  htmlFor="pdf-upload"
+                  className="mt-3 inline-flex w-fit cursor-pointer items-center justify-center rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
+                >
+                  PDFs auswählen
+                </label>
                 <p className="mt-2 text-xs text-gray-500">
                   Die Uploads sind die Grundlage für deine Lernkarten und
                   Quizfragen. Sobald Dateien ausgewählt sind, erscheinen sie in
