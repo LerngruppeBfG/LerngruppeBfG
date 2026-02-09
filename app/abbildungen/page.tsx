@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -206,7 +207,7 @@ export default function AbbildungenPage() {
                       <CardDescription>{figure.caption}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <img
+                      <Image
                         src={figure.image}
                         alt={`Abbildung ${figure.name}`}
                         width={640}
