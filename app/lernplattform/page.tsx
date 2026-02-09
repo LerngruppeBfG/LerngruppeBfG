@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { learningMethods } from "@/lib/learningMethods"
 
 const pdfSources = {
   wounds: [
@@ -94,73 +95,6 @@ const learningFields = [
   },
 ]
 
-const learningMethods = [
-  {
-    title: "Virchow-Trias-Check",
-    description:
-      "Ordne Risikofaktoren den drei Ursachen (Blutströmung, Gefäßwand, Gerinnung) zu.",
-  },
-  {
-    title: "Thrombose-Symptom-Scan",
-    description:
-      "Schweregefühl, warme Extremität, Schwellung und Wadenschmerz als Alarmzeichen merken.",
-  },
-  {
-    title: "Atem- & Bewegungsübungen",
-    description:
-      "Tiefes Atmen und aktive Fußbewegungen fördern den venösen Rückfluss.",
-  },
-  {
-    title: "Ausstreichen & Hochlagerung",
-    description:
-      "Beinvenen ausstreichen und Beine hochlagern, um venöse Stauung zu reduzieren.",
-  },
-  {
-    title: "Kompressionstraining",
-    description:
-      "Kompressionsverband und Thromboseprophylaxestrumpf korrekt anlegen.",
-  },
-  {
-    title: "Wundarten-Karteikarten",
-    description:
-      "Mechanische, chemische, thermische und strahlenbedingte Wunden unterscheiden.",
-  },
-  {
-    title: "Wundheilungsphasen-Poster",
-    description:
-      "Exsudation (bis 3 Tage), Proliferation (1–14 Tage), Regeneration (ab Tag 4, überlappend).",
-  },
-  {
-    title: "Non-Touch-Verbandswechsel",
-    description:
-      "Wundauflage nicht berühren und einfache Wundversorgung strukturiert üben.",
-  },
-  {
-    title: "Diabetes-Glukosewerte-Check",
-    description:
-      "Nüchtern-BZ 80–100 mg/dl, HbA1c ≥ 6,5% (Diagnosegrenze für Diabetes mellitus) und oGTT im Team abfragen.",
-  },
-  {
-    title: "Hypoglykämie-Notfallkarte",
-    description:
-      "Bei < 50 mg/dl Glukose geben, BZ messen, Arzt informieren; bei Bewusstlosigkeit stabile Seitenlage.",
-  },
-  {
-    title: "DGE-10-Regeln-Foodplan",
-    description:
-      "5 am Tag, Vollkorn, 1,5 Liter Wasser, maximal 300–600 g Fleisch/Woche.",
-  },
-  {
-    title: "Fieberkurven & Pflegeplan",
-    description:
-      "Fieberphasen erkennen, Vitalzeichen 2× täglich, Wadenwickel bei warmen Beinen.",
-  },
-  {
-    title: "Fallbeispiel Herr Winterhaus",
-    description:
-      "Case-Review zu Diabetes, Wundversorgung, Fiebermanagement und Mobilisation.",
-  },
-]
 
 const dataBacktests = [
   {
@@ -611,12 +545,21 @@ export default function LernplattformPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {learningMethods.map((method) => (
-              <Card key={method.title} className="bg-white/80">
-                <CardHeader>
-                  <CardTitle className="text-lg">{method.title}</CardTitle>
-                  <CardDescription>{method.description}</CardDescription>
-                </CardHeader>
-              </Card>
+              <Link
+                key={method.title}
+                href={`/lernplattform/lernmethoden/${method.slug}`}
+                className="group"
+              >
+                <Card className="h-full bg-white/80 transition group-hover:-translate-y-1 group-hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{method.title}</CardTitle>
+                    <CardDescription>{method.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0 text-xs text-primary">
+                    Mehr erfahren →
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </section>
