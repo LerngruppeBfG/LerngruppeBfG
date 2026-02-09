@@ -292,7 +292,7 @@ const flashcards = [
     title: "Hypoglykämie-Alarm",
     question: "Ab welchem Wert beginnt eine Hypoglykämie?",
     answer:
-      "Unter 50 mg/dl: BZ messen, Glukose geben, Arzt informieren.",
+      "Unter 50 mg/dl: Blutzucker (BZ) messen, Glukose geben, Arzt informieren.",
     tip: "Bei Bewusstlosigkeit: stabile Seitenlage.",
     source: "1. Diabetes Präsentation",
   },
@@ -357,7 +357,7 @@ const quickQuestions = [
   {
     question: "Was gehört in die Wunddokumentation?",
     answer:
-      "Wundgröße, Exsudat, Geruch, Schmerzen, Wundrand und verwendetes Material.",
+      "Datum/Zeit, Wundgröße, Exsudat, Geruch, Schmerzen, Wundrand und verwendetes Material.",
   },
   {
     question: "Welche DGE-Regel ist bei Diabetes besonders wichtig?",
