@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -337,10 +337,12 @@ export default function KiQuizPage() {
   const topics = getTopics()
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
   const [questionCount, setQuestionCount] = useState(8)
-  const [questions, setQuestions] = useState<GeneratedQuestion[]>(() =>
-    generateQuiz(8, null)
-  )
+  const [questions, setQuestions] = useState<GeneratedQuestion[]>([])
   const [score, setScore] = useState<{ correct: number; total: number } | null>(null)
+
+  useEffect(() => {
+    setQuestions(generateQuiz(8, null))
+  }, [])
 
   const regenerate = useCallback(() => {
     setQuestions(generateQuiz(questionCount, selectedTopic))
