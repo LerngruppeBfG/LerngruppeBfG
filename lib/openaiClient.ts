@@ -1,16 +1,16 @@
 /**
  * Client-side OpenAI API wrapper.
  *
- * The OpenAI API key is configured via the environment variable
- * NEXT_PUBLIC_OPENAI_API_KEY in .env.local (project config).
+ * Requests are proxied through a server-side API route (/api/chat) so that the
+ * OpenAI API key is never exposed to the browser.  The server reads the key
+ * from the OPENAI_API_KEY environment variable (falls back to
+ * NEXT_PUBLIC_OPENAI_API_KEY for backward compatibility).
+ *
  * ChatGPT is used for data extraction from PDFs and content generation,
  * not as a live chat feature.
- *
- * The wrapper calls the OpenAI Chat Completions API directly from the browser
- * using the standard fetch API.  No SDK dependency is required.
  */
 
-/* ── API key from environment variable ───────────────────── */
+/* ── configuration ───────────────────────────────────────── */
 
 export const AVAILABLE_MODELS = [
   { id: "gpt-4o-mini", label: "GPT-4o Mini (schnell & günstig)" },
@@ -21,11 +21,11 @@ export const AVAILABLE_MODELS = [
 export const DEFAULT_MODEL = "gpt-4o-mini"
 
 export function getOpenAIKey(): string {
-  return process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""
+  return process.env.OPENAI_API_KEY ?? process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""
 }
 
 export function getSelectedModel(): string {
-  return process.env.NEXT_PUBLIC_OPENAI_MODEL ?? DEFAULT_MODEL
+  return process.env.OPENAI_MODEL ?? process.env.NEXT_PUBLIC_OPENAI_MODEL ?? DEFAULT_MODEL
 }
 
 export function isOpenAIConfigured(): boolean {
@@ -49,43 +49,29 @@ export async function chatCompletion(
   messages: ChatMessage[],
   options?: { temperature?: number; maxTokens?: number }
 ): Promise<string> {
-  const apiKey = getOpenAIKey()
-  if (!apiKey) {
-    throw new Error("Kein OpenAI API-Key konfiguriert. Bitte unter KI-Einstellungen hinterlegen.")
-  }
-
-  const model = getSelectedModel()
   const temperature = options?.temperature ?? 0.7
   const maxTokens = options?.maxTokens ?? 1024
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch("/api/chat", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages, temperature, maxTokens }),
   })
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null)
     const errorMsg =
-      (errorBody as { error?: OpenAIError })?.error?.message ??
+      (errorBody as { error?: string })?.error ??
       `OpenAI API-Fehler: ${response.status} ${response.statusText}`
     throw new Error(errorMsg)
   }
 
   const data = await response.json()
-  const content = data?.choices?.[0]?.message?.content
+  const content = (data as { content?: string })?.content
   if (typeof content !== "string") {
     throw new Error("Unerwartete Antwort von der OpenAI API.")
   }
-  return content.trim()
+  return content
 }
 
 /* ── Convenience: test the API key ───────────────────────── */

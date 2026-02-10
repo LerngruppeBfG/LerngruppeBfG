@@ -11,9 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import {
-  getOpenAIKey,
-  getSelectedModel,
-  isOpenAIConfigured,
   testAPIKey,
   AVAILABLE_MODELS,
 } from "@/lib/openaiClient"
@@ -29,14 +26,18 @@ export default function KiEinstellungenPage() {
   const [maskedKey, setMaskedKey] = useState("")
 
   useEffect(() => {
-    const key = getOpenAIKey()
-    setConfigured(isOpenAIConfigured())
-    setModel(getSelectedModel())
-    if (key.length > 8) {
-      setMaskedKey(key.slice(0, 4) + "••••••••" + key.slice(-4))
-    } else if (key.length > 0) {
-      setMaskedKey("••••••••")
-    }
+    fetch("/api/chat/status")
+      .then((res) => res.json())
+      .then((data: { configured?: boolean; model?: string }) => {
+        setConfigured(data.configured ?? false)
+        setModel(data.model ?? "")
+        if (data.configured) {
+          setMaskedKey("sk-••••••••")
+        }
+      })
+      .catch(() => {
+        setConfigured(false)
+      })
   }, [])
 
   async function handleTest() {
@@ -123,12 +124,12 @@ export default function KiEinstellungenPage() {
               <div className="rounded-lg bg-gray-900 p-4 font-mono text-sm text-gray-100 overflow-x-auto">
                 <p className="text-gray-400"># .env.local</p>
                 <p>
-                  <span className="text-emerald-400">NEXT_PUBLIC_OPENAI_API_KEY</span>
+                  <span className="text-emerald-400">OPENAI_API_KEY</span>
                   <span className="text-gray-400">=</span>
                   <span className="text-amber-300">sk-dein-api-key-hier</span>
                 </p>
                 <p className="mt-1">
-                  <span className="text-emerald-400">NEXT_PUBLIC_OPENAI_MODEL</span>
+                  <span className="text-emerald-400">OPENAI_MODEL</span>
                   <span className="text-gray-400">=</span>
                   <span className="text-amber-300">gpt-4o-mini</span>
                 </p>
@@ -284,7 +285,7 @@ export default function KiEinstellungenPage() {
             <CardHeader>
               <CardTitle className="text-lg">Verfügbare Modelle</CardTitle>
               <CardDescription>
-                Setze <code className="text-xs bg-gray-100 px-1 rounded">NEXT_PUBLIC_OPENAI_MODEL</code>{" "}
+                Setze <code className="text-xs bg-gray-100 px-1 rounded">OPENAI_MODEL</code>{" "}
                 in der .env.local auf eines der folgenden Modelle:
               </CardDescription>
             </CardHeader>

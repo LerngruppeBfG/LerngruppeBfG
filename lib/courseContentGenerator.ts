@@ -93,11 +93,12 @@ function safeParseJSON<T>(text: string): T | null {
 
 export async function generateCourseContent(
   course: CourseConfig,
-  onProgress?: ProgressCallback
+  onProgress?: ProgressCallback,
+  forceUseAI?: boolean
 ): Promise<GeneratedCourseContent> {
   const topics = extractTopics(course.pdfFiles)
   const topicName = course.topicName
-  const useAI = isOpenAIConfigured()
+  const useAI = forceUseAI ?? isOpenAIConfigured()
 
   const steps: ProgressStep[] = [
     { label: "Themen aus PDFs extrahieren…", done: false },

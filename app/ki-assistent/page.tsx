@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { searchKnowledge, getTopics, getEntriesByTopic, pdfKnowledge, type KnowledgeEntry } from "@/lib/pdfKnowledge"
-import { isOpenAIConfigured, chatCompletion, type ChatMessage } from "@/lib/openaiClient"
+import { chatCompletion, type ChatMessage } from "@/lib/openaiClient"
 
 type Message = {
   role: "user" | "assistant"
@@ -225,7 +225,14 @@ export default function KiAssistentPage() {
   }, [messages])
 
   useEffect(() => {
-    setUseAI(isOpenAIConfigured())
+    fetch("/api/chat/status")
+      .then((res) => res.json())
+      .then((data: { configured?: boolean }) => {
+        setUseAI(data.configured ?? false)
+      })
+      .catch(() => {
+        setUseAI(false)
+      })
   }, [])
 
   async function handleSend(question?: string) {
