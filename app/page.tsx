@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { RegistrationForm } from "@/components/registration-form"
 import { ParticipantsList } from "@/components/participants-list"
-import { BookOpen, Users } from "lucide-react"
+import { BookOpen, Users, GraduationCap } from "lucide-react"
 
 export default function Home() {
   const [activeView, setActiveView] = useState<"form" | "list">("form")
@@ -67,6 +67,13 @@ export default function Home() {
             <BookOpen className="w-5 h-5" />
             Lernplattform
           </Link>
+          <Link
+            href="/kurse"
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+          >
+            <GraduationCap className="w-5 h-5" />
+            Alle Kurse
+          </Link>
         </div>
 
         {/* Content Area */}
@@ -84,12 +91,26 @@ export default function Home() {
             © 2026 Lerngruppen-Portal | Alle Daten werden gemäß DSGVO verarbeitet und gespeichert | Nur zur internen Schulnutzung
           </p>
           <div className="flex flex-col items-center gap-2 text-xs text-gray-400">
-            <Link
-              href="/lernplattform"
-              className="hover:text-primary transition-colors"
-            >
-              Lernplattform
-            </Link>
+            <div className="flex gap-4">
+              <Link
+                href="/lernplattform"
+                className="hover:text-primary transition-colors"
+              >
+                Lernplattform
+              </Link>
+              <Link
+                href="/kurse"
+                className="hover:text-primary transition-colors"
+              >
+                Kursübersicht
+              </Link>
+              <Link
+                href="/kurs-erstellen"
+                className="hover:text-primary transition-colors"
+              >
+                Kurs erstellen
+              </Link>
+            </div>
             {showAdminLink && (
               <Link
                 href="/admin"

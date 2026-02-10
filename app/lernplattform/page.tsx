@@ -397,16 +397,22 @@ export default function LernplattformPage() {
           </p>
           <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
             <Link
-              href="/"
+              href="/kurse"
               className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors"
             >
-              Zurück zur Anmeldung
+              Alle Kurse
             </Link>
             <Link
-              href="/delete"
+              href="/kurs-erstellen"
               className="px-5 py-2 rounded-full border border-gray-200 text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors"
             >
-              Abmeldung verwalten
+              Kurs erstellen
+            </Link>
+            <Link
+              href="/"
+              className="px-5 py-2 rounded-full border border-gray-200 text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors"
+            >
+              Zurück zur Anmeldung
             </Link>
           </div>
         </header>
