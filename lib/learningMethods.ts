@@ -193,4 +193,33 @@ export const learningMethods: LearningMethod[] = [
     ],
     topics: ["LS 4C Herr Winterhaus (Fallbeispiel)", "04 Wunden & Wundversorgung"],
   },
+  {
+    slug: "insulinpen-schritt-fuer-schritt",
+    title: "Insulin-PEN Schritt für Schritt",
+    description:
+      "Lerne den korrekten Umgang mit dem Insulin-PEN und übe die Injektionsschritte.",
+    focus:
+      "Du trainierst die praxisnahe Handhabung des Insulin-PEN und vermeidest typische Fehler.",
+    steps: [
+      "Lege alle benötigten Materialien bereit (PEN, Nadel, Desinfektionsmittel).",
+      "Übe die Schrittfolge: Nadel aufsetzen, Dosis einstellen, Injektionsstelle desinfizieren.",
+      "Injiziere und warte 10 Sekunden, bevor du die Nadel entfernst.",
+      "Notiere, warum die Injektionsstelle regelmäßig gewechselt werden muss.",
+    ],
+    topics: ["5. Insulinspritzen mit dem PEN", "1. Diabetes Präsentation"],
+  },
+  {
+    slug: "lungenembolie-notfall",
+    title: "Lungenembolie-Notfallkarte",
+    description:
+      "Erkenne die Warnzeichen einer Lungenembolie und leite Sofortmaßnahmen ein.",
+    focus:
+      "Du sicherst lebensrettende Erstmaßnahmen und verstehst den Zusammenhang mit Thrombosen.",
+    steps: [
+      "Notiere die typischen Symptome einer Lungenembolie (Atemnot, Brustschmerz, Tachykardie).",
+      "Erstelle eine Notfallkarte mit den Sofortmaßnahmen in der richtigen Reihenfolge.",
+      "Erkläre den Zusammenhang zwischen Beinvenenthrombose und Lungenembolie.",
+    ],
+    topics: ["1a Lungenembolie", "1. Definition Thrombose"],
+  },
 ]

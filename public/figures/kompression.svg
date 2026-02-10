@@ -1,14 +1,98 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
-  <title id="title">Kompressionsverband</title>
-  <desc id="desc">Schema für Wickelrichtung von distal nach proximal.</desc>
-  <rect width="640" height="360" fill="#f8fafc" />
-  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Kompressionsverband</text>
-  <rect x="260" y="90" width="120" height="200" rx="50" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2" />
-  <line x1="260" y1="250" x2="380" y2="250" stroke="#94a3b8" stroke-width="3" />
-  <line x1="260" y1="210" x2="380" y2="210" stroke="#94a3b8" stroke-width="3" />
-  <line x1="260" y1="170" x2="380" y2="170" stroke="#94a3b8" stroke-width="3" />
-  <line x1="260" y1="130" x2="380" y2="130" stroke="#94a3b8" stroke-width="3" />
-  <polygon points="430,110 480,110 480,90" fill="#38bdf8" />
-  <line x1="430" y1="110" x2="480" y2="90" stroke="#38bdf8" stroke-width="3" />
-  <text x="420" y="150" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Druck nach oben</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" role="img" aria-labelledby="title desc">
+  <title id="title">Kompressionsverband – Anleitung &amp; Technik</title>
+  <desc id="desc">Schritt-für-Schritt-Anleitung zum Anlegen eines Kompressionsverbandes mit Druckverteilung und Kontrolle.</desc>
+  <rect width="640" height="440" fill="#f0f9ff" rx="8"/>
+
+  <!-- Title -->
+  <text x="320" y="28" font-family="Arial, sans-serif" font-size="18" fill="#1e293b" font-weight="700" text-anchor="middle">Kompressionsverband – Technik &amp; Anleitung</text>
+  <text x="320" y="46" font-family="Arial, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Zur Thromboseprophylaxe und bei venöser Insuffizienz</text>
+
+  <!-- Leg diagram (center) -->
+  <rect x="235" y="58" width="170" height="290" rx="60" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Foot label -->
+  <text x="320" y="340" font-family="Arial, sans-serif" font-size="10" fill="#0c4a6e" font-weight="600" text-anchor="middle">Fuß (distal)</text>
+  <text x="320" y="80" font-family="Arial, sans-serif" font-size="10" fill="#0c4a6e" font-weight="600" text-anchor="middle">Knie (proximal)</text>
+
+  <!-- Bandage wraps -->
+  <rect x="250" y="300" width="140" height="18" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <rect x="252" y="275" width="136" height="18" rx="4" fill="#3b82f6" opacity="0.7"/>
+  <rect x="255" y="250" width="130" height="18" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="258" y="225" width="124" height="18" rx="4" fill="#3b82f6" opacity="0.5"/>
+  <rect x="261" y="200" width="118" height="18" rx="4" fill="#3b82f6" opacity="0.4"/>
+  <rect x="264" y="175" width="112" height="18" rx="4" fill="#3b82f6" opacity="0.35"/>
+  <rect x="267" y="150" width="106" height="18" rx="4" fill="#3b82f6" opacity="0.3"/>
+  <rect x="270" y="125" width="100" height="18" rx="4" fill="#3b82f6" opacity="0.25"/>
+  <rect x="273" y="100" width="94" height="18" rx="4" fill="#3b82f6" opacity="0.2"/>
+
+  <!-- Pressure arrow -->
+  <line x1="415" y1="310" x2="415" y2="105" stroke="#1d4ed8" stroke-width="3" marker-end="url(#pArrow)"/>
+  <defs>
+    <marker id="pArrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,2 L8,5 L0,8" fill="#1d4ed8"/>
+    </marker>
+  </defs>
+  <text x="425" y="200" font-family="Arial, sans-serif" font-size="10" fill="#1d4ed8" font-weight="700" transform="rotate(-90,425,200)">Druck nimmt ab ↑</text>
+
+  <!-- Pressure labels -->
+  <rect x="430" y="295" width="70" height="20" rx="4" fill="#dbeafe"/>
+  <text x="465" y="309" font-family="Arial, sans-serif" font-size="9" fill="#1e40af" font-weight="600" text-anchor="middle">100% Druck</text>
+  <rect x="430" y="195" width="70" height="20" rx="4" fill="#dbeafe"/>
+  <text x="465" y="209" font-family="Arial, sans-serif" font-size="9" fill="#1e40af" font-weight="600" text-anchor="middle">70% Druck</text>
+  <rect x="430" y="100" width="70" height="20" rx="4" fill="#dbeafe"/>
+  <text x="465" y="114" font-family="Arial, sans-serif" font-size="9" fill="#1e40af" font-weight="600" text-anchor="middle">40% Druck</text>
+
+  <!-- Left: Anleitungsschritte -->
+  <rect x="15" y="58" width="208" height="172" rx="10" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+  <text x="30" y="78" font-family="Arial, sans-serif" font-size="12" fill="#166534" font-weight="700">📋 Anleitung</text>
+  <line x1="30" y1="84" x2="210" y2="84" stroke="#86efac" stroke-width="1"/>
+  <text x="30" y="102" font-family="Arial, sans-serif" font-size="10" fill="#15803d">1. Bein morgens wickeln</text>
+  <text x="38" y="116" font-family="Arial, sans-serif" font-size="9" fill="#15803d">(vor dem Aufstehen!)</text>
+  <text x="30" y="134" font-family="Arial, sans-serif" font-size="10" fill="#15803d">2. Am Fußrücken beginnen</text>
+  <text x="30" y="152" font-family="Arial, sans-serif" font-size="10" fill="#15803d">3. Dachziegelartig wickeln</text>
+  <text x="30" y="170" font-family="Arial, sans-serif" font-size="10" fill="#15803d">4. Gleichmäßiger Zug</text>
+  <text x="30" y="188" font-family="Arial, sans-serif" font-size="10" fill="#15803d">5. Ferse einbinden</text>
+  <text x="30" y="206" font-family="Arial, sans-serif" font-size="10" fill="#15803d">6. Faltenfrei anlegen</text>
+  <text x="30" y="224" font-family="Arial, sans-serif" font-size="10" fill="#15803d">7. Unterhalb Knie enden</text>
+
+  <!-- Left: Kontrolle -->
+  <rect x="15" y="240" width="208" height="108" rx="10" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="30" y="260" font-family="Arial, sans-serif" font-size="12" fill="#92400e" font-weight="700">🔍 Kontrolle (regelmäßig!)</text>
+  <line x1="30" y1="266" x2="210" y2="266" stroke="#fcd34d" stroke-width="1"/>
+  <text x="30" y="284" font-family="Arial, sans-serif" font-size="10" fill="#a16207">☑ Zehen frei &amp; beweglich?</text>
+  <text x="30" y="300" font-family="Arial, sans-serif" font-size="10" fill="#a16207">☑ Durchblutung (warm, rosig)?</text>
+  <text x="30" y="316" font-family="Arial, sans-serif" font-size="10" fill="#a16207">☑ Sensibilität vorhanden?</text>
+  <text x="30" y="332" font-family="Arial, sans-serif" font-size="10" fill="#a16207">☑ Keine Druckstellen?</text>
+  <text x="30" y="348" font-family="Arial, sans-serif" font-size="10" fill="#a16207">☑ Verband rutscht nicht?</text>
+
+  <!-- Right: MTS -->
+  <rect x="510" y="58" width="118" height="130" rx="10" fill="#fce7f3" stroke="#f9a8d4" stroke-width="1.5"/>
+  <text x="520" y="78" font-family="Arial, sans-serif" font-size="10" fill="#9d174d" font-weight="700">MTS (Strumpf)</text>
+  <line x1="520" y1="84" x2="618" y2="84" stroke="#f9a8d4" stroke-width="1"/>
+  <text x="520" y="100" font-family="Arial, sans-serif" font-size="9" fill="#be185d">• Richtige Größe</text>
+  <text x="520" y="115" font-family="Arial, sans-serif" font-size="9" fill="#be185d">  abmessen!</text>
+  <text x="520" y="130" font-family="Arial, sans-serif" font-size="9" fill="#be185d">• Morgens anziehen</text>
+  <text x="520" y="145" font-family="Arial, sans-serif" font-size="9" fill="#be185d">• Faltenfrei sitzen</text>
+  <text x="520" y="160" font-family="Arial, sans-serif" font-size="9" fill="#be185d">• Täglich waschen</text>
+  <text x="520" y="175" font-family="Arial, sans-serif" font-size="9" fill="#be185d">• Nach 6 Mon.</text>
+  <text x="520" y="186" font-family="Arial, sans-serif" font-size="9" fill="#be185d">  erneuern</text>
+
+  <!-- Prinzip box -->
+  <rect x="510" y="200" width="118" height="70" rx="10" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="520" y="218" font-family="Arial, sans-serif" font-size="10" fill="#1e40af" font-weight="700">Prinzip:</text>
+  <text x="520" y="235" font-family="Arial, sans-serif" font-size="9" fill="#2563eb">Druck von</text>
+  <text x="520" y="248" font-family="Arial, sans-serif" font-size="9" fill="#2563eb" font-weight="700">distal → proximal</text>
+  <text x="520" y="264" font-family="Arial, sans-serif" font-size="9" fill="#2563eb">(unten → oben)</text>
+
+  <!-- Warning/info box -->
+  <rect x="15" y="365" width="610" height="60" rx="8" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="30" y="383" font-family="Arial, sans-serif" font-size="10" fill="#854d0e" font-weight="700">⚠ Kontraindikationen:</text>
+  <text x="165" y="383" font-family="Arial, sans-serif" font-size="10" fill="#a16207">pAVK (periphere arterielle Verschlusskrankheit), dekompensierte Herzinsuffizienz, akute Dermatitis</text>
+  <text x="30" y="400" font-family="Arial, sans-serif" font-size="10" fill="#854d0e" font-weight="700">⚠ Bei Schmerzen, Taubheit, Blaufärbung der Zehen:</text>
+  <text x="310" y="400" font-family="Arial, sans-serif" font-size="10" fill="#b91c1c" font-weight="700">Verband SOFORT entfernen und Arzt informieren!</text>
+  <text x="30" y="418" font-family="Arial, sans-serif" font-size="10" fill="#854d0e" font-weight="700">Ziel:</text>
+  <text x="55" y="418" font-family="Arial, sans-serif" font-size="10" fill="#a16207">Venösen Rückfluss verbessern, Ödeme verhindern, Muskelpumpe unterstützen</text>
+
+  <!-- Source -->
+  <text x="320" y="438" font-family="Arial, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Quelle: Text - Kompressionsverband / Text - Medizinischer Thromboseprophylaxestrumpf</text>
 </svg>

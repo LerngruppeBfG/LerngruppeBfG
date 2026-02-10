@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -8,6 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
+const repo = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "Lerngruppe26"
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true" || process.env.GITHUB_PAGES === "true"
+const basePath = isGitHubPages ? `/${repo}` : ""
 
 const figureSections = [
   {
@@ -207,11 +210,12 @@ export default function AbbildungenPage() {
                       <CardDescription>{figure.caption}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <Image
-                        src={figure.image}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`${basePath}${figure.image}`}
                         alt={`Abbildung ${figure.name}`}
                         width={640}
-                        height={360}
+                        height={440}
                         className="w-full rounded-lg border border-indigo-100 bg-white p-4"
                       />
                       <div>

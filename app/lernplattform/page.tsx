@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { learningMethods } from "@/lib/learningMethods"
+import { PdfLink } from "@/components/pdf-link"
+import { QuizItem } from "@/components/quiz-item"
 
 const pdfSources = {
   wounds: [
@@ -457,13 +459,11 @@ export default function LernplattformPage() {
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {pdfCatalog.map((doc) => (
-                    <Badge
+                    <PdfLink
                       key={doc}
-                      variant="outline"
-                      className="border-dashed text-[11px]"
-                    >
-                      {doc}
-                    </Badge>
+                      name={doc}
+                      className="text-[11px] no-underline"
+                    />
                   ))}
                 </div>
               </div>
@@ -519,13 +519,11 @@ export default function LernplattformPage() {
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {field.documents.map((doc) => (
-                        <Badge
+                        <PdfLink
                           key={doc}
-                          variant="outline"
-                          className="border-dashed text-xs"
-                        >
-                          {doc}
-                        </Badge>
+                          name={doc}
+                          className="text-xs"
+                        />
                       ))}
                     </div>
                   </div>
@@ -632,38 +630,14 @@ export default function LernplattformPage() {
           </p>
           <div className="grid gap-4 lg:grid-cols-2">
             {quizItems.map((quiz) => (
-              <Card key={quiz.title} className="bg-white/80">
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="text-lg">{quiz.title}</CardTitle>
-                    <Badge>Lernquiz</Badge>
-                  </div>
-                  <CardDescription>{quiz.question}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-gray-600">
-                  <ol className="space-y-1 text-sm text-gray-600">
-                    {quiz.options.map((option, index) => (
-                      <li key={option} className="flex gap-2">
-                        <span className="font-semibold text-gray-500">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span>{option}</span>
-                      </li>
-                    ))}
-                  </ol>
-                  <details className="rounded-lg border border-dashed border-gray-200 bg-white/80 p-3">
-                    <summary className="cursor-pointer text-sm font-medium text-gray-700">
-                      Lösung anzeigen
-                    </summary>
-                    <p className="mt-2 font-medium text-gray-700">
-                      Richtige Antwort: {quiz.answer}
-                    </p>
-                    <p className="mt-2 text-xs text-gray-500">
-                      {quiz.explanation}
-                    </p>
-                  </details>
-                </CardContent>
-              </Card>
+              <QuizItem
+                key={quiz.title}
+                title={quiz.title}
+                question={quiz.question}
+                options={quiz.options}
+                answer={quiz.answer}
+                explanation={quiz.explanation}
+              />
             ))}
           </div>
         </section>

@@ -1,19 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
-  <title id="title">DGE Ernährungsteller</title>
-  <desc id="desc">Tellerdiagramm mit Gemüse, Vollkorn und Eiweiß.</desc>
-  <rect width="640" height="360" fill="#f8fafc" />
-  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">DGE-Ernährungsteller</text>
-  <circle cx="320" cy="200" r="120" fill="#f1f5f9" stroke="#cbd5f5" stroke-width="2" />
-  <path d="M320 200 L320 80 A120 120 0 0 1 432 140 Z" fill="#bbf7d0" />
-  <path d="M320 200 L432 140 A120 120 0 0 1 432 260 Z" fill="#fde68a" />
-  <path d="M320 200 L432 260 A120 120 0 0 1 320 320 Z" fill="#bfdbfe" />
-  <path d="M320 200 L320 320 A120 120 0 0 1 200 260 Z" fill="#fecaca" />
-  <path d="M320 200 L200 260 A120 120 0 0 1 200 140 Z" fill="#e9d5ff" />
-  <path d="M320 200 L200 140 A120 120 0 0 1 320 80 Z" fill="#fed7aa" />
-  <text x="450" y="130" font-family="Arial, sans-serif" font-size="12" fill="#166534">Gemüse/Obst</text>
-  <text x="450" y="205" font-family="Arial, sans-serif" font-size="12" fill="#92400e">Vollkorn</text>
-  <text x="450" y="275" font-family="Arial, sans-serif" font-size="12" fill="#1d4ed8">Eiweiß</text>
-  <text x="160" y="285" font-family="Arial, sans-serif" font-size="12" fill="#b91c1c">Fette sparsam</text>
-  <text x="150" y="205" font-family="Arial, sans-serif" font-size="12" fill="#6b21a8">Milchprodukte</text>
-  <text x="160" y="130" font-family="Arial, sans-serif" font-size="12" fill="#9a3412">Getränke</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" role="img" aria-labelledby="title desc">
+  <title id="title">DGE-Ernährungsteller – Die 10 Regeln</title>
+  <desc id="desc">Visualisierung der DGE-Ernährungsregeln mit Mengenempfehlungen für eine ausgewogene Ernährung.</desc>
+  <rect width="640" height="440" fill="#fefce8" rx="8"/>
+
+  <!-- Title -->
+  <text x="320" y="28" font-family="Arial, sans-serif" font-size="18" fill="#1e293b" font-weight="700" text-anchor="middle">DGE-Ernährungsteller</text>
+  <text x="320" y="46" font-family="Arial, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Die 10 Regeln der Deutschen Gesellschaft für Ernährung</text>
+
+  <!-- Plate circle -->
+  <circle cx="210" cy="200" r="135" fill="#f8fafc" stroke="#e2e8f0" stroke-width="3"/>
+
+  <!-- Segments -->
+  <!-- Gemüse/Obst (largest, 40%) -->
+  <path d="M210 200 L210 65 A135 135 0 0 1 320 115 Z" fill="#bbf7d0" stroke="#fff" stroke-width="2"/>
+  <text x="260" y="105" font-family="Arial, sans-serif" font-size="10" fill="#166534" font-weight="700">Gemüse</text>
+  <text x="260" y="118" font-family="Arial, sans-serif" font-size="10" fill="#166534" font-weight="700">&amp; Obst</text>
+
+  <!-- Getreide/Kartoffeln (30%) -->
+  <path d="M210 200 L320 115 A135 135 0 0 1 340 240 Z" fill="#fde68a" stroke="#fff" stroke-width="2"/>
+  <text x="290" y="185" font-family="Arial, sans-serif" font-size="9" fill="#92400e" font-weight="700">Vollkorn</text>
+  <text x="290" y="197" font-family="Arial, sans-serif" font-size="9" fill="#92400e" font-weight="700">Kartoffeln</text>
+
+  <!-- Eiweiß (15%) -->
+  <path d="M210 200 L340 240 A135 135 0 0 1 260 330 Z" fill="#bfdbfe" stroke="#fff" stroke-width="2"/>
+  <text x="278" y="285" font-family="Arial, sans-serif" font-size="9" fill="#1e40af" font-weight="700">Eiweiß</text>
+
+  <!-- Fette (5%) -->
+  <path d="M210 200 L260 330 A135 135 0 0 1 160 330 Z" fill="#fecaca" stroke="#fff" stroke-width="2"/>
+  <text x="198" y="310" font-family="Arial, sans-serif" font-size="8" fill="#b91c1c" font-weight="600">Fette</text>
+
+  <!-- Milchprodukte (10%) -->
+  <path d="M210 200 L160 330 A135 135 0 0 1 82 250 Z" fill="#e9d5ff" stroke="#fff" stroke-width="2"/>
+  <text x="112" y="290" font-family="Arial, sans-serif" font-size="8" fill="#7c3aed" font-weight="600">Milch</text>
+
+  <!-- Getränke hint -->
+  <path d="M210 200 L82 250 A135 135 0 0 1 210 65 Z" fill="#cffafe" stroke="#fff" stroke-width="2"/>
+  <text x="130" y="145" font-family="Arial, sans-serif" font-size="9" fill="#0e7490" font-weight="700">Getränke</text>
+  <text x="130" y="158" font-family="Arial, sans-serif" font-size="8" fill="#0e7490">1,5L Wasser</text>
+
+  <!-- Center circle -->
+  <circle cx="210" cy="200" r="28" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="210" y="197" font-family="Arial, sans-serif" font-size="9" fill="#1e293b" font-weight="700" text-anchor="middle">DGE</text>
+  <text x="210" y="210" font-family="Arial, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">Teller</text>
+
+  <!-- Right side: 10 Rules -->
+  <rect x="370" y="58" width="258" height="330" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="385" y="80" font-family="Arial, sans-serif" font-size="13" fill="#166534" font-weight="700">Die 10 DGE-Regeln:</text>
+  <line x1="385" y1="86" x2="615" y2="86" stroke="#86efac" stroke-width="1"/>
+
+  <text x="385" y="106" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">1. Lebensmittelvielfalt genießen</text>
+  <text x="385" y="126" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">2. Gemüse &amp; Obst: 5 am Tag</text>
+  <text x="400" y="140" font-family="Arial, sans-serif" font-size="9" fill="#22c55e">→ 3× Gemüse + 2× Obst</text>
+  <text x="385" y="160" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">3. Vollkorn wählen</text>
+  <text x="385" y="180" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">4. Tierische Produkte ergänzen</text>
+  <text x="400" y="194" font-family="Arial, sans-serif" font-size="9" fill="#22c55e">→ Milch täglich, Fisch 1–2×/Woche</text>
+  <text x="385" y="214" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">5. Gesundheitsförderliche Fette</text>
+  <text x="400" y="228" font-family="Arial, sans-serif" font-size="9" fill="#22c55e">→ Pflanzliche Öle bevorzugen</text>
+  <text x="385" y="248" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">6. Zucker &amp; Salz sparen</text>
+  <text x="385" y="268" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">7. Wasser trinken: 1,5 L/Tag</text>
+  <text x="385" y="288" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">8. Schonend zubereiten</text>
+  <text x="385" y="308" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">9. Achtsam essen &amp; genießen</text>
+  <text x="385" y="328" font-family="Arial, sans-serif" font-size="10" fill="#15803d" font-weight="600">10. Bewegen &amp; Gewicht halten</text>
+  <text x="400" y="342" font-family="Arial, sans-serif" font-size="9" fill="#22c55e">→ 30–60 Min. Bewegung/Tag</text>
+
+  <!-- Fleisch limit -->
+  <rect x="370" y="356" width="258" height="32" rx="6" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+  <text x="385" y="376" font-family="Arial, sans-serif" font-size="10" fill="#b91c1c" font-weight="700">🥩 Fleisch: max. 300–600 g/Woche</text>
+
+  <!-- Bottom info -->
+  <rect x="15" y="400" width="610" height="28" rx="8" fill="#fefce8" stroke="#fde047" stroke-width="1"/>
+  <text x="30" y="418" font-family="Arial, sans-serif" font-size="10" fill="#854d0e" font-weight="700">⚠ Diabetes-Tipp: </text>
+  <text x="120" y="418" font-family="Arial, sans-serif" font-size="10" fill="#a16207">Ballaststoffreich essen (Vollkorn), Zucker reduzieren, regelmäßige Mahlzeiten, kein Alkohol auf leeren Magen</text>
+
+  <!-- Source -->
+  <text x="320" y="438" font-family="Arial, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Quelle: 2. Die 10 Regeln der DGE</text>
 </svg>
