@@ -78,7 +78,7 @@
   <text x="335" y="325" font-family="Arial, sans-serif" font-size="9" fill="#2563eb">• Kreislauf labil</text>
   <text x="335" y="342" font-family="Arial, sans-serif" font-size="9" fill="#166534" font-weight="600">Pflege:</text>
   <text x="335" y="356" font-family="Arial, sans-serif" font-size="9" fill="#166534">Wäsche wechseln,</text>
-  <text x="335" y="368" font-family="Arial, sans-serif" font-size="9" fill="#166534">Flüssigkeit, Kreislauf beob.</text>
+  <text x="335" y="368" font-family="Arial, sans-serif" font-size="9" fill="#166534">Flüssigkeit, Kreislauf prüfen</text>
 
   <!-- Phase 4: Erschöpfung -->
   <rect x="480" y="278" width="145" height="98" rx="8" fill="#f3e8ff" stroke="#c4b5fd" stroke-width="1.5"/>
