@@ -419,7 +419,7 @@ function generateQuizItemsFallback(
     },
     {
       q: (t: string) => `Was gehört zu den Grundlagen von ${t}?`,
-      options: () => [
+      options: (_t: string) => [
         `Nur theoretisches Wissen ohne Praxisbezug.`,
         `Definition, Ursachen und pflegerische Maßnahmen.`,
         `Ausschließlich medikamentöse Therapie.`,
@@ -431,7 +431,7 @@ function generateQuizItemsFallback(
     },
     {
       q: (t: string) => `Welche Maßnahme ist im Rahmen von ${t} besonders wichtig?`,
-      options: () => [
+      options: (_t: string) => [
         `Abwarten ohne Intervention.`,
         `Gezielte Beobachtung und Dokumentation.`,
         `Eigenständige Medikamentengabe ohne Arztanordnung.`,
@@ -443,7 +443,7 @@ function generateQuizItemsFallback(
     },
     {
       q: (t: string) => `Worauf muss bei ${t} in der Pflegepraxis geachtet werden?`,
-      options: () => [
+      options: (_t: string) => [
         `Es gibt keine besonderen Anforderungen.`,
         `Auf individuelle Patientenbedürfnisse und Sicherheit.`,
         `Nur auf ärztliche Anweisungen.`,
