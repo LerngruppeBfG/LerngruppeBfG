@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { CheckCircle, XCircle as X } from "lucide-react"
+import { CheckCircle, XCircle } from "lucide-react"
 import emailjs from '@emailjs/browser'
 import { addParticipant } from '@/lib/participantService'
 
@@ -236,7 +236,7 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
         <Card className={`p-8 text-center ${saveFailed ? "border-red-200 bg-red-50" : ""}`}>
           {saveFailed ? (
             <>
-              <X className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Anmeldung fehlgeschlagen</h2>
               <p className="text-gray-600 mb-2">
                 Die Datenbank ist derzeit nicht erreichbar. Bitte versuche es später erneut.
