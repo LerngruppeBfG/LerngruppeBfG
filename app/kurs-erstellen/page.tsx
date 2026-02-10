@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -140,53 +140,59 @@ function StepPdfUpload({
   pdfFiles,
   onAdd,
   onRemove,
+  fileInputRef,
 }: {
   pdfFiles: string[]
   onAdd: (name: string) => void
   onRemove: (name: string) => void
+  fileInputRef: React.RefObject<HTMLInputElement | null>
 }) {
-  const [newPdf, setNewPdf] = useState("")
-
-  function handleAdd() {
-    const name = newPdf.trim()
-    if (name && !pdfFiles.includes(name)) {
-      onAdd(name)
-      setNewPdf("")
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (!files) return
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      if (file.type === "application/pdf") {
+        const name = file.name.replace(/\.pdf$/i, "")
+        if (!pdfFiles.includes(name)) {
+          onAdd(name)
+        }
+      }
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
   return (
     <Card className="bg-white/90">
       <CardHeader>
-        <CardTitle className="text-lg">Schritt 2: PDF-Dateien</CardTitle>
+        <CardTitle className="text-lg">Schritt 2: PDF-Dateien hochladen</CardTitle>
         <CardDescription>
-          Füge die Namen der PDF-Dateien hinzu, die für diesen Kurs benötigt
-          werden. Die PDFs werden im Ordner <code>/pdf-uploads</code>{" "}
-          abgelegt.
+          Lade die PDF-Dateien hoch, die für diesen Kurs benötigt werden. Die
+          PDFs werden im Ordner <code>/pdf-uploads</code> abgelegt.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex gap-2">
+        <div
+          className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50/50 p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-colors"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <div className="text-3xl mb-2">📄</div>
+          <p className="text-sm font-medium text-gray-700">
+            Klicke hier oder ziehe PDF-Dateien hierher
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Nur PDF-Dateien (.pdf) werden akzeptiert
+          </p>
           <input
-            type="text"
-            value={newPdf}
-            onChange={(e) => setNewPdf(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault()
-                handleAdd()
-              }
-            }}
-            placeholder="PDF-Name eingeben (z.B. Anatomie Grundlagen)"
-            className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,application/pdf"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
           />
-          <button
-            onClick={handleAdd}
-            disabled={!newPdf.trim()}
-            className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Hinzufügen
-          </button>
         </div>
 
         {pdfFiles.length > 0 ? (
@@ -210,13 +216,13 @@ function StepPdfUpload({
           </ul>
         ) : (
           <p className="text-sm text-gray-400 italic">
-            Noch keine PDFs hinzugefügt.
+            Noch keine PDFs hochgeladen.
           </p>
         )}
 
         <p className="text-xs text-gray-400">
           {pdfFiles.length} PDF-Datei{pdfFiles.length !== 1 ? "en" : ""}{" "}
-          hinzugefügt
+          hochgeladen
         </p>
       </CardContent>
     </Card>
@@ -421,6 +427,7 @@ export default function KursErstellenPage() {
     () => ({ ...defaultModuleConfig })
   )
   const [created, setCreated] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const totalSteps = 4
 
@@ -546,6 +553,7 @@ export default function KursErstellenPage() {
               onRemove={(name) =>
                 setPdfFiles((prev) => prev.filter((n) => n !== name))
               }
+              fileInputRef={fileInputRef}
             />
           )}
           {step === 2 && (

@@ -709,9 +709,32 @@ export default function LernplattformPage() {
             <span className="font-semibold">/pdf-uploads{" "}</span>ab, damit
             Lernmethoden und Backtests aktuell bleiben.
           </p>
-          <Link href="/" className="text-primary hover:underline">
-            Zur Startseite
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/" className="text-primary hover:underline">
+              Startseite
+            </Link>
+            <Link href="/kurse" className="text-primary hover:underline">
+              Alle Kurse
+            </Link>
+            <Link href="/ki-quiz" className="text-primary hover:underline">
+              KI-Quiz
+            </Link>
+            <Link href="/ki-assistent" className="text-primary hover:underline">
+              KI-Assistent
+            </Link>
+            <Link href="/lernkarten" className="text-primary hover:underline">
+              Lernkarten
+            </Link>
+            <Link href="/lernquiz" className="text-primary hover:underline">
+              Lernquiz
+            </Link>
+            <Link href="/lerntabellen" className="text-primary hover:underline">
+              Lerntabellen
+            </Link>
+            <Link href="/kurs-erstellen" className="text-primary hover:underline">
+              Kurs erstellen
+            </Link>
+          </div>
         </footer>
       </div>
     </main>

@@ -61,7 +61,7 @@ export default function Home() {
             Teilnehmerliste
           </button>
           <Link
-            href="/lernplattform"
+            href="/lernplattform-auswahl"
             className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
           >
             <BookOpen className="w-5 h-5" />
@@ -93,7 +93,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-2 text-xs text-gray-400">
             <div className="flex gap-4">
               <Link
-                href="/lernplattform"
+                href="/lernplattform-auswahl"
                 className="hover:text-primary transition-colors"
               >
                 Lernplattform

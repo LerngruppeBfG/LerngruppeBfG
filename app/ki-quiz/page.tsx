@@ -193,6 +193,26 @@ function generateWrongEndings(entry: KnowledgeEntry): string[] {
   ).slice(0, 3)
 }
 
+function generateFallbackQuestion(entry: KnowledgeEntry): GeneratedQuestion {
+  const keywords = entry.keywords.length > 0 ? entry.keywords : [entry.subtopic]
+  const keyword = keywords[Math.floor(Math.random() * keywords.length)]
+  const otherTopics = getTopics().filter((t) => t !== entry.topic)
+  const wrongTopics = shuffle(otherTopics).slice(0, 3)
+
+  const options = shuffle([entry.topic, ...wrongTopics])
+  const correctIndex = options.indexOf(entry.topic)
+
+  return {
+    id: ++questionCounter,
+    topic: entry.topic,
+    question: `Zu welchem Themenbereich gehört der Begriff „${keyword}"?`,
+    options,
+    correctIndex,
+    explanation: `„${keyword}" gehört zum Thema ${entry.topic} – ${entry.subtopic}.`,
+    source: entry.source,
+  }
+}
+
 function generateQuiz(
   count: number,
   topicFilter: string | null
@@ -205,13 +225,49 @@ function generateQuiz(
   const shuffledEntries = shuffle(entries)
   const questions: GeneratedQuestion[] = []
 
+  // First pass: try all templates for each entry
   for (const entry of shuffledEntries) {
     if (questions.length >= count) break
 
-    const template = templates[Math.floor(Math.random() * templates.length)]
-    const question = template.build(entry)
-    if (question) {
-      questions.push(question)
+    const shuffledTemplates = shuffle([...templates])
+    for (const template of shuffledTemplates) {
+      const question = template.build(entry)
+      if (question) {
+        questions.push(question)
+        break
+      }
+    }
+  }
+
+  // Second pass: if still not enough, try remaining entries with all templates
+  if (questions.length < count) {
+    const usedEntryTopics = new Set(questions.map((q) => `${q.topic}-${q.source}`))
+    for (const entry of shuffle(entries)) {
+      if (questions.length >= count) break
+      const key = `${entry.topic}-${entry.source}`
+      if (usedEntryTopics.has(key)) continue
+
+      for (const template of shuffle([...templates])) {
+        const question = template.build(entry)
+        if (question) {
+          questions.push(question)
+          usedEntryTopics.add(key)
+          break
+        }
+      }
+    }
+  }
+
+  // Third pass: generate fallback questions to fill remaining count
+  if (questions.length < count) {
+    const allEntries = topicFilter
+      ? pdfKnowledge.filter((e) => e.topic === topicFilter)
+      : pdfKnowledge
+
+    for (const entry of shuffle(allEntries)) {
+      if (questions.length >= count) break
+      const fallback = generateFallbackQuestion(entry)
+      questions.push(fallback)
     }
   }
 
@@ -485,12 +541,24 @@ export default function KiQuizPage() {
             Die Quizfragen werden dynamisch aus dem PDF-Wissen generiert. Klicke
             auf „Neue Fragen generieren" für frische Fragen.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link href="/lernplattform" className="text-primary hover:underline">
               Zur Lernplattform
             </Link>
             <Link href="/ki-assistent" className="text-primary hover:underline">
               Zum KI-Assistenten
+            </Link>
+            <Link href="/kurse" className="text-primary hover:underline">
+              Alle Kurse
+            </Link>
+            <Link href="/lernkarten" className="text-primary hover:underline">
+              Lernkarten
+            </Link>
+            <Link href="/lernquiz" className="text-primary hover:underline">
+              Lernquiz
+            </Link>
+            <Link href="/" className="text-primary hover:underline">
+              Startseite
             </Link>
           </div>
         </footer>
