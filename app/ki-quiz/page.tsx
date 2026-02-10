@@ -333,15 +333,17 @@ const quizTips = [
   },
 ]
 
+const DEFAULT_QUESTION_COUNT = 8
+
 export default function KiQuizPage() {
   const topics = getTopics()
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
-  const [questionCount, setQuestionCount] = useState(8)
+  const [questionCount, setQuestionCount] = useState(DEFAULT_QUESTION_COUNT)
   const [questions, setQuestions] = useState<GeneratedQuestion[]>([])
   const [score, setScore] = useState<{ correct: number; total: number } | null>(null)
 
   useEffect(() => {
-    setQuestions(generateQuiz(8, null))
+    setQuestions(generateQuiz(DEFAULT_QUESTION_COUNT, null))
   }, [])
 
   const regenerate = useCallback(() => {
