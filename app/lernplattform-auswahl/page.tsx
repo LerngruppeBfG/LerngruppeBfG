@@ -24,7 +24,7 @@ export default function LernplattformAuswahlPage() {
     setCourses(getStoredCourses())
   }, [])
 
-  const pflegefachkraftLevels: { level: CourseLevel; label: string; description: string }[] = [
+  const pflegefachkraftLevelConfigs: { level: CourseLevel; label: string; description: string }[] = [
     {
       level: "unterkurs",
       label: "Unterkurs",
@@ -87,7 +87,7 @@ export default function LernplattformAuswahlPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {pflegefachkraftLevels.map((item) => {
+              {pflegefachkraftLevelConfigs.map((item) => {
                 const levelCourses = courses.filter(
                   (c) => c.level === item.level
                 )
