@@ -70,8 +70,8 @@ export const getParticipants = async (): Promise<Participant[]> => {
 const deleteParticipantByTokenViaApi = async (deleteToken: string): Promise<boolean | null> => {
   const basePath = typeof window === 'undefined'
     ? ''
-    : window.location.pathname.replace(/\/delete\/?$/, '')
-  const apiUrl = `${basePath || ''}/api/delete`
+    : window.location.pathname.replace(/\/delete\/?$/, '').replace(/\/$/, '')
+  const apiUrl = `${basePath}/api/delete`
   let response: Response
   try {
     response = await fetch(apiUrl, {
@@ -138,16 +138,15 @@ const ensureDeleteTokenSession = async (deleteToken: string) => {
 
 const deleteParticipantByTokenViaClient = async (deleteToken: string): Promise<boolean> => {
   await ensureDeleteTokenSession(deleteToken)
-  const { data, error } = await supabase!
+  const { error, count } = await supabase!
     .from(TABLE_NAME)
-    .delete()
+    .delete({ count: 'exact' })
     .eq('deleteToken', deleteToken)
-    .select('id')
   if (error) {
     console.error('[Supabase] Error deleting participant:', error)
     throw error
   }
-  if (!data || data.length === 0) {
+  if (count === null || count === 0) {
     console.log('[Supabase] No participant found with token:', deleteToken)
     return false
   }

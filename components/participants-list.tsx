@@ -145,7 +145,8 @@ export function ParticipantsList() {
       return
     }
 
-    if (typedEmail !== deleteTarget.email.toLowerCase()) {
+    const targetEmail = deleteTarget.email.trim().toLowerCase()
+    if (typedEmail !== targetEmail) {
       setDeleteStatus({ message: "E-Mail-Adresse stimmt nicht überein.", type: "error" })
       return
     }

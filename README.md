@@ -36,6 +36,21 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+> **GitHub Pages preview:** When `GITHUB_ACTIONS=true` the app uses the `/Lerngruppe26` base path. In that case use `http://localhost:3000/Lerngruppe26/`.
+
+## Quick Tutorial: Test registration + deletion
+
+1. Ensure Supabase is configured via `.env.local` (see **Supabase Setup** below).
+2. Start the dev server: `npm run dev`.
+3. Register a participant with your email.
+4. Open **Teilnehmerliste**, click the **X** next to your entry.
+5. Enter the same email address and confirm deletion.
+
+If deletion fails across devices:
+- Confirm **Anonymous Sign-ins** are enabled in Supabase (**Authentication → Providers**).
+- Ensure the **delete by token** policy in [SUPABASE_SETUP.md](SUPABASE_SETUP.md) is applied.
+- For server-capable hosting, set `SUPABASE_SERVICE_ROLE_KEY` so `/api/delete` can delete with the service role.
+
 ## Project Structure
 
 This project uses:
@@ -69,6 +84,15 @@ https://<your-username>.github.io/Lerngruppe26/
 ```
 
 If you rename the repository, update `basePath` and `assetPrefix` in `next.config.js`.
+
+## Linting & Build
+
+```bash
+npm run lint
+npm run build
+```
+
+There are currently no automated tests in this repository.
 
 Note: The admin view is meant for local use only. It is disabled on GitHub Pages because client-side passwords are not secure on static sites.
 
