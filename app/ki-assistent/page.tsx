@@ -103,7 +103,7 @@ async function buildOpenAIAnswer(
 ): Promise<Message> {
   const systemPrompt = buildSystemPrompt()
 
-  // Build conversation for the API (last 6 messages for context)
+  // Keep last 6 messages as context window to stay within token limits
   const recentMessages = conversationHistory.slice(-6)
   const apiMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
@@ -132,10 +132,11 @@ async function buildOpenAIAnswer(
       sources,
     }
   } catch (err) {
+    const fallback = buildLocalAnswer(query)
     return {
       role: "assistant",
-      text: `⚠️ OpenAI-Fehler: ${(err as Error).message}\n\nIch nutze stattdessen den lokalen Wissens-Modus:\n\n${buildLocalAnswer(query).text}`,
-      sources: buildLocalAnswer(query).sources,
+      text: `⚠️ OpenAI-Fehler: ${(err as Error).message}\n\nIch nutze stattdessen den lokalen Wissens-Modus:\n\n${fallback.text}`,
+      sources: fallback.sources,
     }
   }
 }
