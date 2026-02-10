@@ -1,7 +1,7 @@
 /**
  * Generates learning content for a course based on topic name and PDF file names.
  *
- * When an OpenAI API key is configured (NEXT_PUBLIC_OPENAI_API_KEY in .env.local),
+ * When an OpenAI API key is configured (OPENAI_API_KEY on the server),
  * ChatGPT is used to extract and generate real educational content from the PDF
  * topics. Without an API key, a template-based fallback generates placeholder content.
  *

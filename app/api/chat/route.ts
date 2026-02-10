@@ -2,12 +2,25 @@ import { NextResponse } from "next/server"
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 
+/**
+ * Required for `output: "export"` (GitHub Pages). The GET handler provides
+ * a static fallback; the POST handler remains dynamic on server platforms.
+ */
+export const dynamic = "force-static"
+
 function getApiKey(): string {
   return process.env.OPENAI_API_KEY ?? process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""
 }
 
 function getModel(): string {
   return process.env.OPENAI_MODEL ?? process.env.NEXT_PUBLIC_OPENAI_MODEL ?? "gpt-4o-mini"
+}
+
+export function GET() {
+  return NextResponse.json(
+    { error: "POST method required" },
+    { status: 405 }
+  )
 }
 
 export async function POST(request: Request) {
