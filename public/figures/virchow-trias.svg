@@ -1,12 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
-  <title id="title">Virchow-Trias</title>
-  <desc id="desc">Dreieck mit Blutströmung, Gefäßwand und Gerinnung.</desc>
-  <rect width="640" height="360" fill="#f8fafc" />
-  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Virchow-Trias</text>
-  <polygon points="320,90 520,280 120,280" fill="#e0e7ff" stroke="#6366f1" stroke-width="2" />
-  <text x="290" y="115" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Gefäßwand</text>
-  <text x="150" y="275" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Blutströmung</text>
-  <text x="440" y="275" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Gerinnung</text>
-  <circle cx="320" cy="170" r="42" fill="#c7d2fe" />
-  <text x="295" y="176" font-family="Arial, sans-serif" font-size="12" fill="#4338ca">Risiko</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" role="img" aria-labelledby="title desc">
+  <title id="title">Virchow-Trias – Drei Ursachen der Thrombose</title>
+  <desc id="desc">Detailliertes Dreieck mit Risikofaktoren, Beispielen und Prophylaxemaßnahmen zu Blutströmung, Gefäßwand und Gerinnung.</desc>
+  <rect width="640" height="440" fill="#eef2ff" rx="8"/>
+
+  <!-- Title -->
+  <text x="320" y="28" font-family="Arial, sans-serif" font-size="18" fill="#1e293b" font-weight="700" text-anchor="middle">Virchow-Trias</text>
+  <text x="320" y="46" font-family="Arial, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Die drei Hauptursachen einer Thrombose (Gefäßverschluss durch Blutgerinnsel)</text>
+
+  <!-- Triangle -->
+  <polygon points="320,70 530,290 110,290" fill="#e0e7ff" stroke="#818cf8" stroke-width="2.5" fill-opacity="0.6"/>
+
+  <!-- Center circle: Thrombose -->
+  <circle cx="320" cy="210" r="50" fill="#c7d2fe" stroke="#6366f1" stroke-width="2"/>
+  <text x="320" y="200" font-family="Arial, sans-serif" font-size="13" fill="#4338ca" font-weight="700" text-anchor="middle">THROMBOSE</text>
+  <text x="320" y="216" font-family="Arial, sans-serif" font-size="9" fill="#4338ca" text-anchor="middle">Gefäßverschluss</text>
+  <text x="320" y="228" font-family="Arial, sans-serif" font-size="9" fill="#4338ca" text-anchor="middle">durch Thrombus</text>
+
+  <!-- Top: Gefäßwandschaden -->
+  <rect x="230" y="62" width="180" height="70" rx="10" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="320" y="82" font-family="Arial, sans-serif" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">Gefäßwandschaden</text>
+  <text x="320" y="97" font-family="Arial, sans-serif" font-size="9" fill="#a16207" text-anchor="middle">• Verletzung der Innenwand (Endothel)</text>
+  <text x="320" y="110" font-family="Arial, sans-serif" font-size="9" fill="#a16207" text-anchor="middle">• Arteriosklerose, OP-Trauma</text>
+  <text x="320" y="123" font-family="Arial, sans-serif" font-size="9" fill="#a16207" text-anchor="middle">• Entzündungen, Venenkatheter</text>
+
+  <!-- Bottom-Left: Verlangsamte Blutströmung -->
+  <rect x="30" y="292" width="200" height="80" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="130" y="312" font-family="Arial, sans-serif" font-size="12" fill="#1e40af" font-weight="700" text-anchor="middle">Verlangsamte</text>
+  <text x="130" y="326" font-family="Arial, sans-serif" font-size="12" fill="#1e40af" font-weight="700" text-anchor="middle">Blutströmung</text>
+  <text x="130" y="342" font-family="Arial, sans-serif" font-size="9" fill="#2563eb" text-anchor="middle">• Immobilität, Bettlägerigkeit</text>
+  <text x="130" y="355" font-family="Arial, sans-serif" font-size="9" fill="#2563eb" text-anchor="middle">• Varizen, Herzinsuffizienz</text>
+  <text x="130" y="368" font-family="Arial, sans-serif" font-size="9" fill="#2563eb" text-anchor="middle">• Langes Sitzen, Gipsverband</text>
+
+  <!-- Bottom-Right: Erhöhte Gerinnungsneigung -->
+  <rect x="410" y="292" width="200" height="80" rx="10" fill="#fce7f3" stroke="#f472b6" stroke-width="1.5"/>
+  <text x="510" y="312" font-family="Arial, sans-serif" font-size="12" fill="#9d174d" font-weight="700" text-anchor="middle">Erhöhte</text>
+  <text x="510" y="326" font-family="Arial, sans-serif" font-size="12" fill="#9d174d" font-weight="700" text-anchor="middle">Gerinnungsneigung</text>
+  <text x="510" y="342" font-family="Arial, sans-serif" font-size="9" fill="#be185d" text-anchor="middle">• Dehydratation, Exsikkose</text>
+  <text x="510" y="355" font-family="Arial, sans-serif" font-size="9" fill="#be185d" text-anchor="middle">• Gerinnungsstörungen</text>
+  <text x="510" y="368" font-family="Arial, sans-serif" font-size="9" fill="#be185d" text-anchor="middle">• Medikamente (z.B. Pille)</text>
+
+  <!-- Prophylaxe box -->
+  <rect x="15" y="388" width="610" height="38" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+  <text x="30" y="405" font-family="Arial, sans-serif" font-size="10" fill="#166534" font-weight="700">✓ Prophylaxemaßnahmen:</text>
+  <text x="190" y="405" font-family="Arial, sans-serif" font-size="10" fill="#15803d">Frühmobilisation | Atemübungen | Bewegungsübungen | Kompression | Ausreichend trinken</text>
+  <text x="30" y="420" font-family="Arial, sans-serif" font-size="10" fill="#166534" font-weight="700">⚠ Gefahr:</text>
+  <text x="88" y="420" font-family="Arial, sans-serif" font-size="10" fill="#15803d">Lungenembolie! Bei Verdacht → Arzt informieren, Bettruhe, Oberkörper hoch, KEINE Mobilisation!</text>
+
+  <!-- Source -->
+  <text x="320" y="438" font-family="Arial, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Quelle: 2. Übersicht Virchow-Trias / 1. Definition Thrombose / 3. Risikofaktoren einer Thrombose</text>
 </svg>

@@ -1,22 +1,87 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
   <title id="title">Wundheilungsphasen</title>
-  <desc id="desc">Zeitachse mit Exsudation, Proliferation und Regeneration.</desc>
-  <rect width="640" height="360" fill="#f8fafc" />
-  <text x="40" y="48" font-family="Arial, sans-serif" font-size="20" fill="#1f2937" font-weight="700">Wundheilung</text>
-  <line x1="60" y1="110" x2="580" y2="110" stroke="#94a3b8" stroke-width="3" />
-  <circle cx="120" cy="110" r="14" fill="#22c55e" />
-  <circle cx="320" cy="110" r="14" fill="#38bdf8" />
-  <circle cx="520" cy="110" r="14" fill="#f97316" />
-  <rect x="70" y="150" width="160" height="120" rx="12" fill="#dcfce7" />
-  <rect x="250" y="150" width="160" height="120" rx="12" fill="#e0f2fe" />
-  <rect x="430" y="150" width="160" height="120" rx="12" fill="#ffedd5" />
-  <text x="90" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#166534">Exsudation</text>
-  <text x="90" y="202" font-family="Arial, sans-serif" font-size="12" fill="#166534">0–3 Tage</text>
-  <text x="90" y="224" font-family="Arial, sans-serif" font-size="12" fill="#166534">Reinigung &amp; Schutz</text>
-  <text x="270" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0f4c81">Proliferation</text>
-  <text x="270" y="202" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">1–14 Tage</text>
-  <text x="270" y="224" font-family="Arial, sans-serif" font-size="12" fill="#0f4c81">Granulation</text>
-  <text x="450" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#9a3412">Regeneration</text>
-  <text x="450" y="202" font-family="Arial, sans-serif" font-size="12" fill="#9a3412">ab Tag 4</text>
-  <text x="450" y="224" font-family="Arial, sans-serif" font-size="12" fill="#9a3412">Narbenaufbau</text>
+  <desc id="desc">Detaillierte Zeitachse der drei Wundheilungsphasen mit Pflegeinterventionen.</desc>
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+    <marker id="arrowR" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="640" height="400" fill="url(#bgGrad)" rx="8"/>
+
+  <!-- Title -->
+  <text x="320" y="32" font-family="Arial, sans-serif" font-size="18" fill="#1e293b" font-weight="700" text-anchor="middle">Wundheilungsphasen – Übersicht</text>
+
+  <!-- Timeline -->
+  <line x1="50" y1="65" x2="590" y2="65" stroke="#94a3b8" stroke-width="2"/>
+  <text x="50" y="58" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Tag 0</text>
+  <text x="200" y="58" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Tag 3</text>
+  <text x="380" y="58" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Tag 14</text>
+  <text x="555" y="58" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Tag 21+</text>
+  <circle cx="50" cy="65" r="4" fill="#64748b"/>
+  <circle cx="200" cy="65" r="4" fill="#64748b"/>
+  <circle cx="380" cy="65" r="4" fill="#64748b"/>
+  <circle cx="590" cy="65" r="4" fill="#64748b"/>
+
+  <!-- Phase bars -->
+  <rect x="50" y="72" width="180" height="8" rx="4" fill="#22c55e" opacity="0.7"/>
+  <rect x="170" y="72" width="250" height="8" rx="4" fill="#3b82f6" opacity="0.7"/>
+  <rect x="350" y="72" width="240" height="8" rx="4" fill="#f97316" opacity="0.7"/>
+
+  <!-- Phase 1: Exsudation -->
+  <rect x="20" y="95" width="190" height="165" rx="12" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+  <circle cx="45" cy="115" r="12" fill="#22c55e"/>
+  <text x="45" y="119" font-family="Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">1</text>
+  <text x="65" y="119" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#166534">Exsudationsphase</text>
+  <text x="35" y="138" font-family="Arial, sans-serif" font-size="11" fill="#166534" font-weight="600">Dauer: 0–3 Tage</text>
+  <line x1="35" y1="145" x2="195" y2="145" stroke="#86efac" stroke-width="1"/>
+  <text x="35" y="162" font-family="Arial, sans-serif" font-size="10" fill="#15803d">• Blutstillung (Hämostase)</text>
+  <text x="35" y="178" font-family="Arial, sans-serif" font-size="10" fill="#15803d">• Entzündungsreaktion</text>
+  <text x="35" y="194" font-family="Arial, sans-serif" font-size="10" fill="#15803d">• Wundreinigung durch Exsudat</text>
+  <text x="35" y="210" font-family="Arial, sans-serif" font-size="10" fill="#15803d">• Abwehrzellen wandern ein</text>
+  <rect x="32" y="222" width="168" height="30" rx="6" fill="#bbf7d0"/>
+  <text x="40" y="237" font-family="Arial, sans-serif" font-size="9" fill="#166534" font-weight="600">🩹 Pflege: Wunde reinigen,</text>
+  <text x="40" y="248" font-family="Arial, sans-serif" font-size="9" fill="#166534">steriler Verband, Schutz</text>
+
+  <!-- Phase 2: Proliferation -->
+  <rect x="225" y="95" width="190" height="165" rx="12" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+  <circle cx="250" cy="115" r="12" fill="#3b82f6"/>
+  <text x="250" y="119" font-family="Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">2</text>
+  <text x="270" y="119" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#1e40af">Proliferationsphase</text>
+  <text x="240" y="138" font-family="Arial, sans-serif" font-size="11" fill="#1e40af" font-weight="600">Dauer: 1–14 Tage</text>
+  <line x1="240" y1="145" x2="400" y2="145" stroke="#93c5fd" stroke-width="1"/>
+  <text x="240" y="162" font-family="Arial, sans-serif" font-size="10" fill="#1d4ed8">• Granulationsgewebe bildet sich</text>
+  <text x="240" y="178" font-family="Arial, sans-serif" font-size="10" fill="#1d4ed8">• Neue Blutgefäße (Angiogenese)</text>
+  <text x="240" y="194" font-family="Arial, sans-serif" font-size="10" fill="#1d4ed8">• Kollagenproduktion beginnt</text>
+  <text x="240" y="210" font-family="Arial, sans-serif" font-size="10" fill="#1d4ed8">• Wundkontraktion setzt ein</text>
+  <rect x="237" y="222" width="168" height="30" rx="6" fill="#bfdbfe"/>
+  <text x="245" y="237" font-family="Arial, sans-serif" font-size="9" fill="#1e40af" font-weight="600">🩹 Pflege: Feuchte Wund-</text>
+  <text x="245" y="248" font-family="Arial, sans-serif" font-size="9" fill="#1e40af">behandlung, Schutz</text>
+
+  <!-- Phase 3: Regeneration -->
+  <rect x="430" y="95" width="190" height="165" rx="12" fill="#ffedd5" stroke="#fdba74" stroke-width="1.5"/>
+  <circle cx="455" cy="115" r="12" fill="#f97316"/>
+  <text x="455" y="119" font-family="Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">3</text>
+  <text x="475" y="119" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#9a3412">Regenerationsphase</text>
+  <text x="445" y="138" font-family="Arial, sans-serif" font-size="11" fill="#9a3412" font-weight="600">Dauer: ab Tag 4 (Wochen–Monate)</text>
+  <line x1="445" y1="145" x2="605" y2="145" stroke="#fdba74" stroke-width="1"/>
+  <text x="445" y="162" font-family="Arial, sans-serif" font-size="10" fill="#c2410c">• Epithelzellen wandern ein</text>
+  <text x="445" y="178" font-family="Arial, sans-serif" font-size="10" fill="#c2410c">• Narbengewebe reift aus</text>
+  <text x="445" y="194" font-family="Arial, sans-serif" font-size="10" fill="#c2410c">• Zugfestigkeit nimmt zu</text>
+  <text x="445" y="210" font-family="Arial, sans-serif" font-size="10" fill="#c2410c">• Narbe wird heller &amp; flacher</text>
+  <rect x="442" y="222" width="168" height="30" rx="6" fill="#fed7aa"/>
+  <text x="450" y="237" font-family="Arial, sans-serif" font-size="9" fill="#9a3412" font-weight="600">🩹 Pflege: Narbenpflege,</text>
+  <text x="450" y="248" font-family="Arial, sans-serif" font-size="9" fill="#9a3412">Belastung langsam steigern</text>
+
+  <!-- Key info box -->
+  <rect x="20" y="275" width="600" height="55" rx="10" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="35" y="295" font-family="Arial, sans-serif" font-size="11" fill="#854d0e" font-weight="700">⚠ Wichtig für die Klausur:</text>
+  <text x="35" y="312" font-family="Arial, sans-serif" font-size="10" fill="#a16207">• Primäre Wundheilung: komplikationslos, kleine Narbe (z.B. OP-Wunde) | Sekundäre Wundheilung: größerer Defekt, langsamer</text>
+  <text x="35" y="325" font-family="Arial, sans-serif" font-size="10" fill="#a16207">• Phasen überlappen sich zeitlich – keine starre Trennung! | Dokumentation: Größe, Exsudat, Geruch, Schmerz, Wundrand</text>
+
+  <!-- Source -->
+  <text x="320" y="390" font-family="Arial, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Quelle: 04a AB Wundheilung / 04 Wunden &amp; Wundversorgung</text>
 </svg>
