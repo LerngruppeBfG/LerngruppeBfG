@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, XCircle as X } from "lucide-react"
 import emailjs from '@emailjs/browser'
 import { addParticipant } from '@/lib/participantService'
 
@@ -76,6 +76,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   })
 
   const [submitted, setSubmitted] = useState(false)
+  const [saveFailed, setSaveFailed] = useState(false)
   const [emailStatus, setEmailStatus] = useState<string>("")
   const [saveStatus, setSaveStatus] = useState<string>("")
   // Initialize EmailJS
@@ -148,9 +149,11 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
 
     if (!savedToDatabase) {
       console.error("[Storage] Registration could not be saved in Supabase")
-      setSaveStatus("Fehler: Anmeldung konnte nicht gespeichert werden.")
+      setSaveFailed(true)
+      setSaveStatus("Fehler: Anmeldung konnte nicht gespeichert werden. Bitte versuche es später erneut.")
       setTimeout(() => {
         setSubmitted(false)
+        setSaveFailed(false)
         setEmailStatus("")
         setSaveStatus("")
       }, 4000)
@@ -230,14 +233,26 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
   if (submitted) {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
-        <Card className="p-8 text-center">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Anmeldung erfolgreich gespeichert!</h2>
-          <p className="text-gray-600 mb-2">
-            Deine Anmeldung wurde erfolgreich registriert.
-          </p>
+        <Card className={`p-8 text-center ${saveFailed ? "border-red-200 bg-red-50" : ""}`}>
+          {saveFailed ? (
+            <>
+              <X className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Anmeldung fehlgeschlagen</h2>
+              <p className="text-gray-600 mb-2">
+                Die Datenbank ist derzeit nicht erreichbar. Bitte versuche es später erneut.
+              </p>
+            </>
+          ) : (
+            <>
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Anmeldung erfolgreich gespeichert!</h2>
+              <p className="text-gray-600 mb-2">
+                Deine Anmeldung wurde erfolgreich registriert.
+              </p>
+            </>
+          )}
           {saveStatus && (
-            <p className="text-sm text-gray-600 font-medium">
+            <p className={`text-sm font-medium ${saveFailed ? "text-red-600" : "text-gray-600"}`}>
               {saveStatus}
             </p>
           )}
@@ -248,7 +263,8 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
           )}
         </Card>
 
-        {/* Email Preview */}
+        {/* Email Preview - only show on success */}
+        {!saveFailed && (
         <Card className="p-6 bg-gray-50 border-2 border-gray-200">
           <div className="text-xs text-gray-500 mb-4">Vorschau der Bestätigungs-E-Mail:</div>
           <div className="bg-white rounded-lg shadow-sm p-6 space-y-4">
@@ -297,6 +313,7 @@ Diese E-Mail dient nur zur Bestätigung. Deine Daten werden ausschließlich für
             </div>
           </div>
         </Card>
+        )}
       </div>
     )
   }

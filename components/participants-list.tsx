@@ -27,19 +27,22 @@ export function ParticipantsList() {
   } | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
+  const [dbConnected, setDbConnected] = useState(true)
+
   useEffect(() => {
     const loadParticipants = async () => {
       try {
         const storedParticipants = await getParticipants()
         setParticipants(storedParticipants)
       } catch (error) {
-        console.error('[Storage] Failed to load participants from Firebase:', error)
+        console.error('[Storage] Failed to load participants from Supabase:', error)
+        setDbConnected(false)
       }
     }
     // Initialize EmailJS
     emailjs.init("ukCJVevtRBgZ-Dr1B")
 
-    // Subscribe to real-time updates from Firebase
+    // Subscribe to real-time updates from Supabase
     let unsubscribe: (() => void) | null = null
     try {
       loadParticipants()
@@ -48,6 +51,7 @@ export function ParticipantsList() {
       })
     } catch (error) {
       console.error('[Storage] Failed to subscribe to Supabase:', error)
+      setDbConnected(false)
     }
 
     return () => {
@@ -397,7 +401,14 @@ export function ParticipantsList() {
       )}
 
       {/* Participants List */}
-      {filteredParticipants.length === 0 ? (
+      {!dbConnected ? (
+        <Card className="p-8 text-center border-amber-200 bg-amber-50">
+          <p className="text-amber-800 font-medium mb-2">⚠️ Datenbank nicht verbunden</p>
+          <p className="text-sm text-amber-700">
+            Die Teilnehmerliste kann derzeit nicht geladen werden, da keine Datenbankverbindung besteht.
+          </p>
+        </Card>
+      ) : filteredParticipants.length === 0 ? (
         <Card className="p-8 text-center">
           <p className="text-gray-500">Noch keine Anmeldungen vorhanden.</p>
         </Card>
