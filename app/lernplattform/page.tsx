@@ -330,6 +330,20 @@ const learningSprint = [
 
 const learningResources = [
   {
+    title: "Lernen mit KI",
+    description:
+      "Stelle Fragen zum Unterrichtsstoff – der KI-Assistent kennt alle PDF-Inhalte und hilft dir beim Verstehen.",
+    href: "/ki-assistent",
+    badge: "KI-Assistent",
+  },
+  {
+    title: "KI-Quiz",
+    description:
+      "Dynamisch generierte Quizfragen aus dem PDF-Wissen – jedes Mal neu, damit du Verständnis statt Auswendiglernen trainierst.",
+    href: "/ki-quiz",
+    badge: "KI-Quiz",
+  },
+  {
     title: "Lernkarten-Decks",
     description:
       "Thematisch sortierte Karteikarten mit Antworten, Tipps und Quellen aus den PDFs.",

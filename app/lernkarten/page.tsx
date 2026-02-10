@@ -211,6 +211,94 @@ const flashcardSets = [
       },
     ],
   },
+  {
+    title: "Lungenembolie & Notfall",
+    description: "Warnzeichen erkennen und Sofortmaßnahmen bei Lungenembolie.",
+    cards: [
+      {
+        question: "Wie entsteht eine Lungenembolie?",
+        answer:
+          "Ein Thrombus löst sich aus den tiefen Beinvenen und verschließt eine Lungenarterie.",
+        tip: "Jede tiefe Beinvenenthrombose kann zur Lungenembolie führen.",
+        source: "1a Lungenembolie",
+      },
+      {
+        question: "Welche Symptome zeigt eine Lungenembolie?",
+        answer:
+          "Plötzliche Atemnot, Brustschmerz, Tachykardie, Angst, Zyanose.",
+        tip: "Die Symptome treten oft schlagartig auf.",
+        source: "1a Lungenembolie",
+      },
+      {
+        question: "Was sind die Sofortmaßnahmen bei Lungenembolie?",
+        answer:
+          "Notruf absetzen, Oberkörper hochlagern, Sauerstoff geben, Vitalzeichen überwachen.",
+        tip: "Ruhe bewahren und Patient beruhigen.",
+        source: "1a Lungenembolie",
+      },
+    ],
+  },
+  {
+    title: "Diabetes-Spätfolgen",
+    description: "Langzeitkomplikationen und ihre Prävention verstehen.",
+    cards: [
+      {
+        question: "Was ist die diabetische Retinopathie?",
+        answer:
+          "Schädigung der Netzhautgefäße durch chronisch erhöhten BZ, kann zur Erblindung führen.",
+        tip: "Regelmäßige Augenuntersuchung ist Pflicht.",
+        source: "3. AB Diabetes mellitus",
+      },
+      {
+        question: "Was versteht man unter diabetischer Neuropathie?",
+        answer:
+          "Nervenschäden, besonders an Füßen: Taubheit, Kribbeln, gestörte Schmerzwahrnehmung.",
+        tip: "Hauptursache für das diabetische Fußsyndrom.",
+        source: "3. AB Diabetes mellitus",
+      },
+      {
+        question: "Wie kann man dem diabetischen Fußsyndrom vorbeugen?",
+        answer:
+          "Tägliche Fußinspektion, professionelle Fußpflege, geeignetes Schuhwerk, gute BZ-Einstellung.",
+        tip: "Niemals barfuß gehen, Verletzungen sofort behandeln.",
+        source: "8 Pflege bei Diabetes mellitus Typ 2",
+      },
+      {
+        question: "Was ist eine diabetische Nephropathie?",
+        answer:
+          "Nierenschädigung durch Diabetes: Eiweiß im Urin, nachlassende Nierenfunktion bis zur Dialyse.",
+        tip: "BZ und Blutdruck gut einstellen, Nierenwerte regelmäßig kontrollieren.",
+        source: "3. AB Diabetes mellitus",
+      },
+    ],
+  },
+  {
+    title: "Venensystem & Kompression",
+    description: "Anatomie der Beinvenen und korrekte Kompressionsversorgung.",
+    cards: [
+      {
+        question: "Welchen Anteil des Blutes transportieren die tiefen Beinvenen?",
+        answer:
+          "Ca. 90 % des venösen Blutes fließen über die tiefen Beinvenen zum Herzen.",
+        tip: "Tiefe Venen liegen zwischen den Muskeln.",
+        source: "1b Venensystem der Beine",
+      },
+      {
+        question: "Wie funktioniert die Muskelpumpe?",
+        answer:
+          "Die Wadenmuskulatur drückt bei Kontraktion die tiefen Venen zusammen und presst das Blut herzwärts.",
+        tip: "Deshalb ist aktive Bewegung wichtig für die Thromboseprophylaxe.",
+        source: "1b Venensystem der Beine",
+      },
+      {
+        question: "In welche Richtung wird ein Kompressionsverband gewickelt?",
+        answer:
+          "Von distal (Fuß) nach proximal (Oberschenkel), mit abnehmendem Druck.",
+        tip: "Höchster Druck am Knöchel, abnehmend nach oben.",
+        source: "Text - Kompressionsverband",
+      },
+    ],
+  },
 ]
 
 const rotationPlan = [
@@ -346,9 +434,14 @@ export default function LernkartenPage() {
             Ergänze die PDFs im Ordner <span className="font-semibold">/pdf-uploads</span>,
             damit weitere Lernkarten entstehen.
           </p>
-          <Link href="/lernplattform" className="text-primary hover:underline">
-            Zur Lernplattform
-          </Link>
+          <div className="flex justify-center gap-4">
+            <Link href="/lernplattform" className="text-primary hover:underline">
+              Zur Lernplattform
+            </Link>
+            <Link href="/ki-assistent" className="text-primary hover:underline">
+              Zum KI-Assistenten
+            </Link>
+          </div>
         </footer>
       </div>
     </main>

@@ -77,6 +77,52 @@ const miniTables = [
       ],
     ],
   },
+  {
+    title: "Virchow-Trias – Zuordnung",
+    description: "Risikofaktoren den drei Ursachen zuordnen.",
+    headers: ["Ursache", "Risikofaktoren", "Prophylaxe"],
+    rows: [
+      ["Blutströmung", "Immobilität, Bettlägerigkeit, Herzinsuffizienz", "Mobilisation, Bewegungsübungen"],
+      ["Gefäßwand", "OP, Trauma, Entzündung, Varikosis", "Schonende Lagerung, Druckstellen vermeiden"],
+      ["Gerinnung", "Dehydratation, Medikamente, Gerinnungsstörung", "Flüssigkeitszufuhr, Antikoagulation"],
+    ],
+  },
+  {
+    title: "Insulin-PEN Schrittfolge",
+    description: "Korrekte Reihenfolge bei der Insulininjektion.",
+    headers: ["Schritt", "Aktion", "Hinweis"],
+    rows: [
+      ["1", "Hände waschen & desinfizieren", "Hygiene beachten"],
+      ["2", "Nadel aufsetzen, Funktionskontrolle", "2 IE in die Luft abgeben"],
+      ["3", "Dosis einstellen", "Dosis laut Verordnung"],
+      ["4", "Injektionsstelle wählen & desinfizieren", "Rotation: Bauch, Oberschenkel, Oberarm"],
+      ["5", "Hautfalte bilden, im 90°-Winkel einstechen", "Nicht in Narbengewebe"],
+      ["6", "Injizieren, 10 Sekunden warten", "Vollständige Abgabe sichern"],
+      ["7", "Nadel entfernen, Abwurfbehälter", "Einstichstelle kurz drücken"],
+    ],
+  },
+  {
+    title: "Drainagen-Übersicht",
+    description: "Wichtige Drainagearten und ihre Pflege.",
+    headers: ["Art", "Prinzip", "Pflege"],
+    rows: [
+      ["Redon-Drainage", "Geschlossenes Vakuumsystem", "Fördermenge dokumentieren, Sog prüfen"],
+      ["Robinson-Drainage", "Offene Ableitung", "Sekretfarbe beobachten, steril arbeiten"],
+      ["T-Drainage", "Ableitung aus Gallenwegen", "Gallenfluss kontrollieren, Hautpflege"],
+    ],
+  },
+  {
+    title: "Diabetes-Spätfolgen",
+    description: "Langzeitkomplikationen bei Diabetes mellitus.",
+    headers: ["Komplikation", "Betroffenes Organ", "Vorbeugung"],
+    rows: [
+      ["Retinopathie", "Augen", "Regelmäßige Augenuntersuchung"],
+      ["Nephropathie", "Nieren", "BZ-Einstellung, Blutdruckkontrolle"],
+      ["Neuropathie", "Nerven (v.a. Füße)", "Fußpflege, Schuhwerk prüfen"],
+      ["Diabetisches Fußsyndrom", "Füße", "Tägliche Fußinspektion"],
+      ["Makroangiopathie", "Herz, Gefäße", "Bewegung, Ernährung, Rauchstopp"],
+    ],
+  },
 ]
 
 const checklist = [

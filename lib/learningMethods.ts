@@ -222,4 +222,75 @@ export const learningMethods: LearningMethod[] = [
     ],
     topics: ["1a Lungenembolie", "1. Definition Thrombose"],
   },
+  {
+    slug: "venensystem-anatomie",
+    title: "Venensystem der Beine verstehen",
+    description:
+      "Lerne den Aufbau des Venensystems mit tiefen und oberflächlichen Venen sowie der Muskelpumpe.",
+    focus:
+      "Du verstehst, warum Bewegung und Kompression die Thromboseprophylaxe unterstützen.",
+    steps: [
+      "Zeichne eine Skizze des Beinvenensystems mit tiefen und oberflächlichen Venen.",
+      "Markiere die Lage der Venenklappen und die Richtung des Blutflusses.",
+      "Erkläre die Funktionsweise der Muskelpumpe und warum Immobilität gefährlich ist.",
+    ],
+    topics: ["1b Venensystem der Beine", "1. Definition Thrombose"],
+  },
+  {
+    slug: "diabetes-spaetfolgen-mindmap",
+    title: "Diabetes-Spätfolgen Mindmap",
+    description:
+      "Erstelle eine Mindmap zu den Langzeitkomplikationen bei Diabetes mellitus.",
+    focus:
+      "Du lernst, warum eine gute BZ-Einstellung langfristig wichtig ist.",
+    steps: [
+      "Schreibe Diabetes mellitus in die Mitte und zeichne Äste für jede Spätfolge.",
+      "Notiere zu jeder Spätfolge: betroffenes Organ, Symptome und Prävention.",
+      "Ergänze die Mindmap mit Pflegemaßnahmen zur Vorbeugung (Fußpflege, Augencheck).",
+    ],
+    topics: ["3. AB Diabetes mellitus", "8 Pflege bei Diabetes mellitus Typ 2"],
+  },
+  {
+    slug: "ernaehrungsprotokoll",
+    title: "Ernährungsprotokoll erstellen",
+    description:
+      "Plane und dokumentiere eine diabetesgerechte Tagesernährung nach DGE-Regeln.",
+    focus:
+      "Du übst die praktische Umsetzung der Ernährungsempfehlungen im Pflegealltag.",
+    steps: [
+      "Erstelle einen Tages-Ernährungsplan mit 3 Hauptmahlzeiten und 2 Snacks.",
+      "Prüfe den Plan anhand der 10 DGE-Regeln (Vollkorn, 5 am Tag, Flüssigkeit).",
+      "Berechne die ungefähre Kohlenhydratmenge und diskutiere die Auswirkung auf den BZ.",
+    ],
+    topics: ["2. Die 10 Regeln der DGE", "1. Diabetes Präsentation"],
+  },
+  {
+    slug: "fieber-dokumentation",
+    title: "Fieberdokumentation üben",
+    description:
+      "Erstelle eine vollständige Fieberkurve und dokumentiere Pflegeinterventionen je Phase.",
+    focus:
+      "Du trainierst die korrekte Dokumentation von Fieberverläufen und Pflegemaßnahmen.",
+    steps: [
+      "Zeichne eine Fieberkurve mit realistischen Werten über 3 Tage.",
+      "Ordne jeder Phase (Anstieg, Höhe, Abfall) die passenden Pflegeinterventionen zu.",
+      "Dokumentiere Vitalzeichen, Wadenwickel-Anwendung und Flüssigkeitsbilanz.",
+    ],
+    topics: ["Fieber"],
+  },
+  {
+    slug: "wundversorgung-simulation",
+    title: "Verbandswechsel-Simulation",
+    description:
+      "Simuliere einen vollständigen aseptischen Verbandswechsel nach Non-Touch-Technik.",
+    focus:
+      "Du trainierst den sterilen Ablauf in der richtigen Reihenfolge.",
+    steps: [
+      "Bereite alle Materialien vor und lege sie in der richtigen Reihenfolge bereit.",
+      "Führe den Verbandswechsel als Trockenübung durch (Handschuhe, Pinzette, Kompressen).",
+      "Fülle anschließend einen Wunddokumentationsbogen vollständig aus.",
+      "Lasse eine Lernpartner:in deine Technik beobachten und Feedback geben.",
+    ],
+    topics: ["04 Wunden & Wundversorgung", "04b Literatur Wunden und Drainagen"],
+  },
 ]

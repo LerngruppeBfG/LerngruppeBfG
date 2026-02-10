@@ -454,6 +454,148 @@ const allQuizSections: QuizSection[] = [
       },
     ],
   },
+  {
+    title: "Lungenembolie & Venensystem",
+    description: "Notfallwissen zu Lungenembolie und Venensystem der Beine.",
+    questions: [
+      {
+        question: "Was ist die häufigste Ursache einer Lungenembolie?",
+        options: [
+          "Lungenentzündung",
+          "Losgelöster Thrombus aus den tiefen Beinvenen",
+          "Allergische Reaktion",
+          "Asthma-Anfall",
+        ],
+        answer: "B",
+        explanation:
+          "Die häufigste Ursache einer Lungenembolie ist ein losgelöster Thrombus (Embolus) aus den tiefen Beinvenen.",
+        source: "1a Lungenembolie",
+      },
+      {
+        question: "Welche Symptome sind typisch für eine Lungenembolie?",
+        options: [
+          "Durchfall und Erbrechen",
+          "Plötzliche Atemnot, Brustschmerz und Tachykardie",
+          "Juckreiz und Hautausschlag",
+          "Rückenschmerzen und Fieber",
+        ],
+        answer: "B",
+        explanation:
+          "Atemnot, Brustschmerz und Tachykardie sind typische Warnzeichen einer Lungenembolie.",
+        source: "1a Lungenembolie",
+      },
+      {
+        question: "Welche Sofortmaßnahme ist bei Verdacht auf Lungenembolie am wichtigsten?",
+        options: [
+          "Patient sofort mobilisieren",
+          "Notruf absetzen und Oberkörper hochlagern",
+          "Wadenwickel anlegen",
+          "Blutdruck messen und abwarten",
+        ],
+        answer: "B",
+        explanation:
+          "Bei Verdacht auf Lungenembolie: Notruf, Oberkörper hochlagern, Sauerstoff und Vitalzeichen überwachen.",
+        source: "1a Lungenembolie",
+      },
+      {
+        question: "Welchen Anteil des venösen Blutes transportieren die tiefen Beinvenen?",
+        options: [
+          "Etwa 50 %",
+          "Etwa 70 %",
+          "Etwa 90 %",
+          "100 %",
+        ],
+        answer: "C",
+        explanation:
+          "Die tiefen Beinvenen transportieren ca. 90 % des venösen Blutes zum Herzen zurück.",
+        source: "1b Venensystem der Beine",
+      },
+      {
+        question: "Was unterstützt den venösen Rückstrom in den Beinen?",
+        options: [
+          "Bluthochdruck",
+          "Muskelpumpe und Venenklappen",
+          "Hohe Außentemperaturen",
+          "Tiefe Lagerung der Beine",
+        ],
+        answer: "B",
+        explanation:
+          "Die Muskelpumpe (besonders Wadenmuskel) und die Venenklappen sind essenziell für den venösen Rückstrom.",
+        source: "1b Venensystem der Beine",
+      },
+      {
+        question: "Was verbindet die tiefen mit den oberflächlichen Beinvenen?",
+        options: [
+          "Arterien",
+          "Perforansvenen",
+          "Lymphgefäße",
+          "Kapillaren",
+        ],
+        answer: "B",
+        explanation:
+          "Perforansvenen verbinden die tiefen mit den oberflächlichen Venen und haben ebenfalls Venenklappen.",
+        source: "1b Venensystem der Beine",
+      },
+    ],
+  },
+  {
+    title: "Diabetes-Spätfolgen & Pflege",
+    description: "Langzeitkomplikationen und pflegerische Schwerpunkte bei Diabetes.",
+    questions: [
+      {
+        question: "Welche Spätfolge betrifft die Augen bei Diabetes?",
+        options: [
+          "Nephropathie",
+          "Retinopathie",
+          "Neuropathie",
+          "Makroangiopathie",
+        ],
+        answer: "B",
+        explanation:
+          "Die diabetische Retinopathie betrifft die Netzhaut und kann bis zur Erblindung führen.",
+        source: "3. AB Diabetes mellitus",
+      },
+      {
+        question: "Was ist die wichtigste Maßnahme zur Vorbeugung des diabetischen Fußsyndroms?",
+        options: [
+          "Regelmäßige BZ-Messung",
+          "Tägliche Fußinspektion und Fußpflege",
+          "Bewegungsverzicht",
+          "Erhöhte Insulindosis",
+        ],
+        answer: "B",
+        explanation:
+          "Die tägliche Fußinspektion und professionelle Fußpflege sind entscheidend zur Vermeidung von Fußulzera.",
+        source: "8 Pflege bei Diabetes mellitus Typ 2",
+      },
+      {
+        question: "Welche Diabetes-Spätfolge betrifft die Nieren?",
+        options: [
+          "Retinopathie",
+          "Neuropathie",
+          "Nephropathie",
+          "Makroangiopathie",
+        ],
+        answer: "C",
+        explanation:
+          "Die diabetische Nephropathie ist eine Nierenschädigung, die bis zur Dialysepflichtigkeit führen kann.",
+        source: "3. AB Diabetes mellitus",
+      },
+      {
+        question: "Warum ist die Injektionsstelle beim Insulin-PEN regelmäßig zu wechseln?",
+        options: [
+          "Damit die Nadel schärfer bleibt",
+          "Um Lipodystrophien (Gewebeveränderungen) zu vermeiden",
+          "Weil jede Stelle nur einmal verwendet werden darf",
+          "Wegen der besseren Optik",
+        ],
+        answer: "B",
+        explanation:
+          "Wiederholte Injektionen an derselben Stelle können zu Lipodystrophien führen, die die Insulinaufnahme beeinträchtigen.",
+        source: "5. Insulinspritzen mit dem PEN",
+      },
+    ],
+  },
 ]
 
 /** Fisher-Yates shuffle */
@@ -640,9 +782,17 @@ export default function LernquizPage() {
             Du kannst die Quizfragen erweitern, indem du neue PDFs im Ordner
             <span className="font-semibold"> /pdf-uploads</span> ablegst.
           </p>
-          <Link href="/lernplattform" className="text-primary hover:underline">
-            Zur Lernplattform
-          </Link>
+          <div className="flex justify-center gap-4">
+            <Link href="/lernplattform" className="text-primary hover:underline">
+              Zur Lernplattform
+            </Link>
+            <Link href="/ki-quiz" className="text-primary hover:underline">
+              Zum KI-Quiz
+            </Link>
+            <Link href="/ki-assistent" className="text-primary hover:underline">
+              Zum KI-Assistenten
+            </Link>
+          </div>
         </footer>
       </div>
     </main>

@@ -66,6 +66,63 @@ const overviewTables = [
       ],
     ],
   },
+  {
+    title: "Notfallmaßnahmen-Überblick",
+    description: "Sofortmaßnahmen bei kritischen Pflegesituationen.",
+    headers: ["Notfall", "Erkennung", "Sofortmaßnahme", "Weiteres Vorgehen"],
+    rows: [
+      [
+        "Hypoglykämie",
+        "BZ < 50 mg/dl, Zittern, Schwitzen",
+        "Glukose geben, BZ messen",
+        "Arzt informieren, Ursache klären",
+      ],
+      [
+        "Lungenembolie",
+        "Atemnot, Brustschmerz, Tachykardie",
+        "Notruf, Oberkörper hochlagern, O₂",
+        "Vitalzeichen überwachen",
+      ],
+      [
+        "Thromboseverdacht",
+        "Einseitige Schwellung, Wadenschmerz",
+        "Arzt informieren, Bettruhe",
+        "Keine Mobilisation ohne Anordnung",
+      ],
+      [
+        "Hohes Fieber (> 39 °C)",
+        "Heiße Haut, Tachykardie, Unruhe",
+        "Wadenwickel, Flüssigkeit",
+        "Arzt informieren, Antipyretika nach AO",
+      ],
+    ],
+  },
+  {
+    title: "Verbandswechsel-Checkliste",
+    description: "Schritt-für-Schritt-Ablauf eines aseptischen Verbandswechsels.",
+    headers: ["Schritt", "Handlung", "Hinweis"],
+    rows: [
+      ["1", "Händedesinfektion durchführen", "Mind. 30 Sekunden einwirken"],
+      ["2", "Material bereitstellen", "Sterile Kompressen, Desinfektionsmittel, Handschuhe"],
+      ["3", "Alten Verband entfernen", "Unsterile Handschuhe verwenden"],
+      ["4", "Wunde inspizieren & dokumentieren", "Größe, Exsudat, Geruch, Wundrand"],
+      ["5", "Wundreinigung mit Non-Touch-Technik", "Von innen nach außen desinfizieren"],
+      ["6", "Neuen Verband steril auflegen", "Sterile Pinzette verwenden"],
+      ["7", "Verband fixieren & beschriften", "Datum, Uhrzeit, Handzeichen"],
+    ],
+  },
+  {
+    title: "Ernährung bei Diabetes – Praxistipps",
+    description: "Konkrete Ernährungsempfehlungen basierend auf den DGE-Regeln.",
+    headers: ["Mahlzeit", "Empfehlung", "Beispiel"],
+    rows: [
+      ["Frühstück", "Vollkorn, wenig Zucker", "Vollkornbrot mit Frischkäse, Obst"],
+      ["Mittagessen", "Gemüse-Basis, mageres Eiweiß", "Gemüsepfanne mit Hähnchen, Reis"],
+      ["Abendessen", "Leicht, ballaststoffreich", "Salat mit Fisch, Vollkornbrot"],
+      ["Snacks", "Obst, Nüsse, Gemüsesticks", "Apfel, Mandeln, Karotten"],
+      ["Getränke", "1,5 L Wasser/Tag, ungesüßt", "Wasser, Kräutertee"],
+    ],
+  },
 ]
 
 const workflowNotes = [
