@@ -123,7 +123,9 @@ function KursDetailInner() {
       const res = await fetch("/api/chat/status")
       const data = await res.json()
       useAI = data.configured ?? false
-    } catch { /* fallback to non-AI mode */ }
+    } catch (err) {
+      console.warn("Failed to check AI status:", err)
+    }
 
     try {
       const content = await generateCourseContent(c, (steps, idx) => {

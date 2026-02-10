@@ -20,14 +20,32 @@ export const AVAILABLE_MODELS = [
 
 export const DEFAULT_MODEL = "gpt-4o-mini"
 
+/**
+ * Returns the OpenAI API key.
+ *
+ * Only available in server-side contexts where OPENAI_API_KEY is set.
+ * Client-side code should use the /api/chat/status endpoint instead.
+ */
 export function getOpenAIKey(): string {
   return process.env.OPENAI_API_KEY ?? process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""
 }
 
+/**
+ * Returns the selected OpenAI model.
+ *
+ * On the server, reads from OPENAI_MODEL env var.
+ * Client-side code should use the /api/chat/status endpoint instead.
+ */
 export function getSelectedModel(): string {
   return process.env.OPENAI_MODEL ?? process.env.NEXT_PUBLIC_OPENAI_MODEL ?? DEFAULT_MODEL
 }
 
+/**
+ * Checks whether an OpenAI API key is configured.
+ *
+ * Only reliable in server-side contexts. Client-side code should fetch
+ * /api/chat/status to determine configuration status.
+ */
 export function isOpenAIConfigured(): boolean {
   return getOpenAIKey().length > 0
 }
