@@ -14,6 +14,7 @@ import {
   saveCourse,
   defaultModuleConfig,
   moduleSliderRange,
+  suggestModuleCounts,
   courseLevelLabels,
   courseLevelDescriptions,
   moduleTypeLabels,
@@ -234,9 +235,11 @@ function StepPdfUpload({
 function StepModules({
   modules,
   onChange,
+  pdfCount,
 }: {
   modules: Record<ModuleType, ModuleConfig>
   onChange: (type: ModuleType, cfg: ModuleConfig) => void
+  pdfCount: number
 }) {
   return (
     <Card className="bg-white/90">
@@ -248,6 +251,12 @@ function StepModules({
           Aktiviere die gewünschten Lernmodule per Checkbox und stelle über den
           Slider ein, wie viele Einträge pro Modul erstellt werden sollen.
         </CardDescription>
+        {pdfCount > 0 && (
+          <p className="text-xs text-emerald-600 mt-2">
+            📄 {pdfCount} PDF{pdfCount !== 1 ? "s" : ""} erkannt – Slider wurden
+            automatisch an die Themengröße angepasst.
+          </p>
+        )}
       </CardHeader>
       <CardContent className="space-y-5">
         {allModuleTypes.map((type) => {
@@ -429,6 +438,10 @@ export default function KursErstellenPage() {
   const [created, setCreated] = useState(false)
   const [createdCourseId, setCreatedCourseId] = useState("")
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  // Track the PDF count for which sliders were last auto-adjusted.
+  // This prevents overriding manual tweaks when navigating back/forward.
+  const [slidersAdjustedForPdfCount, setSlidersAdjustedForPdfCount] =
+    useState<number | null>(null)
 
   const totalSteps = 4
 
@@ -510,6 +523,7 @@ export default function KursErstellenPage() {
                   setLevel(null)
                   setPdfFiles([])
                   setModules({ ...defaultModuleConfig })
+                  setSlidersAdjustedForPdfCount(null)
                 }}
                 className="px-5 py-2 rounded-full border border-gray-200 text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors"
               >
@@ -567,7 +581,7 @@ export default function KursErstellenPage() {
             />
           )}
           {step === 2 && (
-            <StepModules modules={modules} onChange={handleModuleChange} />
+            <StepModules modules={modules} onChange={handleModuleChange} pdfCount={pdfFiles.length} />
           )}
           {step === 3 && level && (
             <StepSummary
@@ -590,7 +604,14 @@ export default function KursErstellenPage() {
 
           {step < totalSteps - 1 ? (
             <button
-              onClick={() => setStep((s) => s + 1)}
+              onClick={() => {
+                // Auto-adjust sliders when advancing from PDF upload to modules
+                if (step === 1 && pdfFiles.length > 0 && slidersAdjustedForPdfCount !== pdfFiles.length) {
+                  setModules(suggestModuleCounts(pdfFiles.length))
+                  setSlidersAdjustedForPdfCount(pdfFiles.length)
+                }
+                setStep((s) => s + 1)
+              }}
               disabled={!canProceed()}
               className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >

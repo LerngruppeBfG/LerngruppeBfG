@@ -179,6 +179,43 @@ export const moduleSliderRange: Record<ModuleType, { min: number; max: number }>
   "ki-quiz": { min: 1, max: 1 },
 }
 
+/* ── Suggest module counts based on PDF count ─────────────── */
+
+/**
+ * Suggest slider values based on the number of uploaded PDFs.
+ *
+ * The idea: more PDFs → bigger topic → more content items should be
+ * generated.  The returned counts are clamped to each module's
+ * allowed slider range so they can be used directly.
+ */
+export function suggestModuleCounts(
+  pdfCount: number
+): Record<ModuleType, ModuleConfig> {
+  // Normalise pdfCount into a 0-1 ratio across a 1–MAX_PDF_RANGE range.
+  const MAX_PDF_RANGE = 30
+  const ratio = Math.min(1, Math.max(0, (pdfCount - 1) / (MAX_PDF_RANGE - 1)))
+
+  function scaled(min: number, max: number): number {
+    return Math.round(min + ratio * (max - min))
+  }
+
+  function clamp(value: number, type: ModuleType): number {
+    const range = moduleSliderRange[type]
+    return Math.min(range.max, Math.max(range.min, value))
+  }
+
+  return {
+    lerntabellen:  { enabled: true, count: clamp(scaled(2, 15), "lerntabellen") },
+    tabellen:      { enabled: true, count: clamp(scaled(1, 10), "tabellen") },
+    lernquiz:      { enabled: true, count: clamp(scaled(3, 25), "lernquiz") },
+    lernkarten:    { enabled: true, count: clamp(scaled(4, 30), "lernkarten") },
+    lernmethoden:  { enabled: true, count: clamp(scaled(2, 15), "lernmethoden") },
+    abbildungen:   { enabled: true, count: clamp(scaled(2, 15), "abbildungen") },
+    "ki-assistent": { enabled: true, count: 1 },
+    "ki-quiz":      { enabled: true, count: 1 },
+  }
+}
+
 /* ── Storage helpers (localStorage) ───────────────────────── */
 
 const STORAGE_KEY = "lernplattform-courses"

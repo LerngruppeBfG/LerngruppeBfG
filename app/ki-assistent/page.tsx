@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { searchKnowledge, getTopics, getEntriesByTopic, pdfKnowledge, type KnowledgeEntry } from "@/lib/pdfKnowledge"
-import { isOpenAIConfigured, chatCompletion, type ChatMessage } from "@/lib/openaiClient"
+import { chatCompletion, type ChatMessage, type AIProvider } from "@/lib/openaiClient"
 
 type Message = {
   role: "user" | "assistant"
@@ -88,9 +88,19 @@ function buildSystemPrompt(): string {
     )
     .join("\n\n")
 
-  return `Du bist ein hilfreicher KI-Lernassistent für Pflegeschüler. Du kennst den Inhalt aller hochgeladenen Unterrichts-PDFs und antwortest basierend auf diesem Wissen.
+  return `Du bist ein hilfreicher KI-Lernassistent für Pflegeschüler. Du hast zwei Wissensquellen:
 
-Antworte immer auf Deutsch. Gib am Ende deiner Antwort die genutzten Quellen an (PDF-Namen).
+1. **Unterrichts-PDFs**: Du kennst den Inhalt aller hochgeladenen PDFs (siehe unten). Nutze diese als primäre Quelle für themenbezogene Fragen.
+
+2. **Allgemeines Pflegewissen**: Du verfügst zusätzlich über umfassendes Fachwissen in der Pflege (Anatomie, Physiologie, Krankheitsbilder, Pflegeplanung, Medikamentenlehre, Recht, etc.). Nutze dieses Wissen um Antworten zu ergänzen, zu vertiefen und in einen größeren Kontext zu setzen.
+
+Wichtige Regeln:
+- Antworte immer auf Deutsch und fachlich korrekt.
+- Beantworte Fragen ausführlich (3-5 Sätze) mit konkreten Fakten.
+- Wenn das Thema in den PDFs enthalten ist, beziehe dich darauf UND ergänze mit deinem allgemeinen Wissen.
+- Wenn das Thema NICHT in den PDFs vorkommt, nutze dein allgemeines Pflegewissen und weise darauf hin.
+- Gib am Ende deiner Antwort die genutzten Quellen an (PDF-Namen), falls zutreffend.
+- Erkläre komplexe Zusammenhänge verständlich und praxisbezogen.
 
 Hier sind die Unterrichtsinhalte aus den PDFs:
 
@@ -99,7 +109,8 @@ ${knowledgeContext}`
 
 async function buildOpenAIAnswer(
   query: string,
-  conversationHistory: Message[]
+  conversationHistory: Message[],
+  provider?: AIProvider
 ): Promise<Message> {
   const systemPrompt = buildSystemPrompt()
 
@@ -117,7 +128,8 @@ async function buildOpenAIAnswer(
   try {
     const response = await chatCompletion(apiMessages, {
       temperature: 0.7,
-      maxTokens: 1024,
+      maxTokens: 2048,
+      provider,
     })
 
     // Try to extract source references from the response
@@ -212,12 +224,14 @@ export default function KiAssistentPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      text: "Hallo! Ich bin dein KI-Lernassistent. Ich kenne den Inhalt aller PDFs aus deinem Unterricht. Stell mir eine Frage zu Thrombose, Diabetes, Wunden, Ernährung oder Fieber – ich helfe dir beim Lernen!",
+      text: "Hallo! Ich bin dein KI-Lernassistent. Ich kenne den Inhalt aller PDFs aus deinem Unterricht und verfüge zusätzlich über umfassendes Pflegefachwissen. Stell mir eine Frage zu Thrombose, Diabetes, Wunden, Ernährung, Fieber, Schmerzmanagement oder einem anderen Pflegethema – ich helfe dir beim Lernen!",
     },
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [useAI, setUseAI] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<AIProvider>("openai")
+  const [availableProviders, setAvailableProviders] = useState<{ openai: boolean; anthropic: boolean }>({ openai: false, anthropic: false })
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -225,7 +239,20 @@ export default function KiAssistentPage() {
   }, [messages])
 
   useEffect(() => {
-    setUseAI(isOpenAIConfigured())
+    fetch("/api/chat/status")
+      .then((res) => res.json())
+      .then((data: { configured?: boolean; openai?: { configured?: boolean }; anthropic?: { configured?: boolean } }) => {
+        const openaiOk = data.openai?.configured ?? false
+        const anthropicOk = data.anthropic?.configured ?? false
+        setAvailableProviders({ openai: openaiOk, anthropic: anthropicOk })
+        setUseAI(openaiOk || anthropicOk)
+        // Default to whichever is available (prefer OpenAI)
+        if (openaiOk) setSelectedProvider("openai")
+        else if (anthropicOk) setSelectedProvider("anthropic")
+      })
+      .catch(() => {
+        setUseAI(false)
+      })
   }, [])
 
   async function handleSend(question?: string) {
@@ -238,7 +265,7 @@ export default function KiAssistentPage() {
     if (useAI) {
       setMessages((prev) => [...prev, userMessage])
       setLoading(true)
-      const answer = await buildOpenAIAnswer(q, [...messages, userMessage])
+      const answer = await buildOpenAIAnswer(q, [...messages, userMessage], selectedProvider)
       setMessages((prev) => [...prev, answer])
       setLoading(false)
     } else {
@@ -335,8 +362,8 @@ export default function KiAssistentPage() {
               Zur Anmeldung
             </Link>
           </div>
-          {/* AI Mode Indicator */}
-          <div className="mt-4">
+          {/* AI Mode Indicator & Provider Toggle */}
+          <div className="mt-4 flex flex-col items-center gap-2">
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
                 useAI
@@ -345,8 +372,34 @@ export default function KiAssistentPage() {
               }`}
             >
               <span className={`h-2 w-2 rounded-full ${useAI ? "bg-emerald-500" : "bg-gray-400"}`} />
-              {useAI ? "ChatGPT-Modus aktiv" : "Lokaler Wissens-Modus"}
+              {useAI
+                ? selectedProvider === "anthropic" ? "Claude-Modus aktiv" : "ChatGPT-Modus aktiv"
+                : "Lokaler Wissens-Modus"}
             </span>
+            {useAI && availableProviders.openai && availableProviders.anthropic && (
+              <div className="inline-flex rounded-full border border-gray-200 bg-white p-0.5 text-xs">
+                <button
+                  onClick={() => setSelectedProvider("openai")}
+                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                    selectedProvider === "openai"
+                      ? "bg-emerald-500 text-white shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  🟢 ChatGPT
+                </button>
+                <button
+                  onClick={() => setSelectedProvider("anthropic")}
+                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                    selectedProvider === "anthropic"
+                      ? "bg-purple-500 text-white shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  🟣 Claude
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -418,7 +471,7 @@ export default function KiAssistentPage() {
                 {loading && (
                   <div className="flex justify-start">
                     <div className="max-w-[85%] rounded-lg px-4 py-2 text-sm bg-white border border-gray-200 text-gray-500">
-                      ChatGPT denkt nach…
+                      {selectedProvider === "anthropic" ? "Claude denkt nach…" : "ChatGPT denkt nach…"}
                     </div>
                   </div>
                 )}

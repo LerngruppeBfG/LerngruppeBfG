@@ -1,7 +1,7 @@
 /**
  * Generates learning content for a course based on topic name and PDF file names.
  *
- * When an OpenAI API key is configured (NEXT_PUBLIC_OPENAI_API_KEY in .env.local),
+ * When an OpenAI API key is configured (OPENAI_API_KEY on the server),
  * ChatGPT is used to extract and generate real educational content from the PDF
  * topics. Without an API key, a template-based fallback generates placeholder content.
  *
@@ -19,6 +19,7 @@ import type {
   GeneratedLearningField,
 } from "./courseConfig"
 import { isOpenAIConfigured, chatCompletion, type ChatMessage } from "./openaiClient"
+import { pdfKnowledge, searchKnowledge, type KnowledgeEntry } from "./pdfKnowledge"
 
 /* ── helpers ─────────────────────────────────────────────── */
 
@@ -89,15 +90,39 @@ function safeParseJSON<T>(text: string): T | null {
   }
 }
 
+/** Find knowledge entries relevant to the course topic and PDF files. */
+function findRelevantKnowledge(topicName: string, topics: string[]): KnowledgeEntry[] {
+  const searchTerms = [topicName, ...topics].join(" ")
+  const results = searchKnowledge(searchTerms)
+  if (results.length > 0) return results.slice(0, 30)
+  // Fallback: try individual topics
+  const all: KnowledgeEntry[] = []
+  for (const t of topics) {
+    for (const entry of searchKnowledge(t)) {
+      if (!all.some((e) => e.topic === entry.topic && e.subtopic === entry.subtopic)) all.push(entry)
+    }
+    if (all.length >= 30) break
+  }
+  return all.slice(0, 30)
+}
+
+/** Build a compact knowledge summary string for AI prompts. */
+function buildKnowledgeContext(entries: KnowledgeEntry[]): string {
+  if (entries.length === 0) return ""
+  return "\n\nHier sind relevante Fachinhalte aus den Unterrichts-PDFs:\n\n" +
+    entries.map((e) => `[${e.topic} – ${e.subtopic}]: ${e.content}`).join("\n\n")
+}
+
 /* ── generator ──────────────────────────────────────────── */
 
 export async function generateCourseContent(
   course: CourseConfig,
-  onProgress?: ProgressCallback
+  onProgress?: ProgressCallback,
+  forceUseAI?: boolean
 ): Promise<GeneratedCourseContent> {
   const topics = extractTopics(course.pdfFiles)
   const topicName = course.topicName
-  const useAI = isOpenAIConfigured()
+  const useAI = forceUseAI ?? isOpenAIConfigured()
 
   const steps: ProgressStep[] = [
     { label: "Themen aus PDFs extrahieren…", done: false },
@@ -177,18 +202,22 @@ async function generateLearningFieldsAI(
 ): Promise<GeneratedLearningField[]> {
   const topicList = topics.length > 0 ? topics.join(", ") : topicName
   const pdfList = pdfFiles.join(", ")
+  const knowledge = findRelevantKnowledge(topicName, topics)
+  const knowledgeCtx = buildKnowledgeContext(knowledge)
 
   const prompt = `Erstelle Lernfelder für einen Pflegekurs zum Thema "${topicName}".
 
 Verfügbare Themen aus den PDFs: ${topicList}
 PDF-Dateien: ${pdfList}
+${knowledgeCtx}
 
 Erstelle 2-4 Lernfelder. Jedes Lernfeld soll folgende Struktur haben:
 - title: Titel des Lernfeldes (spezifisch zum Thema)
 - subtitle: Untertitel mit Bezug zum Kurs
-- goals: Array mit 3-4 konkreten, fachlich korrekten Lernzielen
+- goals: Array mit 3-4 konkreten, fachlich korrekten Lernzielen die sich direkt auf den Inhalt beziehen
 - documents: Array mit den zugehörigen PDF-Dateinamen
 
+Nutze die bereitgestellten Fachinhalte um spezifische, nicht-generische Lernziele zu formulieren.
 Antworte als JSON-Array. Beispiel:
 [{"title":"...","subtitle":"...","goals":["...","...","..."],"documents":["..."]}]`
 
@@ -210,19 +239,23 @@ async function generateFlashcardsAI(
 
   const topicList = topics.length > 0 ? topics.join(", ") : topicName
   const pdfList = pdfFiles.join(", ")
+  const knowledge = findRelevantKnowledge(topicName, topics)
+  const knowledgeCtx = buildKnowledgeContext(knowledge)
 
   const prompt = `Erstelle ${count} Lernkarten (Flashcards) für Pflegeschüler zum Thema "${topicName}".
 
 Verfügbare Themen: ${topicList}
 PDF-Dateien: ${pdfList}
+${knowledgeCtx}
 
-Jede Lernkarte soll fachlich korrekte Pflegeinhalte enthalten:
-- title: Kurzer Titel (z.B. "Definition Thrombose – Karte 1")
-- question: Eine konkrete Lernfrage
-- answer: Die fachlich korrekte, ausführliche Antwort (2-3 Sätze)
-- tip: Ein Lerntipp
+Jede Lernkarte soll fachlich korrekte, spezifische Pflegeinhalte enthalten – KEINE generischen Platzhalter:
+- title: Kurzer, spezifischer Titel (z.B. "Virchow-Trias" statt "Thrombose – Karte 1")
+- question: Eine konkrete, prüfungsrelevante Lernfrage
+- answer: Die fachlich korrekte, ausführliche Antwort (2-4 Sätze mit konkreten Fakten, Zahlen, Definitionen)
+- tip: Ein spezifischer Lerntipp der sich auf den Inhalt bezieht
 - source: Die zugehörige PDF-Datei
 
+Nutze die bereitgestellten Fachinhalte für fachlich korrekte, detaillierte Karten.
 Verteile die Karten gleichmäßig auf die verschiedenen Themen.
 Antworte als JSON-Array:
 [{"title":"...","question":"...","answer":"...","tip":"...","source":"..."}]`
@@ -245,19 +278,23 @@ async function generateQuizItemsAI(
 
   const topicList = topics.length > 0 ? topics.join(", ") : topicName
   const pdfList = pdfFiles.join(", ")
+  const knowledge = findRelevantKnowledge(topicName, topics)
+  const knowledgeCtx = buildKnowledgeContext(knowledge)
 
   const prompt = `Erstelle ${count} Multiple-Choice-Quizfragen für Pflegeschüler zum Thema "${topicName}".
 
 Verfügbare Themen: ${topicList}
 PDF-Dateien: ${pdfList}
+${knowledgeCtx}
 
 Jede Frage soll 4 Antwortmöglichkeiten haben, wobei genau EINE richtig ist:
-- title: Kurzer Titel (z.B. "Thrombose – Quiz 1")
-- question: Die Quizfrage (fachlich korrekt und prüfungsrelevant)
-- options: Array mit genau 4 Antwortoptionen (vollständige Sätze)
+- title: Kurzer, spezifischer Titel (z.B. "Virchow-Trias" statt "Thrombose – Quiz 1")
+- question: Die Quizfrage (fachlich korrekt, prüfungsrelevant, konkret – keine generischen Fragen)
+- options: Array mit genau 4 Antwortoptionen (vollständige, fachlich plausible Sätze)
 - answer: Der Buchstabe der richtigen Antwort ("A", "B", "C" oder "D")
-- explanation: Erklärung warum die Antwort richtig ist (1-2 Sätze)
+- explanation: Erklärung warum die Antwort richtig ist (2-3 Sätze mit Fachinhalten)
 
+Nutze die bereitgestellten Fachinhalte für fachlich korrekte, spezifische Fragen.
 Die richtige Antwort soll NICHT immer an der gleichen Position stehen.
 Antworte als JSON-Array:
 [{"title":"...","question":"...","options":["A-Option","B-Option","C-Option","D-Option"],"answer":"B","explanation":"..."}]`
@@ -280,18 +317,22 @@ async function generateTablesAI(
 
   const topicList = topics.length > 0 ? topics.join(", ") : topicName
   const pdfList = pdfFiles.join(", ")
+  const knowledge = findRelevantKnowledge(topicName, topics)
+  const knowledgeCtx = buildKnowledgeContext(knowledge)
 
   const prompt = `Erstelle ${count} Lerntabellen für Pflegeschüler zum Thema "${topicName}".
 
 Verfügbare Themen: ${topicList}
 PDF-Dateien: ${pdfList}
+${knowledgeCtx}
 
-Jede Tabelle soll fachlich korrekte Pflegeinhalte zusammenfassen:
-- title: Titel der Tabelle (z.B. "Thrombose – Übersicht")
-- headers: Array mit 3 Spaltenüberschriften (z.B. ["Aspekt", "Beschreibung", "Quelle"])
+Jede Tabelle soll fachlich korrekte, spezifische Pflegeinhalte zusammenfassen:
+- title: Titel der Tabelle (z.B. "Virchow-Trias – Risikofaktoren und Prophylaxe")
+- headers: Array mit 3 Spaltenüberschriften
 - rows: Array mit 4-5 Zeilen, jede Zeile ist ein Objekt mit den Header-Keys
 
-Die Inhalte müssen fachlich korrekt und spezifisch zum jeweiligen Thema sein.
+Die Inhalte müssen fachlich korrekt, spezifisch und detailliert sein – nutze die bereitgestellten Fachinhalte.
+KEINE generischen Platzhalter wie "Grundlegende Definition von X".
 Antworte als JSON-Array:
 [{"title":"...","headers":["Aspekt","Beschreibung","Quelle"],"rows":[{"Aspekt":"Definition","Beschreibung":"Konkreter Inhalt...","Quelle":"PDF-Name"}]}]`
 
@@ -311,17 +352,21 @@ async function generateQuickQuestionsAI(
   const topicList = topics.length > 0 ? topics.join(", ") : topicName
   const pdfList = pdfFiles.join(", ")
   const qaCount = Math.min(6, Math.max(4, topics.length * 2))
+  const knowledge = findRelevantKnowledge(topicName, topics)
+  const knowledgeCtx = buildKnowledgeContext(knowledge)
 
   const prompt = `Erstelle ${qaCount} Fragen und Antworten für Pflegeschüler zum Thema "${topicName}".
 
 Verfügbare Themen: ${topicList}
 PDF-Dateien: ${pdfList}
+${knowledgeCtx}
 
 Jede Frage-Antwort soll prüfungsrelevantes Pflegewissen abdecken:
-- question: Eine konkrete Lernfrage
-- answer: Eine fachlich korrekte Antwort (2-3 Sätze)
+- question: Eine konkrete, spezifische Lernfrage (z.B. "Nenne die drei Faktoren der Virchow-Trias" statt "Was sind die Grundlagen?")
+- answer: Eine fachlich korrekte, ausführliche Antwort (3-4 Sätze mit konkreten Fakten und Zusammenhängen)
 
-Die Fragen sollen verschiedene Aspekte des Themas abdecken (Definition, Ursachen, Symptome, Maßnahmen, etc.).
+Nutze die bereitgestellten Fachinhalte für fachlich korrekte, detaillierte Antworten.
+Die Fragen sollen verschiedene Aspekte des Themas abdecken (Definition, Ursachen, Symptome, Maßnahmen, Prävention etc.).
 Antworte als JSON-Array:
 [{"question":"...","answer":"..."}]`
 
@@ -344,21 +389,47 @@ function generateLearningFieldsFallback(
 ): GeneratedLearningField[] {
   const chunkSize = Math.max(1, Math.ceil(pdfFiles.length / Math.min(4, Math.max(1, topics.length))))
   const fields: GeneratedLearningField[] = []
+  const knowledge = findRelevantKnowledge(topicName, topics)
 
   for (let i = 0; i < pdfFiles.length && fields.length < 4; i += chunkSize) {
     const chunk = pdfFiles.slice(i, i + chunkSize)
     const fieldTopics = extractTopics(chunk)
     const fieldTitle = fieldTopics[0] || `${topicName} – Bereich ${fields.length + 1}`
 
+    // Find knowledge entries matching this field's topics for specific goals
+    const fieldKnowledge = knowledge.filter((e) =>
+      fieldTopics.some((ft) =>
+        e.topic.toLowerCase().includes(ft.toLowerCase()) ||
+        ft.toLowerCase().includes(e.topic.toLowerCase()) ||
+        e.subtopic.toLowerCase().includes(ft.toLowerCase())
+      )
+    )
+
+    const goals: string[] = []
+    if (fieldKnowledge.length > 0) {
+      // Generate specific goals from actual knowledge entries
+      for (const entry of fieldKnowledge.slice(0, 4)) {
+        const firstSentence = entry.content.split(/\.\s+/)[0]
+        if (firstSentence && firstSentence.length > 15) {
+          goals.push(`${entry.subtopic}: ${firstSentence}.`)
+        }
+      }
+    }
+    // Fill remaining goals with topic-specific defaults
+    while (goals.length < 4) {
+      const defaults = [
+        `Grundlagen von ${fieldTitle} verstehen und in eigenen Worten erklären können.`,
+        `Risikofaktoren und Ursachen von ${fieldTitle} benennen und Patienten zuordnen können.`,
+        `Pflegerische Maßnahmen zu ${fieldTitle} planen und begründen können.`,
+        `Dokumentation und Beobachtungskriterien bei ${fieldTitle} sicher anwenden.`,
+      ]
+      goals.push(defaults[goals.length])
+    }
+
     fields.push({
       title: fieldTitle,
       subtitle: `Lernfeld aus ${topicName}`,
-      goals: [
-        `Grundlagen von ${fieldTitle} verstehen und erklären können.`,
-        `Wichtige Begriffe und Definitionen aus den PDFs kennen.`,
-        `Zusammenhänge zwischen Theorie und Praxis herstellen.`,
-        `Relevante Inhalte für die Prüfungsvorbereitung sicher beherrschen.`,
-      ],
+      goals: goals.slice(0, 4),
       documents: chunk,
     })
   }
@@ -375,19 +446,38 @@ function generateFlashcardsFallback(
   if (count <= 0) return []
 
   const cards: GeneratedFlashcard[] = []
-  const usedTopics = topics.length > 0 ? topics : [topicName]
+  const knowledge = findRelevantKnowledge(topicName, topics)
 
+  // Generate cards from actual knowledge entries first
   for (let i = 0; i < count; i++) {
-    const topic = usedTopics[i % usedTopics.length]
-    const source = pdfFiles[i % pdfFiles.length]
+    if (i < knowledge.length) {
+      const entry = knowledge[i]
+      const sentences = entry.content.split(/\.\s+/).filter((s) => s.length > 15)
+      const answer = sentences.length > 1
+        ? sentences.slice(0, 3).join(". ") + "."
+        : entry.content
 
-    cards.push({
-      title: `${topic} – Karte ${i + 1}`,
-      question: `Was sind die wichtigsten Aspekte von ${topic} laut den Unterlagen?`,
-      answer: `Die zentralen Punkte zu ${topic} umfassen: Definition, Ursachen, Symptome/Merkmale, Diagnostik und pflegerische Maßnahmen. Details findest du in der PDF „${source}".`,
-      tip: `Lies die PDF „${source}" und markiere Schlüsselwörter. Formuliere die Antwort anschließend in eigenen Worten.`,
-      source,
-    })
+      cards.push({
+        title: `${entry.topic} – ${entry.subtopic}`,
+        question: `Erkläre ${entry.subtopic} im Bereich ${entry.topic}.`,
+        answer,
+        tip: `Merke dir die Schlüsselbegriffe: ${entry.keywords.slice(0, 3).join(", ")}. Quelle: ${entry.source}.`,
+        source: (entry.source.length > 0 && pdfFiles.find((f) =>
+          f.toLowerCase().includes(entry.source.split(" ")[0].toLowerCase())
+        )) || pdfFiles[i % pdfFiles.length],
+      })
+    } else {
+      // Fallback for topics without knowledge entries
+      const topic = topics[i % topics.length] || topicName
+      const source = pdfFiles[i % pdfFiles.length]
+      cards.push({
+        title: `${topic} – Wiederholung ${i + 1}`,
+        question: `Was sind die wichtigsten Aspekte von ${topic} für die Pflegepraxis?`,
+        answer: `Zu ${topic} gehören: Definition und Abgrenzung des Begriffs, typische Ursachen und Risikofaktoren, Symptome und Beobachtungskriterien sowie pflegerische Maßnahmen und Dokumentation. Details findest du in „${source}".`,
+        tip: `Lies die PDF „${source}" und erstelle dir eigene Stichpunkte zu Definition, Ursachen, Symptome und Maßnahmen.`,
+        source,
+      })
+    }
   }
 
   return cards
@@ -402,70 +492,101 @@ function generateQuizItemsFallback(
   if (count <= 0) return []
 
   const quizzes: GeneratedQuiz[] = []
-  const usedTopics = topics.length > 0 ? topics : [topicName]
+  const knowledge = findRelevantKnowledge(topicName, topics)
 
-  const questionTemplates = [
-    {
-      q: (t: string) => `Welche Aussage zu ${t} ist korrekt?`,
-      options: (t: string) => [
-        `${t} hat keine Relevanz für die Pflegepraxis.`,
-        `${t} ist ein wichtiger Bestandteil der Ausbildungsinhalte.`,
-        `${t} wird nur im Oberkurs behandelt.`,
-        `${t} erfordert keine Dokumentation.`,
-      ],
-      answer: "B",
-      explanation: (t: string, s: string) =>
-        `${t} ist ein zentraler Ausbildungsinhalt. Weitere Informationen findest du in „${s}".`,
-    },
-    {
-      q: (t: string) => `Was gehört zu den Grundlagen von ${t}?`,
-      options: (_t: string) => [
-        `Nur theoretisches Wissen ohne Praxisbezug.`,
-        `Definition, Ursachen und pflegerische Maßnahmen.`,
-        `Ausschließlich medikamentöse Therapie.`,
-        `Keine Dokumentation nötig.`,
-      ],
-      answer: "B",
-      explanation: (t: string, s: string) =>
-        `Zu den Grundlagen von ${t} gehören Definition, Ursachen und pflegerische Interventionen. Quelle: „${s}".`,
-    },
-    {
-      q: (t: string) => `Welche Maßnahme ist im Rahmen von ${t} besonders wichtig?`,
-      options: (_t: string) => [
-        `Abwarten ohne Intervention.`,
-        `Gezielte Beobachtung und Dokumentation.`,
-        `Eigenständige Medikamentengabe ohne Arztanordnung.`,
-        `Ausschließlich telefonische Beratung.`,
-      ],
-      answer: "B",
-      explanation: (t: string, s: string) =>
-        `Bei ${t} ist gezielte Beobachtung und Dokumentation essenziell. Siehe „${s}".`,
-    },
-    {
-      q: (t: string) => `Worauf muss bei ${t} in der Pflegepraxis geachtet werden?`,
-      options: (_t: string) => [
-        `Es gibt keine besonderen Anforderungen.`,
-        `Auf individuelle Patientenbedürfnisse und Sicherheit.`,
-        `Nur auf ärztliche Anweisungen.`,
-        `Ausschließlich auf Kosteneffizienz.`,
-      ],
-      answer: "B",
-      explanation: (t: string, s: string) =>
-        `Bei ${t} stehen individuelle Patientenbedürfnisse und Sicherheit im Vordergrund. Quelle: „${s}".`,
-    },
-  ]
-
+  // Generate quiz items from actual knowledge entries
   for (let i = 0; i < count; i++) {
-    const topic = usedTopics[i % usedTopics.length]
-    const source = pdfFiles[i % pdfFiles.length]
-    const template = questionTemplates[i % questionTemplates.length]
+    if (i < knowledge.length) {
+      const entry = knowledge[i]
+      const sentences = entry.content.split(/\.\s+/).filter((s) => s.length > 20 && s.length < 150)
 
+      if (sentences.length >= 1) {
+        const correctSentence = sentences[0]
+        // Find plausible wrong answers from other topics
+        const otherEntries = pdfKnowledge.filter(
+          (e) => e.topic !== entry.topic || e.subtopic !== entry.subtopic
+        )
+        const wrongSentences = otherEntries
+          .flatMap((e) => e.content.split(/\.\s+/).filter((s) => s.length > 20 && s.length < 150))
+          .slice(0, 20)
+
+        if (wrongSentences.length >= 3) {
+          const selectedWrong = wrongSentences.slice(0, 3)
+          const allOptions = [correctSentence + ".", ...selectedWrong.map((s) => s.endsWith(".") ? s : s + ".")]
+          // Shuffle and find correct index
+          const shuffled = pickRandom(allOptions, allOptions.length)
+          const correctIdx = shuffled.indexOf(correctSentence + ".")
+          const answerLetter = (["A", "B", "C", "D"] as const)[correctIdx]
+
+          quizzes.push({
+            title: `${entry.topic} – ${entry.subtopic}`,
+            question: `Welche Aussage zu „${entry.subtopic}" ist korrekt?`,
+            options: shuffled,
+            answer: answerLetter,
+            explanation: `Die richtige Antwort stammt aus dem Bereich ${entry.topic} – ${entry.subtopic}. ${correctSentence}.`,
+          })
+          continue
+        }
+      }
+    }
+
+    // Fallback template for remaining items
+    const topic = topics[i % topics.length] || topicName
+    const source = pdfFiles[i % pdfFiles.length]
+    const templateIdx = i % 4
+    const templates = [
+      {
+        q: `Welche Aussage zu ${topic} ist korrekt?`,
+        opts: [
+          `${topic} hat keine Relevanz für die Pflegepraxis.`,
+          `${topic} ist ein wichtiger Bestandteil der Pflegeausbildung und erfordert fundiertes Fachwissen.`,
+          `${topic} wird nur im Oberkurs behandelt.`,
+          `${topic} erfordert keine Dokumentation.`,
+        ],
+        a: "B" as const,
+        e: `${topic} ist ein zentraler Ausbildungsinhalt der Pflege. Quelle: „${source}".`,
+      },
+      {
+        q: `Was gehört zu den pflegerischen Grundlagen von ${topic}?`,
+        opts: [
+          `Nur theoretisches Wissen ohne Praxisbezug.`,
+          `Definition, Ursachen, Risikofaktoren und gezielte pflegerische Maßnahmen.`,
+          `Ausschließlich medikamentöse Therapie ohne Pflegeinterventionen.`,
+          `Keine Dokumentation oder Beobachtung nötig.`,
+        ],
+        a: "B" as const,
+        e: `Zu den Grundlagen von ${topic} gehören Definition, Ursachen, Risikofaktoren und pflegerische Interventionen. Quelle: „${source}".`,
+      },
+      {
+        q: `Welche Maßnahme ist im Rahmen von ${topic} besonders wichtig?`,
+        opts: [
+          `Abwarten ohne Intervention oder Beobachtung.`,
+          `Gezielte Beobachtung, Dokumentation und interprofessionelle Zusammenarbeit.`,
+          `Eigenständige Medikamentengabe ohne ärztliche Anordnung.`,
+          `Ausschließlich telefonische Beratung der Patienten.`,
+        ],
+        a: "B" as const,
+        e: `Bei ${topic} sind gezielte Beobachtung, Dokumentation und Teamarbeit essenziell. Quelle: „${source}".`,
+      },
+      {
+        q: `Worauf muss bei ${topic} in der Pflegepraxis besonders geachtet werden?`,
+        opts: [
+          `Es gibt keine besonderen Anforderungen oder Standards.`,
+          `Auf individuelle Patientenbedürfnisse, Sicherheit und evidenzbasiertes Handeln.`,
+          `Nur auf ärztliche Anweisungen ohne eigene Beobachtung.`,
+          `Ausschließlich auf Kosteneffizienz und Zeitersparnis.`,
+        ],
+        a: "B" as const,
+        e: `Bei ${topic} stehen individuelle Patientenbedürfnisse und Sicherheit im Vordergrund. Quelle: „${source}".`,
+      },
+    ]
+    const t = templates[templateIdx]
     quizzes.push({
       title: `${topic} – Quiz ${i + 1}`,
-      question: template.q(topic),
-      options: template.options(topic),
-      answer: template.answer,
-      explanation: template.explanation(topic, source),
+      question: t.q,
+      options: t.opts,
+      answer: t.a,
+      explanation: t.e,
     })
   }
 
@@ -481,22 +602,48 @@ function generateTablesFallback(
   if (count <= 0) return []
 
   const tables: GeneratedTable[] = []
+  const knowledge = findRelevantKnowledge(topicName, topics)
   const usedTopics = topics.length > 0 ? topics : [topicName]
 
   for (let i = 0; i < count; i++) {
     const topic = usedTopics[i % usedTopics.length]
     const source = pdfFiles[i % pdfFiles.length]
 
-    tables.push({
-      title: `${topic} – Übersicht`,
-      headers: ["Aspekt", "Beschreibung", "Quelle"],
-      rows: [
-        { Aspekt: "Definition", Beschreibung: `Grundlegende Definition von ${topic}`, Quelle: source },
-        { Aspekt: "Ursachen", Beschreibung: `Mögliche Ursachen und Risikofaktoren`, Quelle: source },
-        { Aspekt: "Symptome", Beschreibung: `Typische Anzeichen und Symptome`, Quelle: source },
-        { Aspekt: "Maßnahmen", Beschreibung: `Pflegerische Interventionen und Maßnahmen`, Quelle: source },
-      ],
-    })
+    // Find knowledge entries for this topic
+    const topicEntries = knowledge.filter((e) =>
+      e.topic.toLowerCase().includes(topic.toLowerCase()) ||
+      topic.toLowerCase().includes(e.topic.toLowerCase())
+    )
+
+    if (topicEntries.length >= 2) {
+      // Build table from actual knowledge entries
+      const rows = topicEntries.slice(0, 5).map((entry) => {
+        const firstSentence = entry.content.split(/\.\s+/)[0]
+        return {
+          Thema: entry.subtopic,
+          Inhalt: firstSentence.length > 120 ? firstSentence.substring(0, 117) + "…" : firstSentence + ".",
+          Quelle: entry.source,
+        }
+      })
+
+      tables.push({
+        title: `${topic} – Überblick`,
+        headers: ["Thema", "Inhalt", "Quelle"],
+        rows,
+      })
+    } else {
+      // Fallback with topic-specific structure
+      tables.push({
+        title: `${topic} – Übersicht`,
+        headers: ["Aspekt", "Beschreibung", "Quelle"],
+        rows: [
+          { Aspekt: "Definition", Beschreibung: `Grundlegende Definition und Abgrenzung von ${topic} im pflegerischen Kontext.`, Quelle: source },
+          { Aspekt: "Ursachen / Risikofaktoren", Beschreibung: `Typische Ursachen und Risikofaktoren die zu ${topic} führen können.`, Quelle: source },
+          { Aspekt: "Symptome / Beobachtung", Beschreibung: `Klinische Zeichen und pflegerische Beobachtungskriterien bei ${topic}.`, Quelle: source },
+          { Aspekt: "Pflegerische Maßnahmen", Beschreibung: `Prophylaxe, Interventionen und Dokumentation bei ${topic}.`, Quelle: source },
+        ],
+      })
+    }
   }
 
   return tables
@@ -508,33 +655,44 @@ function generateQuickQuestionsFallback(
   pdfFiles: string[]
 ): GeneratedQA[] {
   const qas: GeneratedQA[] = []
-  const usedTopics = topics.length > 0 ? topics : [topicName]
+  const knowledge = findRelevantKnowledge(topicName, topics)
   const sources = pickRandom(pdfFiles, Math.min(6, pdfFiles.length))
 
+  // Generate Q&A from actual knowledge entries
+  for (let i = 0; i < Math.min(6, knowledge.length); i++) {
+    const entry = knowledge[i]
+    const sentences = entry.content.split(/\.\s+/).filter((s) => s.length > 15)
+    const answer = sentences.length > 2
+      ? sentences.slice(0, 3).join(". ") + "."
+      : entry.content
+
+    qas.push({
+      question: `Erkläre ${entry.subtopic} im Kontext von ${entry.topic}.`,
+      answer,
+    })
+  }
+
+  // Fill with topic-specific templates if not enough knowledge entries
+  const usedTopics = topics.length > 0 ? topics : [topicName]
   const templates = [
     {
-      q: (t: string) => `Was sind die wichtigsten Lernziele zum Thema ${t}?`,
+      q: (t: string) => `Was sind die wichtigsten pflegerischen Maßnahmen bei ${t}?`,
       a: (t: string, s: string) =>
-        `Die Lernziele umfassen: Definitionen kennen, Ursachen verstehen, Symptome erkennen und pflegerische Maßnahmen ableiten können. Quelle: „${s}".`,
+        `Die pflegerischen Maßnahmen bei ${t} umfassen: gezielte Beobachtung und Dokumentation, Umsetzung ärztlicher Anordnungen, Prophylaxe und Prävention, sowie Patienten- und Angehörigenberatung. Weitere Details findest du in „${s}".`,
     },
     {
-      q: (t: string) => `Welche PDFs sollte ich für ${t} zuerst lesen?`,
+      q: (t: string) => `Welche Beobachtungskriterien sind bei ${t} besonders wichtig?`,
       a: (t: string, s: string) =>
-        `Beginne mit „${s}" – dort findest du die Grundlagen. Arbeite dich dann durch die weiteren Unterlagen.`,
+        `Bei ${t} sind folgende Beobachtungskriterien wichtig: Vitalzeichen, Allgemeinzustand, Schmerzverhalten, Hautbeschaffenheit und psychische Verfassung. Auffälligkeiten müssen dokumentiert und dem Arzt gemeldet werden. Quelle: „${s}".`,
     },
     {
-      q: (t: string) => `Wie kann ich ${t} am besten für die Prüfung lernen?`,
+      q: (t: string) => `Wie dokumentierst du ${t} fachgerecht?`,
       a: (t: string, s: string) =>
-        `Nutze die Lernkarten und Quizfragen auf dieser Seite. Lies zusätzlich „${s}" und markiere Schlüsselbegriffe.`,
-    },
-    {
-      q: (t: string) => `Was muss ich zu ${t} in der Praxis wissen?`,
-      a: (t: string, s: string) =>
-        `In der Praxis ist vor allem die Umsetzung der theoretischen Inhalte wichtig: Beobachtung, Dokumentation und Kommunikation im Team. Siehe „${s}".`,
+        `Die Dokumentation bei ${t} erfolgt nach dem AEDL-Modell oder der SIS: Informationssammlung, Maßnahmenplanung, Durchführung und Evaluation. Alle Beobachtungen, Maßnahmen und Veränderungen werden zeitnah und nachvollziehbar dokumentiert. Siehe „${s}".`,
     },
   ]
 
-  for (let i = 0; i < Math.min(templates.length, usedTopics.length * 2); i++) {
+  for (let i = qas.length; i < Math.min(6, usedTopics.length * 2 + templates.length); i++) {
     const topic = usedTopics[i % usedTopics.length]
     const source = sources[i % sources.length]
     const template = templates[i % templates.length]
@@ -544,5 +702,5 @@ function generateQuickQuestionsFallback(
     })
   }
 
-  return qas
+  return qas.slice(0, 6)
 }

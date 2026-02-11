@@ -46,7 +46,7 @@ export default function AdminPage() {
             const storedParticipants = await getParticipants()
             setParticipants(storedParticipants)
           } catch (error) {
-            console.error('[Storage] Failed to load participants from Firebase:', error)
+            console.error('[Storage] Failed to load participants from Supabase:', error)
           }
         }
         loadParticipants()
@@ -85,7 +85,7 @@ export default function AdminPage() {
   const handleDelete = async (id: string) => {
     if (confirm("Möchten Sie diese Anmeldung wirklich löschen?")) {
       try {
-        // Delete from Firebase
+        // Delete from Supabase
         await deleteParticipantById(id)
         console.log('[Storage] Participant deleted from Supabase')
       } catch (error) {

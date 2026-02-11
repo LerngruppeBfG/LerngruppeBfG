@@ -45,6 +45,7 @@ This project uses:
 - **Tailwind CSS** - Utility-first CSS framework
 - **Supabase** - Hosted database for cross-device synchronization
 - **EmailJS** - Email notification service
+- **OpenAI (ChatGPT)** or **Anthropic (Claude)** - AI for content generation
 
 ## Features
 
@@ -52,6 +53,59 @@ This project uses:
 - ✅ Real-time synchronization across all devices
 - ✅ Email confirmations with cancellation links
 - ✅ Admin dashboard (local only)
+- ✅ AI-powered course content generation (ChatGPT or Claude)
+- ✅ KI-Assistent for answering nursing questions
+- ✅ KI-Quiz with auto-generated questions
+
+### KI-Setup (ChatGPT und/oder Claude)
+
+This application supports both AI providers. You can configure one or both — when both are configured, you can switch between them in the KI-Assistent UI.
+
+#### OpenAI (ChatGPT)
+
+1. Go to [platform.openai.com](https://platform.openai.com/signup) and create an account
+2. Open [API Keys](https://platform.openai.com/api-keys) in the settings
+3. Click **"Create new secret key"** and copy it (starts with `sk-`)
+4. Add credit under [Billing](https://platform.openai.com/settings/organization/billing/overview) (from $5 USD)
+
+#### Anthropic (Claude)
+
+1. Go to [console.anthropic.com](https://console.anthropic.com/) and create an account
+2. Navigate to [Settings → API Keys](https://console.anthropic.com/settings/keys)
+3. Click **"Create Key"** and copy it (starts with `sk-ant-`)
+4. Add credit under [Settings → Billing](https://console.anthropic.com/settings/billing) (from $5 USD)
+
+#### Configure in `.env.local`:
+
+```env
+# Add one or both:
+OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_MODEL=gpt-4o-mini
+
+ANTHROPIC_API_KEY=sk-ant-your-api-key-here
+ANTHROPIC_MODEL=claude-sonnet-4-20250514
+```
+
+#### Using newer/custom models
+
+You can use **any valid model name** — just change the `OPENAI_MODEL` or `ANTHROPIC_MODEL` value:
+
+```env
+# Examples for newer OpenAI models:
+OPENAI_MODEL=gpt-5.2-codex    # Latest coding model
+OPENAI_MODEL=gpt-5.2          # Latest reasoning model
+OPENAI_MODEL=gpt-4.1          # 1M+ context window
+OPENAI_MODEL=o4-mini           # Fast reasoning
+
+# Examples for newer Anthropic models:
+ANTHROPIC_MODEL=claude-opus-4-6    # Most powerful Claude
+ANTHROPIC_MODEL=claude-sonnet-4-5  # Fast & capable
+ANTHROPIC_MODEL=claude-haiku-4-5   # Fastest & cheapest
+```
+
+Current model names: [OpenAI Models](https://platform.openai.com/docs/models) · [Anthropic Models](https://docs.anthropic.com/en/docs/about-claude/models)
+
+> **Note:** A ChatGPT Plus or Claude Pro subscription ($20/month) is **not** the same as API credit. The API requires separate prepaid credit.
 
 ## Learn More
 

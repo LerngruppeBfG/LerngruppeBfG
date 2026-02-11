@@ -117,11 +117,21 @@ function KursDetailInner() {
     generatingRef.current = true
     setGenerating(true)
 
+    // Check if AI is available server-side
+    let useAI = false
+    try {
+      const res = await fetch("/api/chat/status")
+      const data = await res.json()
+      useAI = data.configured ?? false
+    } catch (err) {
+      console.warn("Failed to check AI status:", err)
+    }
+
     try {
       const content = await generateCourseContent(c, (steps, idx) => {
         setGenSteps([...steps])
         setGenIndex(idx)
-      })
+      }, useAI)
 
       const updated: CourseConfig = {
         ...c,

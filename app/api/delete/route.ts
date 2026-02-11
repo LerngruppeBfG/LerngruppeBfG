@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+/**
+ * Required for `output: "export"` (GitHub Pages). The GET handler provides
+ * a static fallback; the POST handler remains dynamic on server platforms.
+ */
+export const dynamic = "force-static"
+
 const TABLE_NAME = 'participants'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -15,6 +21,13 @@ const createSupabaseAdmin = () => {
       persistSession: false
     }
   })
+}
+
+export function GET() {
+  return NextResponse.json(
+    { error: "POST method required" },
+    { status: 405 }
+  )
 }
 
 export async function POST(request: Request) {

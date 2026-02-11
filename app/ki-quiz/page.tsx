@@ -155,6 +155,47 @@ const templates: QuestionTemplate[] = [
       }
     },
   },
+  // Template 5: "Was versteht man unter [keyword]?"
+  {
+    build(entry) {
+      if (entry.keywords.length < 2) return null
+      const keyword = entry.keywords[0]
+      if (!keyword || keyword.length < 3) return null
+
+      // Extract the first 2 sentences as the correct definition
+      const sentences = entry.content.split(/\.\s+/).filter((s) => s.length > 15)
+      if (sentences.length < 1) return null
+      const correctDef = sentences[0] + "."
+
+      // Get definitions from other topics as wrong answers
+      const otherEntries = pdfKnowledge.filter(
+        (e) => e.topic !== entry.topic || e.subtopic !== entry.subtopic
+      )
+      const wrongDefs = shuffle(
+        otherEntries
+          .map((e) => {
+            const s = e.content.split(/\.\s+/).filter((s) => s.length > 15)
+            return s.length > 0 ? s[0] + "." : null
+          })
+          .filter(Boolean) as string[]
+      ).slice(0, 3)
+
+      if (wrongDefs.length < 3) return null
+
+      const options = shuffle([correctDef, ...wrongDefs])
+      const correctIndex = options.indexOf(correctDef)
+
+      return {
+        id: ++questionCounter,
+        topic: entry.topic,
+        question: `Was versteht man unter „${keyword}" im Bereich ${entry.topic}?`,
+        options,
+        correctIndex,
+        explanation: `${keyword} bezieht sich auf ${entry.subtopic}: ${correctDef}`,
+        source: entry.source,
+      }
+    },
+  },
 ]
 
 function generateWrongOptions(entry: KnowledgeEntry, correctSentence: string): string[] {
