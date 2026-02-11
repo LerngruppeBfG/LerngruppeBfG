@@ -99,7 +99,7 @@ function findRelevantKnowledge(topicName: string, topics: string[]): KnowledgeEn
   const all: KnowledgeEntry[] = []
   for (const t of topics) {
     for (const entry of searchKnowledge(t)) {
-      if (!all.some((e) => e.subtopic === entry.subtopic)) all.push(entry)
+      if (!all.some((e) => e.topic === entry.topic && e.subtopic === entry.subtopic)) all.push(entry)
     }
     if (all.length >= 30) break
   }
@@ -409,7 +409,7 @@ function generateLearningFieldsFallback(
     if (fieldKnowledge.length > 0) {
       // Generate specific goals from actual knowledge entries
       for (const entry of fieldKnowledge.slice(0, 4)) {
-        const firstSentence = entry.content.split(/\.\s/)[0]
+        const firstSentence = entry.content.split(/\.\s+/)[0]
         if (firstSentence && firstSentence.length > 15) {
           goals.push(`${entry.subtopic}: ${firstSentence}.`)
         }
@@ -462,9 +462,9 @@ function generateFlashcardsFallback(
         question: `Erkläre ${entry.subtopic} im Bereich ${entry.topic}.`,
         answer,
         tip: `Merke dir die Schlüsselbegriffe: ${entry.keywords.slice(0, 3).join(", ")}. Quelle: ${entry.source}.`,
-        source: pdfFiles.find((f) =>
+        source: (entry.source.length > 0 && pdfFiles.find((f) =>
           f.toLowerCase().includes(entry.source.split(" ")[0].toLowerCase())
-        ) || pdfFiles[i % pdfFiles.length],
+        )) || pdfFiles[i % pdfFiles.length],
       })
     } else {
       // Fallback for topics without knowledge entries
@@ -511,8 +511,8 @@ function generateQuizItemsFallback(
           .slice(0, 20)
 
         if (wrongSentences.length >= 3) {
-          const shuffledWrong = pickRandom(wrongSentences, 3)
-          const allOptions = [correctSentence + ".", ...shuffledWrong.map((s) => s.endsWith(".") ? s : s + ".")]
+          const selectedWrong = wrongSentences.slice(0, 3)
+          const allOptions = [correctSentence + ".", ...selectedWrong.map((s) => s.endsWith(".") ? s : s + ".")]
           // Shuffle and find correct index
           const shuffled = pickRandom(allOptions, allOptions.length)
           const correctIdx = shuffled.indexOf(correctSentence + ".")
@@ -618,7 +618,7 @@ function generateTablesFallback(
     if (topicEntries.length >= 2) {
       // Build table from actual knowledge entries
       const rows = topicEntries.slice(0, 5).map((entry) => {
-        const firstSentence = entry.content.split(/\.\s/)[0]
+        const firstSentence = entry.content.split(/\.\s+/)[0]
         return {
           Thema: entry.subtopic,
           Inhalt: firstSentence.length > 120 ? firstSentence.substring(0, 117) + "…" : firstSentence + ".",
