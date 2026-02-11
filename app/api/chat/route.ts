@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 
 /**
  * Required for `output: "export"` (GitHub Pages). The GET handler provides
@@ -8,11 +9,31 @@ const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
  */
 export const dynamic = "force-static"
 
+type AIProvider = "openai" | "anthropic"
+
+function getProvider(): AIProvider {
+  const provider = (
+    process.env.AI_PROVIDER ??
+    process.env.NEXT_PUBLIC_AI_PROVIDER ??
+    ""
+  ).toLowerCase()
+  if (provider === "anthropic") return "anthropic"
+  return "openai"
+}
+
 function getApiKey(): string {
+  const provider = getProvider()
+  if (provider === "anthropic") {
+    return process.env.ANTHROPIC_API_KEY ?? ""
+  }
   return process.env.OPENAI_API_KEY ?? process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""
 }
 
 function getModel(): string {
+  const provider = getProvider()
+  if (provider === "anthropic") {
+    return process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514"
+  }
   return process.env.OPENAI_MODEL ?? process.env.NEXT_PUBLIC_OPENAI_MODEL ?? "gpt-4o-mini"
 }
 
@@ -24,10 +45,12 @@ export function GET() {
 }
 
 export async function POST(request: Request) {
+  const provider = getProvider()
   const apiKey = getApiKey()
   if (!apiKey) {
+    const providerName = provider === "anthropic" ? "Anthropic (Claude)" : "OpenAI"
     return NextResponse.json(
-      { error: "OpenAI API key not configured on the server." },
+      { error: `${providerName} API key not configured on the server.` },
       { status: 500 }
     )
   }
@@ -57,43 +80,123 @@ export async function POST(request: Request) {
   const maxTokens = body.maxTokens ?? 1024
 
   try {
-    const response = await fetch(OPENAI_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: body.messages,
-        temperature,
-        max_tokens: maxTokens,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorBody = await response.json().catch(() => null)
-      const errorMsg =
-        (errorBody as { error?: { message?: string } })?.error?.message ??
-        `OpenAI API error: ${response.status} ${response.statusText}`
-      return NextResponse.json({ error: errorMsg }, { status: response.status })
+    if (provider === "anthropic") {
+      return await handleAnthropic(apiKey, model, body.messages, temperature, maxTokens)
     }
-
-    const data = await response.json()
-    const content = data?.choices?.[0]?.message?.content
-
-    if (typeof content !== "string") {
-      return NextResponse.json(
-        { error: "Unexpected response from OpenAI API." },
-        { status: 502 }
-      )
-    }
-
-    return NextResponse.json({ content: content.trim() })
+    return await handleOpenAI(apiKey, model, body.messages, temperature, maxTokens)
   } catch (err) {
     return NextResponse.json(
       { error: (err as Error).message ?? "Unknown error" },
       { status: 500 }
     )
   }
+}
+
+/** Forward request to OpenAI chat completions API. */
+async function handleOpenAI(
+  apiKey: string,
+  model: string,
+  messages: { role: string; content: string }[],
+  temperature: number,
+  maxTokens: number
+) {
+  const response = await fetch(OPENAI_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature,
+      max_tokens: maxTokens,
+    }),
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null)
+    const errorMsg =
+      (errorBody as { error?: { message?: string } })?.error?.message ??
+      `OpenAI API error: ${response.status} ${response.statusText}`
+    return NextResponse.json({ error: errorMsg }, { status: response.status })
+  }
+
+  const data = await response.json()
+  const content = data?.choices?.[0]?.message?.content
+
+  if (typeof content !== "string") {
+    return NextResponse.json(
+      { error: "Unexpected response from OpenAI API." },
+      { status: 502 }
+    )
+  }
+
+  return NextResponse.json({ content: content.trim() })
+}
+
+/** Forward request to Anthropic messages API. */
+async function handleAnthropic(
+  apiKey: string,
+  model: string,
+  messages: { role: string; content: string }[],
+  temperature: number,
+  maxTokens: number
+) {
+  // Anthropic requires "system" to be passed separately, not in the messages array
+  let systemPrompt: string | undefined
+  const anthropicMessages = messages
+    .filter((m) => {
+      if (m.role === "system") {
+        systemPrompt = m.content
+        return false
+      }
+      return true
+    })
+    .map((m) => ({ role: m.role, content: m.content }))
+
+  const requestBody: Record<string, unknown> = {
+    model,
+    messages: anthropicMessages,
+    temperature,
+    max_tokens: maxTokens,
+  }
+  if (systemPrompt) {
+    requestBody.system = systemPrompt
+  }
+
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify(requestBody),
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null)
+    const errorMsg =
+      (errorBody as { error?: { message?: string } })?.error?.message ??
+      `Anthropic API error: ${response.status} ${response.statusText}`
+    return NextResponse.json({ error: errorMsg }, { status: response.status })
+  }
+
+  const data = await response.json()
+  // Anthropic returns content as an array of content blocks
+  const contentBlocks = data?.content
+  const textBlock = Array.isArray(contentBlocks)
+    ? contentBlocks.find((b: { type: string }) => b.type === "text")
+    : null
+  const content = textBlock?.text
+
+  if (typeof content !== "string") {
+    return NextResponse.json(
+      { error: "Unexpected response from Anthropic API." },
+      { status: 502 }
+    )
+  }
+
+  return NextResponse.json({ content: content.trim() })
 }

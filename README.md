@@ -45,6 +45,7 @@ This project uses:
 - **Tailwind CSS** - Utility-first CSS framework
 - **Supabase** - Hosted database for cross-device synchronization
 - **EmailJS** - Email notification service
+- **OpenAI (ChatGPT)** or **Anthropic (Claude)** - AI for content generation
 
 ## Features
 
@@ -52,6 +53,43 @@ This project uses:
 - ✅ Real-time synchronization across all devices
 - ✅ Email confirmations with cancellation links
 - ✅ Admin dashboard (local only)
+- ✅ AI-powered course content generation (ChatGPT or Claude)
+- ✅ KI-Assistent for answering nursing questions
+- ✅ KI-Quiz with auto-generated questions
+
+### KI-Setup (ChatGPT oder Claude)
+
+This application supports two AI providers. Choose one:
+
+#### Option A: OpenAI (ChatGPT)
+
+1. Go to [platform.openai.com](https://platform.openai.com/signup) and create an account
+2. Open [API Keys](https://platform.openai.com/api-keys) in the settings
+3. Click **"Create new secret key"** and copy it (starts with `sk-`)
+4. Add credit under [Billing](https://platform.openai.com/settings/organization/billing/overview) (from $5 USD)
+5. Configure in `.env.local`:
+
+```env
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_MODEL=gpt-4o-mini
+```
+
+#### Option B: Anthropic (Claude)
+
+1. Go to [console.anthropic.com](https://console.anthropic.com/) and create an account
+2. Navigate to [Settings → API Keys](https://console.anthropic.com/settings/keys)
+3. Click **"Create Key"** and copy it (starts with `sk-ant-`)
+4. Add credit under [Settings → Billing](https://console.anthropic.com/settings/billing) (from $5 USD)
+5. Configure in `.env.local`:
+
+```env
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-your-api-key-here
+ANTHROPIC_MODEL=claude-sonnet-4-20250514
+```
+
+> **Note:** A ChatGPT Plus or Claude Pro subscription ($20/month) is **not** the same as API credit. The API requires separate prepaid credit.
 
 ## Learn More
 
