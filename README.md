@@ -86,6 +86,25 @@ ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 ANTHROPIC_MODEL=claude-sonnet-4-20250514
 ```
 
+#### Using newer/custom models
+
+You can use **any valid model name** — just change the `OPENAI_MODEL` or `ANTHROPIC_MODEL` value:
+
+```env
+# Examples for newer OpenAI models:
+OPENAI_MODEL=gpt-5.2-codex    # Latest coding model
+OPENAI_MODEL=gpt-5.2          # Latest reasoning model
+OPENAI_MODEL=gpt-4.1          # 1M+ context window
+OPENAI_MODEL=o4-mini           # Fast reasoning
+
+# Examples for newer Anthropic models:
+ANTHROPIC_MODEL=claude-opus-4-6    # Most powerful Claude
+ANTHROPIC_MODEL=claude-sonnet-4-5  # Fast & capable
+ANTHROPIC_MODEL=claude-haiku-4-5   # Fastest & cheapest
+```
+
+Current model names: [OpenAI Models](https://platform.openai.com/docs/models) · [Anthropic Models](https://docs.anthropic.com/en/docs/about-claude/models)
+
 > **Note:** A ChatGPT Plus or Claude Pro subscription ($20/month) is **not** the same as API credit. The API requires separate prepaid credit.
 
 ## Learn More

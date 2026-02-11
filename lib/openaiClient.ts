@@ -14,14 +14,23 @@
 export type AIProvider = "openai" | "anthropic"
 
 export const OPENAI_MODELS = [
-  { id: "gpt-4o-mini", label: "GPT-4o Mini (schnell & günstig)" },
-  { id: "gpt-4o", label: "GPT-4o (beste Qualität)" },
-  { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo (günstig)" },
+  { id: "gpt-5.2-codex", label: "GPT-5.2 Codex (neuestes Coding-Modell)" },
+  { id: "gpt-5.2", label: "GPT-5.2 (neuestes Reasoning-Modell)" },
+  { id: "gpt-4.1", label: "GPT-4.1 (1M+ Kontext, sehr leistungsfähig)" },
+  { id: "gpt-4.1-mini", label: "GPT-4.1 Mini (schnell & günstig)" },
+  { id: "gpt-4.1-nano", label: "GPT-4.1 Nano (am günstigsten)" },
+  { id: "o4-mini", label: "O4-Mini (schnelles Reasoning)" },
+  { id: "o3", label: "O3 (tiefes Reasoning)" },
+  { id: "gpt-4o-mini", label: "GPT-4o Mini (bewährt & günstig)" },
+  { id: "gpt-4o", label: "GPT-4o (bewährt, gute Qualität)" },
 ] as const
 
 export const ANTHROPIC_MODELS = [
-  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet 4 (beste Qualität)" },
-  { id: "claude-3-5-haiku-20241022", label: "Claude 3.5 Haiku (schnell & günstig)" },
+  { id: "claude-opus-4-6", label: "Claude Opus 4.6 (neuestes, bestes Modell)" },
+  { id: "claude-sonnet-4-5", label: "Claude Sonnet 4.5 (schnell & leistungsfähig)" },
+  { id: "claude-haiku-4-5", label: "Claude Haiku 4.5 (schnell & günstig)" },
+  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet 4 (bewährt)" },
+  { id: "claude-3-5-haiku-20241022", label: "Claude 3.5 Haiku (günstig)" },
 ] as const
 
 /** All models across providers – used by the settings page. */

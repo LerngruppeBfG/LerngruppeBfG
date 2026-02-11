@@ -503,6 +503,25 @@ export default function KiEinstellungenPage() {
                   ))}
                 </div>
               </div>
+
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 text-sm text-blue-800 space-y-2">
+                <p className="font-semibold">💡 Eigenes Modell verwenden?</p>
+                <p>
+                  Du kannst <strong>jeden beliebigen Modellnamen</strong> in der{" "}
+                  <code className="text-xs bg-blue-100 px-1 rounded">.env.local</code> eintragen — auch
+                  brandneue Modelle, die hier noch nicht aufgelistet sind:
+                </p>
+                <div className="rounded bg-gray-900 p-2 font-mono text-xs text-gray-100">
+                  <p><span className="text-emerald-400">OPENAI_MODEL</span><span className="text-gray-400">=</span><span className="text-amber-300">gpt-5.2-codex</span></p>
+                  <p><span className="text-emerald-400">ANTHROPIC_MODEL</span><span className="text-gray-400">=</span><span className="text-amber-300">claude-opus-4-6</span></p>
+                </div>
+                <p className="text-xs text-blue-600">
+                  Die aktuellen Modellnamen findest du auf{" "}
+                  <a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener noreferrer" className="underline font-medium">platform.openai.com/docs/models</a>{" "}
+                  und{" "}
+                  <a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank" rel="noopener noreferrer" className="underline font-medium">docs.anthropic.com/models</a>.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </section>
