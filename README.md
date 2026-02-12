@@ -119,14 +119,14 @@ To learn more about Next.js, take a look at the following resources:
 This project is configured to deploy to GitHub Pages. Push to `main`, enable Pages in the repository settings (GitHub Actions), and visit:
 
 ```
-https://<your-username>.github.io/Lerngruppe26/
+https://lerngruppebfg.github.io/LerngruppeBfG/
 ```
 
-If you rename the repository, update `basePath` and `assetPrefix` in `next.config.js`.
+The `next.config.js` automatically detects the repository name from the GitHub Actions environment, so no manual configuration is needed.
 
 Note: The admin view is meant for local use only. It is disabled on GitHub Pages because client-side passwords are not secure on static sites.
 
-If styles look missing on Vercel, ensure the deployment uses the default base path (this repo config only applies the `/Lerngruppe26` base path when building for GitHub Pages).
+If styles look missing on Vercel, ensure the deployment uses the default base path (this repo config only applies the `/LerngruppeBfG` base path when building for GitHub Pages).
 
 ---
 
