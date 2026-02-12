@@ -116,7 +116,11 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Deploy
 
-This project is configured to deploy to GitHub Pages. Push to `main`, enable Pages in the repository settings (GitHub Actions), and visit:
+This project is configured to deploy to GitHub Pages. 
+
+**Quick Start**: See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+
+Once deployed, visit:
 
 ```
 https://lerngruppebfg.github.io/LerngruppeBfG/
